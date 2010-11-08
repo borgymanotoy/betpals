@@ -1,0 +1,590 @@
+html {	background-color: #67b116;}
+body {	margin: 0;	background: #67b116;}
+
+
+.colorDiv {
+    padding-top: 45px;
+}
+.colorDiv a {
+    line-height: 12px;
+}
+.colorDiv img {
+    border: 0;
+    vertical-align: bottom;
+}
+
+.headerPane {
+	height: 129px;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #242b21;
+	background: transparent url("../i/header.png") 0 0 no-repeat;	
+}
+
+.headerPane input[type='text'] {
+    width: 148px;
+    height: 24px;
+    border: 1px solid #7a8b73;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.headerPane input[type='password'] {
+    width: 148px;
+    height: 24px;
+    border: 1px solid #7a8b73;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+a {
+    color: #297085 !important;
+}
+
+.greenDotLink {
+    background: transparent url("../i/greenDot.jpg") 0 2px no-repeat;   
+    padding-left: 15px;
+}
+.blueDotLink {
+    background: transparent url("../i/blueDot.jpg") 0 5px no-repeat;   
+    padding-left: 15px;
+}
+
+h3 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 20px;
+    color: #297085;
+}
+
+p {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 13px;
+    color: #242b21;
+}
+
+.buttonG {
+    height: 26px;
+    width: 107px;
+    background: transparent url("../i/btn_g.jpg") 0 0 no-repeat; 
+    border: none;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+.buttonB {
+    height: 26px;
+    width: 107px;
+    background: transparent url("../i/btn_b.jpg") 0 0 no-repeat; 
+    border: none;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+#editProfileButton {
+    background-color: #ffffff;
+    border: 1px solid #a3a3a3;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-top: 7px;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #9f9fa0;
+    cursor: pointer;
+}
+
+.addFriendButton {
+    background-color: #ffffff;
+    border: 1px solid #a3a3a3;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #9f9fa0;
+    cursor: pointer;
+}
+
+#accountInfoTable {
+    margin-left: 12px;
+    width: 149px;
+}
+#accountInfoTable th {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    color: #9f9fa0;
+    border-bottom: 1px solid #d4d4d4;
+    padding-right: 0;
+    padding-bottom: 2px;
+}
+#accountInfoTable td {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    color: #242b21;
+    padding-right: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.leftPaneInside {
+    margin-left: 12px;
+}
+
+#loginInput1 {
+    padding-top: 14px;
+}
+#loginInput1 input[type='checkbox'] {
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-left: 0px;
+    padding-left: 0px;
+    width: 15px;
+    height: 15px;
+}
+#loginInput1 span {
+    color: #297085;
+}
+#loginInput2 {
+    padding-top: 14px;
+}
+#loginButtonPane {
+    padding-top: 32px;
+}
+
+.contentPane img {
+    border: 0;
+    vertical-align: bottom;
+}
+
+#contentArea {
+    background-color: #ffffff;
+}
+
+.contentDiv {
+    padding-top: 25px;
+    padding-left: 40px;
+    padding-right: 38px;
+}
+
+#introArea {
+    height: 301px;
+    background-color: #ffffff;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#linksArea {
+    height: 76px;
+    background: transparent url("../i/links.jpg") 0 0 no-repeat; 
+}
+
+#signupArea {
+    padding-top: 95px;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #242b21;
+    height: 306px;
+    background: transparent url("../i/signup.jpg") 0 0 no-repeat; 
+}
+
+#signupArea input[type='text'] {
+    width: 266px;
+    height: 24px;
+    border: 1px solid #7a8b73;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+#signupArea input[type='password'] {
+    width: 266px;
+    height: 24px;
+    border: 1px solid #7a8b73;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+#signupArea img {
+    vertical-align: bottom;
+}
+
+#registerButton {
+    height: 26px;
+    width: 189px;
+    background: transparent url("../i/btn_b_large.jpg") 0 0 no-repeat; 
+    border: none;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    margin-top: 16px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+#competitionButton {
+    height: 26px;
+    width: 147px;
+    background: transparent url("../i/btn_b_147.jpg") 0 0 no-repeat; 
+    border: none;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#invitesAndCompetitions {
+    width: 174px;
+    margin-left: 1px;
+    margin-right: 0px;
+    list-style-type: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+    background: #e5e5e5;    
+}
+#invitesAndCompetitions li {
+    height: 22px;
+    background: #f6f6f6;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #d4d4d4;
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+#friendsSideList {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+}
+#friendsSideList li {
+    margin-bottom: 3px;
+}
+
+#friendsTable {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #88898a;
+    margin-bottom: 0px;
+}
+#friendsTable td {
+    background: #ffffff;
+}
+
+#searchButton {
+    height: 26px;
+    width: 29px;
+    background: transparent url("../i/search.png") 0 0 no-repeat; 
+    border: none;
+    cursor: pointer;
+}
+
+.deleteButton {
+    height: 11px;
+    width: 11px;
+    background: transparent url("../i/delete.png") 0 0 no-repeat; 
+    border: none;
+    cursor: pointer;
+}
+
+.palsTabs {
+    background: #f6f6f6 !important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+
+/* Overriden jQuery UI CSS __________________ */
+.ui-widget-content {
+    background: #f6f6f6 !important;
+}
+.ui-state-default {
+    background: #626262 !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+.ui-state-active {
+    background: #67b116 !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+.ui-state-default a {
+    color: #ffffff !important;
+}
+.ui-state-active a {
+    color: #ffffff !important;
+}
+.ui-tabs .ui-tabs-panel {
+    padding-top: 25px;
+    padding-left: 40px;
+    padding-right: 30px;
+}
+/* ___________________________________________ */
+
+
+.label {
+    padding-top: 14px;
+}
+
+#bottom {
+    height: 85px;
+    background: transparent url("../i/btm.png") 0 0 no-repeat; 
+}
+
+#footerPane {
+    height: 39px;
+    background: transparent url("../i/btm_narrow.png") 0 0 no-repeat; 
+    padding-bottom: 30px;
+}
+
+#friendList {
+    border-top: 1px solid #d0d0d0;
+    margin-top: 6px;
+    margin-right: 0px;
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+#groupList {
+    border-top: 1px solid #d0d0d0;
+    margin-top: 6px;
+    margin-right: 0px;
+}
+
+#communityList {
+    border-top: 1px solid #d0d0d0;
+    margin-top: 6px;
+    margin-right: 0px;
+}
+
+.orangeTitle {
+    height: 21px;
+    background: transparent url("../i/orangeDiv.jpg") 0 0 no-repeat; 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffffff;
+    padding-top: 8px;
+    padding-left: 12px;
+}
+
+.greenTitle {
+    height: 21px;
+    background: transparent url("../i/greenDiv.jpg") 0 0 no-repeat; 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffffff;
+    padding-top: 8px;
+    padding-left: 12px;
+}
+
+.blueTitle {
+    height: 21px;
+    background: transparent url("../i/blueDiv.jpg") 0 0 no-repeat; 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffffff;
+    padding-top: 8px;
+    padding-left: 12px;
+}
+
+.greyTitle {
+    height: 21px;
+    background: transparent url("../i/greyDiv.jpg") 0 0 no-repeat; 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 11px;
+    color: #ffffff;
+    padding-top: 8px;
+    padding-left: 12px;
+}
+
+#leftPane {
+    background-color: #ffffff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#leftPane h5 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #67b116;
+    margin-bottom: 0px;
+}
+#leftBlock {
+    padding-left: 12px;
+}
+
+#contentPane {
+    background-color: #ffffff;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+#contentPane h4 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #626262;
+    margin-bottom: 5px;
+}
+#contentPane h5 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #297085;
+}
+
+
+#rightPane {
+    background-color: #ffffff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#searchFriendsDiv {
+    height: 108px;
+    background: transparent url("../i/darkInputDiv.jpg") 0 0 no-repeat; 
+}
+#searchFriendsDiv h2 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+    padding-left: 16px;
+    padding-top: 8px;
+}
+#searchFriendsDiv input[type='text'] {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #88898a;
+    margin-left: 40px;
+    width: 415px;
+    height: 24px;
+    border: 1px solid #7a8b73;
+    margin-top: 16px;
+    margin-bottom: 12px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+#quickCompetitionDiv {
+    height: 108px;
+    background: transparent url("../i/darkInputDiv.jpg") 0 0 no-repeat; 
+}
+#quickCompetitionDiv h2 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+    padding-left: 16px;
+    padding-top: 8px;
+}
+
+#wallInputDiv {
+    padding-top: 30px;
+    background: #f6f6f6;
+    border-left: 1px solid #d4d4d4;
+    border-right: 1px solid #d4d4d4;
+}
+#wallInputDiv h3 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #626262;
+    padding-left: 16px;
+    margin-bottom: 6px;
+}
+#wallInputDiv input[type='text'] {
+    margin-left: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #88898a;
+    margin-left: 40px;
+    width: 455px;
+    height: 24px;
+    border: 1px solid #b5b6b6;
+    margin-bottom: 12px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+.panel {
+    background: transparent url("../i/bgDiv.jpg") 0 0 repeat-y; 
+    padding-left: 10px;
+}
+.panelNoPadding {
+    background: transparent url("../i/bgDiv.jpg") 0 0 repeat-y; 
+}
+
+.panelFooter {
+    height: 6px;
+    background: transparent url("../i/footerDiv.jpg") 0 0 no-repeat;
+    padding-bottom: 5px; 
+}
+
+.userPic {
+    border: 1px solid #a3a3a3;
+    padding: 2px;
+    vertical-align: bottom;
+}
+.userPicDiv {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.userNameDiv {
+    height: 42px;
+    padding-top: 28px;
+    border-bottom: 1px solid #d0d0d0;
+}
+.userControlDiv {
+    margin-top: -5px;
+}
+
+.currencyCell {
+    background-color: #ffffff !important;
+    color: #67b116 !important;
+    padding-left: 0;
+    width: 34px;
+}
+
+tr.even td {background-color: #f6f6f6;}
+tr.odd td {background-color: #e5e5e5;}
+
+.middle { vertical-align: middle; }
+.left { text-align: left; }
+.center { text-align: center; }
+.right { text-align: right; }
+.top { vertical-align: top; }
+.bottom { vertical-align: bottom; }
+
+.noline {text-decoration: none;}
+.nopadding{padding: 0 !important;}
+.nowrap {white-space: nowrap;}
+
+
+.error {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+    font-size: 11px;
+	color: red;	
+}
+

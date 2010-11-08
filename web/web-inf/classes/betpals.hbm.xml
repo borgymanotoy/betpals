@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false">
+
+    <class name="se.telescopesoftware.betpals.domain.User" table="users">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="enabled"/>
+        <property name="username"/>
+        <property name="password"/>
+    </class>
+
+    <class name="se.telescopesoftware.betpals.domain.UserProfile">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="userId"/>
+        <property name="name"/>
+        <property name="surname"/>
+        <property name="email"/>
+        <property name="registrationDate"/>
+        <property name="lastLoginDate"/>
+        <property name="numberOfVisits"/>
+        
+        <set name="friendsIdSet" table="user_friends" lazy="false">
+            <key column="user_id"/>
+            <element column="friend_id" type="long"/>
+        </set>
+    </class>
+
+    <class name="se.telescopesoftware.betpals.domain.Authority">
+       <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="userId" column="user_id"/>
+        <property name="username"/>
+        <property name="authority"/>
+    </class>
+
+    <class name="se.telescopesoftware.betpals.domain.Community" table="communities">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="ownerId"/>    
+        <property name="created"/>    
+        <property name="name"/>    
+        <property name="description"/>    
+        <set name="membersIdSet" table="community_members" lazy="false">
+            <key column="community_id"/>
+            <element column="member_id" type="long"/>
+        </set>
+    </class>
+
+    <class name="se.telescopesoftware.betpals.domain.Group" table="groups">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="ownerId"/>    
+        <property name="created"/>    
+        <property name="name"/>    
+        <property name="description"/>    
+        <set name="membersIdSet" table="group_members" lazy="false">
+            <key column="group_id"/>
+            <element column="member_id" type="long"/>
+        </set>
+    </class>
+
+</hibernate-mapping>
