@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<project name="BetPals" default="create-jar" basedir=".">
+
+    <!-- Set global properties here -->
+    <property file="build.properties"/>
+    <property name="src" value="../src/java"/>
+    <property name="testsrc" value="../src/test/junit"/>
+    <property name="web" value="../web"/>
+    <property name="build" value="../bin"/>
+    <property name="config" value="../etc"/>
+    <property name="lib" value="../lib"/>
+    <property name="dist" value="../dist"/>
+    <property name="doc" value="../doc"/>
+    <property name="base" value="../"/>
+    <property name="name" value="betpals"/>
+    <property name="version" value="0.3"/>
+
+    <path id="project.classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement path="${build}"/>
+        <pathelement path="${build}/tests"/>
+    </path>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="usage">
+        <echo message=""/>
+        <echo message="${name} build file"/>
+        <echo message="-----------------------------------"/>
+        <echo message=""/>
+        <echo message="Available targets are:"/>
+        <echo message=""/>
+        <echo message="build         --> Build the application"/>
+        <echo message="create-jar    --> Make application jar file"/>
+        <echo message=""/>
+    </target>
+
+    <target name="build" description="Compile main source tree java files">
+        <mkdir dir="${build}"/>
+        <javac destdir="${build}" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src}"/>
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <target name="build-tests" description="Compile test source tree java files">
+        <mkdir dir="${build}/tests"/>
+        <javac destdir="${build}/tests" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${testsrc}"/>
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <target name="clean-build" description="Compile main source tree java files">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <javac destdir="${build}" debug="true"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src}"/>
+            <classpath refid="project.classpath"/>
+        </javac>
+    </target>
+
+    <target name="create-jar" depends="clean-build, run-tests" description="Create production jar">
+        <propertyfile file="betpals.properties" comment="Build properties">
+            <entry key="build.number" type="int" default="0001" operation="+" pattern="0000"/>
+            <entry key="build.date" type="date" value="now"/>
+        </propertyfile>
+
+        <mkdir dir="${dist}"/>
+        <jar destfile="${dist}/${name}-${version}.jar">
+            <fileset dir="${build}"/>
+        </jar>
+    </target>
+
+    <target name="copyDescriptors">
+        <copy todir="${dist}/descriptors/" flatten="true">
+            <fileset dir="${src}">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="deploy" depends="build" description="Deploy application">
+        <copy todir="${deploy.path}/${name}" preservelastmodified="true">
+            <fileset dir="${web}">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>
+        <copy todir="${deploy.path}/${name}/WEB-INF/classes">
+            <fileset dir="${src}">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="deploywar" depends="build" description="Deploy application as a WAR file">
+        <war destfile="${name}.war"
+             webxml="${web}/WEB-INF/web.xml">
+            <fileset dir="${web}">
+                <include name="**/*.*"/>
+            </fileset>
+        </war>
+        <copy todir="${deploy.path}" preservelastmodified="true">
+            <fileset dir=".">
+                <include name="*.war"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="run-tests" depends="build-tests">
+        <junit printsummary="yes" showoutput="yes" haltonerror="yes" haltonfailure="yes">
+            <classpath refid="project.classpath"/>
+            <batchtest>
+                <fileset dir="${testsrc}">
+                    <include name="**/*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
