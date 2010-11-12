@@ -68,5 +68,41 @@
             <element column="member_id" type="long"/>
         </set>
     </class>
+    
+    <class name="se.telescopesoftware.betpals.domain.Activity" table="activities">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="ownerId"/>    
+        <property name="ownerName"/>    
+        <property name="created"/>
+        <property name="message"/>    
+        <property name="activityType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">se.telescopesoftware.betpals.domain.ActivityType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+    </class>    
+    <class name="se.telescopesoftware.betpals.domain.ActivityComment" table="activities_comments">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="activityId"/>    
+        <property name="ownerId"/>    
+        <property name="ownerName"/>    
+        <property name="created"/>
+        <property name="message"/>    
+    </class>
+
+    <class name="se.telescopesoftware.betpals.domain.ActivityLike" table="activities_likes">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="activityId"/>    
+        <property name="ownerId"/>    
+        <property name="ownerName"/>    
+        <property name="created"/>
+    </class>
 
 </hibernate-mapping>

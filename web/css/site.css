@@ -287,6 +287,12 @@ p {
     background: #ffffff;
 }
 
+#activitiesList {
+    list-style-type: none;
+    padding-left: 0px;
+
+}
+
 #searchButton {
     height: 26px;
     width: 29px;

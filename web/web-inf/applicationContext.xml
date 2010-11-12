@@ -86,11 +86,17 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
     <bean id="userRepository" class="se.telescopesoftware.betpals.repository.HibernateUserRepositoryImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+    <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
     <!-- ================================================================= -->
 
     <!-- Services =========================================================== -->
     <bean id="userDetailsService" class="se.telescopesoftware.betpals.services.UserServiceImpl">
         <property name="userRepository" ref="userRepository"/>
+    </bean>
+    <bean id="activityService" class="se.telescopesoftware.betpals.services.ActivityServiceImpl">
+        <property name="activityRepository" ref="activityRepository"/>
     </bean>
     <!-- ================================================================= -->
 
