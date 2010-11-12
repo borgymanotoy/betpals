@@ -22,7 +22,7 @@ import java.util.Set;
 public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements UserRepository {
 
     public User loadUserByUsername(String username) {
-        List list = getHibernateTemplate().find("from User usr where usr.username = ?", username);
+        List<User> list = getHibernateTemplate().find("from User usr where usr.username = ?", username);
         if (list == null || list.isEmpty()) {
             throw new UsernameNotFoundException("No user found.");
         }
@@ -33,7 +33,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     }
 
     public User loadUserByEmail(String email) {
-        List list = getHibernateTemplate().find("from UserProfile up where up.email = ?", email);
+        List<UserProfile> list = getHibernateTemplate().find("from UserProfile up where up.email = ?", email);
         if (list == null || list.isEmpty()) {
             throw new UsernameNotFoundException("No user found.");
         }
@@ -49,7 +49,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     }
 
     public boolean isUsernameExists(String username) {
-        List list = getHibernateTemplate().find("from User usr where usr.username = ?", username);
+        List<User> list = getHibernateTemplate().find("from User usr where usr.username = ?", username);
         if (list == null || list.isEmpty()) {
             return false;
         }
@@ -57,7 +57,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     }
 
     private UserProfile loadUserProfile(Long userId) {
-        List list = getHibernateTemplate().find("from UserProfile profile where profile.userId = ?", userId);
+        List<UserProfile> list = getHibernateTemplate().find("from UserProfile profile where profile.userId = ?", userId);
         if (list.isEmpty()) {
             UserProfile userProfile = new UserProfile();
             return userProfile;
@@ -68,11 +68,10 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 
     private void storeUserRoles(User user) {
     	deleteUserRoles(user);
-        Set roles = user.getRoles();
+        Set<String> roles = user.getRoles();
         String username = user.getUsername();
         Long userId = user.getId();
-        for (Iterator iterator = roles.iterator(); iterator.hasNext();) {
-            String role = (String) iterator.next();
+        for (String role : roles) {
             Authority authority = new Authority();
             authority.setAuthority(role);
             authority.setUserId(userId);
@@ -81,11 +80,10 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         }
     }
 
-    private Collection loadUserRoles(Long userId) {
-        List list = getHibernateTemplate().find("from Authority auth where auth.userId = ?", userId);
-        List roles = new ArrayList();
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-            Authority authority = (Authority) iterator.next();
+    private Collection<String> loadUserRoles(Long userId) {
+        List<Authority> list = getHibernateTemplate().find("from Authority auth where auth.userId = ?", userId);
+        List<String> roles = new ArrayList<String>();
+        for (Authority authority : list) {
             roles.add(authority.getAuthority());
         }
         return roles;
@@ -114,8 +112,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 
     public Collection<User> loadAllUsers(User user, Integer lastLog, Integer lastReg) {
         List<User> list = getHibernateTemplate().find("from User u where u.id != ? and u.id != 0 order by username", user.getId());
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-            User loadedUser = (User) iterator.next();
+        for (User loadedUser : list) {
             Long userId = loadedUser.getId();
             UserProfile userProfile = loadUserProfile(userId);
             loadedUser.setUserProfile(userProfile);
@@ -133,8 +130,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     private List<User> filterUsersByRegistrationDate(Collection<User> userList, Integer period) {
         List<User> filteredList = new ArrayList<User>();
         Date date = getFromDateForPeriod(period);
-        for (Iterator iterator = userList.iterator(); iterator.hasNext();) {
-            User user = (User) iterator.next();
+        for (User user : userList) {
             Date registrationDate = user.getUserProfile().getRegistrationDate();
             if (registrationDate == null) {
                 continue;
@@ -158,8 +154,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         List<User> filteredList = new ArrayList<User>();
         Date date = getFromDateForPeriod(period);
 
-        for (Iterator iterator = userList.iterator(); iterator.hasNext();) {
-            User user = (User) iterator.next();
+        for (User user : userList) {
             Date lastLoginDate = user.getUserProfile().getLastLoginDate();
             if (lastLoginDate == null) {
                 continue;
@@ -212,10 +207,6 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     	return DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from UserProfile up where up.userId > 9"));
     }
 
-    public Integer getWholesaleCount() {
-    	return DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from Authority a where a.authority = ?", "ROLE_WHOLESALE_USER"));
-    }
-    
     public Integer getRegistrationCountByPeriod(Integer period) {
     	return DataAccessUtils.intResult(getHibernateTemplate().find("select count(*) from UserProfile up where up.registrationDate >= ? AND up.userId > 9", getFromDateForPeriod(period)));
     }
@@ -264,9 +255,8 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         Query query = session.createQuery("from UserProfile up where lower(up.name) like :queryString OR lower(up.surname) like :queryString");
         query.setString("queryString", "%" + searchQuery.toLowerCase() + "%");
 
-        List list = query.list();
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-            UserProfile userProfile = (UserProfile) iterator.next();
+        List<UserProfile> list = query.list();
+        for (UserProfile userProfile : list) {
             User user = loadUserByUserId(userProfile.getUserId());
             result.add(user);
         }
@@ -282,9 +272,8 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         Query query = session.createQuery("from UserProfile up where lower(up.email) like :queryString");
         query.setString("queryString", "%" + searchQuery.toLowerCase() + "%");
 
-        List list = query.list();
-        for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-            UserProfile userProfile = (UserProfile) iterator.next();
+        List<UserProfile> list = query.list();
+        for (UserProfile userProfile : list) {
             User user = loadUserByUserId(userProfile.getUserId());
             result.add(user);
         }
