@@ -6,6 +6,6 @@
         <a href="javascript:changeBgColor('#67b116');"><img src='<c:url value="/i/c3.jpg"/>'/></a>
         <a href="javascript:changeBgColor('#297085');"><img src='<c:url value="/i/c4.jpg"/>'/></a>
     </div>
-    <div class="span-24 headerPane">
+    <div class="span-24 headerPane" onclick="goHome();">
     &nbsp;
     </div>

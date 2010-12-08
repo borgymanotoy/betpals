@@ -20,12 +20,15 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
        }
 
        jQuery(document).ready(function() {
-    	    jQuery("tr:even").addClass("even");
-    	    jQuery("tr:odd").addClass("odd");
+    	    jQuery("table.altRows tr:even").addClass("even");
+    	    jQuery("table.altRows tr:odd").addClass("odd");
 
     	    jQuery("#tabs").tabs();
-    	    
 	   });
+
+	   function goHome() {
+		    window.location = '<c:url value="/home.html"/>';
+	   }
     		          
     </script>
 </head>

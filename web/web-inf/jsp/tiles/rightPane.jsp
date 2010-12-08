@@ -7,19 +7,9 @@
     <div class="panelFooter">&nbsp;</div>
     <div class="greyTitle">Promotions</div>
     <div class="panel">
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
         &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
-        &nbsp;<br/>
+        <img src='<c:url value="/images/promotion/banner2.jpg"/>'/>
+        <img src='<c:url value="/images/promotion/banner1.gif"/>'/>
         &nbsp;<br/>
     </div>
     <div class="panelFooter">&nbsp;</div>

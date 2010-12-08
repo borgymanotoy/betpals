@@ -25,4 +25,19 @@
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/editProfile.jsp"/>
     </definition>
 
+<!-- Account definitions =========================================================== -->
+    <definition name="addAccountView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountAdd.jsp"/>
+    </definition>
+    <definition name="accountDetailsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountDetails.jsp"/>
+    </definition>
+    <definition name="accountDepositView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountDeposit.jsp"/>
+    </definition>
+    <definition name="accountWithdrawView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountWithdraw.jsp"/>
+    </definition>
+<!-- =============================================================================== -->    
+
 </tiles-definitions>

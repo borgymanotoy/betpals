@@ -2,12 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="/WEB-INF/app.properties"/>
-    </bean>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
@@ -18,7 +16,7 @@
     </bean>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="/WEB-INF/messages"/>
+        <property name="basename" value="/WEB-INF/messages/messages"/>
         <property name="useCodeAsDefaultMessage" value="true"/>
         <property name="cacheSeconds" value="1"/>
     </bean>
@@ -30,14 +28,21 @@
             </list>
         </property>
     </bean>
+
+    <util:properties id="buildProperties" location="classpath:betpals.properties"/>
+    
+    <util:map id="supportedCurrencies">
+        <entry key="default" value="FUN"/>
+        <entry key="EUR" value="EUR"/>
+        <entry key="SEK" value="SEK"/>
+        <entry key="USD" value="USD"/>
+        <entry key="GBP" value="GBP"/>
+    </util:map>
     
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="300000"/>
     </bean>
 
-    <bean id="appRoot" class="java.lang.String">
-        <constructor-arg type="java.lang.String" value="${betpals.root}" />
-    </bean>
     <context:component-scan base-package="se.telescopesoftware.betpals.web"/>
     
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
@@ -59,5 +64,24 @@
 	    <property name="facebookAccessTokenUrl" value="https://graph.facebook.com/oauth/access_token"/>
 	    <property name="facebookUserInfoUrl" value="https://graph.facebook.com/me"/>
     </bean>
+
+    <!-- Repositories ========================================================= -->
+    <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="accountRepository" class="se.telescopesoftware.betpals.repository.HibernateAccountRepositoryImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!-- ================================================================= -->
+
+    <!-- Services =========================================================== -->
+    <bean id="activityService" class="se.telescopesoftware.betpals.services.ActivityServiceImpl">
+        <property name="activityRepository" ref="activityRepository"/>
+    </bean>
+    <bean id="accountService" class="se.telescopesoftware.betpals.services.AccountServiceImpl">
+        <property name="accountRepository" ref="accountRepository"/>
+        <property name="supportedCurrenciesMap" ref="supportedCurrencies"/>
+    </bean>
+    <!-- ================================================================= -->
 
 </beans>

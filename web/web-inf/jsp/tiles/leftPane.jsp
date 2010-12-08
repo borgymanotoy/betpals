@@ -1,4 +1,11 @@
 <%@include file="includes.jsp"%>
+<script type="text/javascript">
+    function getAccountDetails(accountId) {
+        jQuery('input', '#accountDetailsForm').val(accountId);
+        jQuery('#accountDetailsForm').submit();
+    } 
+
+</script>
 <div id="leftPane" class="span-5">
     <div class="span-2 right">
         <c:url var="userPictureURL" value="/images/users/${user.userId}.jpg"/>
@@ -12,32 +19,32 @@
     </div>
     <div id="leftBlock" class="span-5">
         <div class="leftPaneInside"><img src='<c:url value="/i/separator.jpg"/>'/></div>
-	    <table id="accountInfoTable">
+        <form action='<c:url value="/accountdetails.html"/>' method="post" id="accountDetailsForm">
+            <input type="hidden" name="accountId" value=""/>
+        </form>
+	    <table id="accountInfoTable" class="palsTable altRows">
 	        <tr>
 	            <th></th>
 	            <th>Balance</th>
 	            <th>Available</th>
 	        </tr>
-	        <tr>
-	            <td class="currencyCell">EUR</td>
-	            <td>300</td>
-	            <td>240</td>
+	    <c:forEach items="${accounts}" var="account">
+	        <tr onclick="getAccountDetails(${account.id});">
+	            <td class="currencyCell">${account.currency}</td>
+	            <td>${account.balance}</td>
+	            <td>${account.available}</td>
 	        </tr>
-	        <tr>
-	            <td class="currencyCell">FUN</td>
-	            <td>500</td>
-	            <td>350</td>
-	        </tr>
+	    </c:forEach>    
 	    </table>
-	    <div class="leftPaneInside"><a class="greenDotLink" href='<c:url value="/editaccounts.html"/>'>Edit accounts</a></div>
+	    <div class="leftPaneInside"><a class="greenDotLink" href='<c:url value="/addaccount.html"/>'>Add account</a></div>
 	    <br/>
 	    <div class="orangeTitle">Invites and competitions</div>
 	    <div class="panelNoPadding">
 	        <ul id="invitesAndCompetitions">
-	           <li><a href='<c:url value="/activeinvites.html"/>'>Active invites</a> (0)</li>
-               <li><a href='<c:url value="/ongoingcompetitions.html"/>'>Ongoing competitions</a> (0)</li>
-               <li><a href='<c:url value="/managecompetitions.html"/>'>Manage competitions</a> (0)</li>
-               <li><a href='<c:url value="/searchcompetitions.html"/>'>Search public competitions</a></li>
+	           <li><a href='<c:url value="/home.html"/>'>Active invites</a> (0)</li>
+               <li><a href='<c:url value="/home.html"/>'>Ongoing competitions</a> (0)</li>
+               <li><a href='<c:url value="/home.html"/>'>Manage competitions</a> (0)</li>
+               <li><a href='<c:url value="/home.html"/>'>Search public competitions</a></li>
 	        </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

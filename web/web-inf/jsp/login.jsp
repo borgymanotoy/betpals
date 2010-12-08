@@ -21,6 +21,11 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     	    jQuery("html").css("backgroundColor", color);
     	    jQuery("body").css("backgroundColor", color);
        }
+
+       jQuery(document).ready(function() {
+           jQuery("#usernameField").focus();
+      });
+      
     </script>
 </head>
 <body>
@@ -37,12 +42,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <div class="span-12">&nbsp;</div>
         <div id="loginInput1" class="span-4">
             E-mail
-            <input type="text" name="j_username"/>
-            <input type="checkbox" name="_spring_security_remember_me"/> <span>Remember me</span>
+            <input id="usernameField" type="text" name="j_username" tabindex="1" />
+            <input type="checkbox" name="_spring_security_remember_me" tabindex="3"/> <span>Remember me</span>
         </div>
         <div id="loginInput2" class="span-4">
             Password
-            <input type="password" name="j_password"/>
+            <input type="password" name="j_password" tabindex="2"/>
             <a href="">Forgot your password?</a>
         </div>
         <div id="loginButtonPane" class="span-4 last">
