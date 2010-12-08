@@ -12,7 +12,8 @@ public class Authority {
         return id;
     }
 
-    private void setId(long id) {
+    @SuppressWarnings("unused")
+	private void setId(long id) {
         this.id = id;
     }
 

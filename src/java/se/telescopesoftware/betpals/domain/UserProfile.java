@@ -1,13 +1,16 @@
 package se.telescopesoftware.betpals.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class UserProfile {
+public class UserProfile implements Serializable {
 
-    private Long id;
+	private static final long serialVersionUID = 7328993013096806624L;
+
+	private Long id;
     private Long userId;
     private String name;
     private String surname;

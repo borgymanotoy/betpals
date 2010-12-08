@@ -64,7 +64,8 @@ public class User implements UserDetails {
         return username;
     }
 
-    private void setUsername(String username) {
+    @SuppressWarnings("unused")
+	private void setUsername(String username) {
         this.username = username;
     }
 
@@ -77,7 +78,7 @@ public class User implements UserDetails {
     }
 
     public Collection<GrantedAuthority> getAuthorities() {
-        Set grantedAuthorities = new HashSet();
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
         for (String role : roles) {
             grantedAuthorities.add(new GrantedAuthorityImpl(role));
         }
@@ -88,7 +89,8 @@ public class User implements UserDetails {
         return accountNonExpired;
     }
 
-    private void setAccountNonExpired(boolean accountNonExpired) {
+    @SuppressWarnings("unused")
+	private void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
@@ -96,7 +98,8 @@ public class User implements UserDetails {
         return accountNonLocked;
     }
 
-    private void setAccountNonLocked(boolean accountNonLocked) {
+    @SuppressWarnings("unused")
+	private void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
@@ -104,7 +107,8 @@ public class User implements UserDetails {
         return credentialsNonExpired;
     }
 
-    private void setCredentialsNonExpired(boolean credentialsNonExpired) {
+    @SuppressWarnings("unused")
+	private void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 

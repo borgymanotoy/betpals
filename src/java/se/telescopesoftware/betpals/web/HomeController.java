@@ -2,27 +2,27 @@ package se.telescopesoftware.betpals.web;
 
 import java.util.Collection;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
+import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.Activity;
-import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.UserService;
 
 
 @Controller
-@SessionAttributes({"user", "friendsSideList"})
-public class HomeController {
+public class HomeController extends AbstractPalsController {
 
     private UserService userService;
     private ActivityService activityService;
+    private AccountService accountService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -34,19 +34,22 @@ public class HomeController {
         this.activityService = activityService;
     }
     
+    @Autowired
+    public void setAccountService(AccountService accountService) {
+    	this.accountService = accountService;
+    }
+    
 
 	@RequestMapping("/home")
-	public String get(Model model) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	User user = (User) authentication.getPrincipal();
-    	UserProfile userProfile = user.getUserProfile();
-
-    	Collection<UserProfile> friends = userService.getUserFriends(user.getId());
-    	Collection<Activity> activities = activityService.getActivitiesForUserProfile(userProfile);
+	public String get(Model model, HttpSession session) {
+    	Collection<UserProfile> friends = userService.getUserFriends(getUserId());
+    	Collection<Activity> activities = activityService.getActivitiesForUserProfile(getUserProfile());
+    	Collection<Account> accounts = accountService.getUserAccounts(getUserId());
     	
-    	model.addAttribute("friendsSideList", friends);    	
+    	session.setAttribute("friendsSideList", friends);    	
+    	session.setAttribute("user", getUserProfile());
+    	session.setAttribute("accounts", accounts);
     	model.addAttribute("activitiesList", activities);    	
-		model.addAttribute("user", userProfile);
 		
 		return "userHomepageView";
 	}

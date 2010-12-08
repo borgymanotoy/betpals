@@ -3,6 +3,11 @@ package se.telescopesoftware.betpals.domain;
 import java.util.Collection;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
 public class Activity {
 
 	private Long id;
@@ -81,5 +86,28 @@ public class Activity {
 		this.likes = likes;
 	}
 	
+	public String getTimeSinceCreated() {
+		Period period = new Period(new DateTime(getCreated()), new DateTime());
+		PeriodFormatter formatter = new PeriodFormatterBuilder()
+	     .appendYears()
+	     .appendSuffix(" year", " years")
+	     .appendSeparator(" ")
+	     .appendMonths()
+	     .appendSuffix(" month", " months")
+	     .appendSeparator(" ")
+	     .appendDays()
+	     .appendSuffix(" day", " days")
+	     .appendSeparator(" ")
+	     .appendHours()
+	     .appendSuffix(" hour", " hours")
+	     .appendSeparator(" ")
+	     .printZeroAlways()
+	     .appendMinutes()
+	     .appendSuffix(" minute", " minutes")
+	     .appendSuffix(" ago")
+	     .toFormatter();
+
+		return formatter.print(period);
+	}
 	
 }

@@ -65,7 +65,7 @@ public class ActivitiesController {
     }
     
     @RequestMapping(value="/activitylike", method = RequestMethod.POST)
-    public String postLike(@RequestParam("message") String message, @RequestParam("activityId") Long activityId) {
+    public String postLike(@RequestParam("activityId") Long activityId) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	User user = (User) authentication.getPrincipal();
     	UserProfile userProfile = user.getUserProfile();
