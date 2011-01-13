@@ -24,7 +24,7 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
 	public Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds) {
     	List<Activity> result = new ArrayList<Activity>();
 		Session session = getSession();
-    	Query query = session.createQuery("from Activity a where a.ownerId in (:ownerIds)");
+    	Query query = session.createQuery("from Activity a where a.ownerId in (:ownerIds) order by a.created desc");
     	query.setParameterList("ownerIds", ownerIds);
     	result = query.list();
     	session.close();

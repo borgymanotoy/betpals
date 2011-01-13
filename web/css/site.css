@@ -142,6 +142,19 @@ p {
     padding-bottom: 2px;
     cursor: pointer;
 }
+.greenButton110 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    width: 110px;
+    background-color: #67b116;
+    border: 1px solid #a0cd70;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
 
 .addFriendButton {
     background-color: #ffffff;
@@ -235,7 +248,15 @@ p {
 }
 
 .contentDiv {
-    padding-top: 25px;
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #283126;
+	padding-top: 25px;
+    padding-left: 40px;
+    padding-right: 30px;
+}
+.headerContentDiv {
+    padding-top: 5px;
     padding-left: 40px;
     padding-right: 30px;
 }
@@ -783,27 +804,31 @@ tr.odd td {background-color: #e5e5e5;}
     padding-left: 3px;
     padding-right: 3px;
 }
-#quickCompetitionDiv input[type='submit']{
-    background-color: #67b116;
-    border: none;
-    color: #ffffff;
-    padding-left: 10px;
-    padding-right: 10px;
+#quickCompetitionButton {
+    background-color: #67b116 !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 #quickCompetitionDiv select {
-    height: 25px;
     -moz-border-radius: 3px 3px 3px 3px;
     border: 1px solid #B5B6B6;
     color: #242B21;
     font-family: Arial,sans-serif;
     font-size: 12px;
+    padding-top: 4px;
+    padding-bottom: 3px;
 }
 #quickCompetitionDiv a {
     color: #ffffff !important;
 }
 #quickCompetitionStake {
     width: 40px;
-    height: 22px;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 #quickCompetitionAlternative {
@@ -811,3 +836,116 @@ tr.odd td {background-color: #e5e5e5;}
     height: 44px;
 }
 
+#quickCompetitionDiv2 {
+    height: 121px;
+    background: transparent url("../i/quickCompDiv2.png") 0 0 no-repeat; 
+}
+#quickCompetitionDiv2 h2 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+    padding-left: 16px;
+    padding-top: 8px;
+    margin-bottom: 18px;
+}
+#quickCompetitionDiv2 span {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 13px;
+}
+#quickCompetitionDiv2 input {
+    -moz-border-radius: 3px 3px 3px 3px;
+    border:1px solid #B5B6B6;
+    color: #242B21;
+    font-family:Arial,sans-serif;
+    font-size: 14px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+#quickCompetitionDiv2 select {
+    -moz-border-radius: 3px 3px 3px 3px;
+    border: 1px solid #B5B6B6;
+    color: #242B21;
+    font-family: Arial,sans-serif;
+    font-size: 12px;
+    padding-top: 4px;
+    padding-bottom: 3px;
+}
+#quickCompetitionAlternative2 {
+    width: 285px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.formSectionDiv {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d0d0d0;
+}
+.formSectionDiv input[type=text] {
+    -moz-border-radius: 3px 3px 3px 3px;
+    border: 1px solid #B5B6B6;
+    height: 25px;
+    padding-left: 5px;
+}
+.formSectionDiv label {
+    font-weight: normal;
+    padding-left: 4px;
+}
+.formSectionDiv h6 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #626262;
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+}
+
+#competitionDescription {
+    height: 120px;
+    width: 465px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    border: 1px solid #B5B6B6;
+}
+
+.competitionDiv {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.invitationDiv {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 5px;
+}
+.invitationDiv h5 {
+    cursor: pointer;	
+}
+.selectionDiv115 {
+    height: 115px;
+    border-top: 1px solid #d0d0d0;	
+    border-bottom: 1px solid #d0d0d0;
+    overflow: auto;
+}
+.selectionList {
+    list-style: none;	
+    padding: 0px;
+    margin: 0px;
+}
+.detailTitle {
+    color: #61695f;	
+}
+.invViewDiv {
+    padding-top: 25px;
+}
+.invViewButtonDiv {
+    padding-top: 20px;
+}
+.inlineDiv {
+	display: inline-block;
+    vertical-align: top;	
+    padding-left: 20px;
+}
+.formInlineDiv {
+    display: inline-block;
+}

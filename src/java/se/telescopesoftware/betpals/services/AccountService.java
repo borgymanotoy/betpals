@@ -14,6 +14,8 @@ public interface AccountService {
 	
 	Account getAccount(Long accountId);
 	
+	Account getUserAccountForCurrency(Long userId, String currency);
+	
 	void saveAccount(Account account);
 	
 	void depositToAccount(Long accountId, BigDecimal amount);

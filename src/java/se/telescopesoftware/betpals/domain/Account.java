@@ -119,8 +119,12 @@ public class Account implements Serializable {
 	public void addTransaction(AccountTransaction transaction) {
 		//TODO: Check balance and available calculation
 		//TODO: Write test for balance and available calculation
-		this.balance = balance.add(transaction.getAmount());
-		this.available = available.add(transaction.getAmount());
+		if (transaction.getTransactionType() == AccountTransactionType.RESERVATION) {
+			this.available = available.subtract(transaction.getAmount());
+		} else {
+			this.balance = balance.add(transaction.getAmount());
+			this.available = available.add(transaction.getAmount());
+		}
 		this.transactions.add(transaction);
 	}
 	

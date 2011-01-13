@@ -14,6 +14,7 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
+import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.services.UserService;
 
 
@@ -23,6 +24,7 @@ public class HomeController extends AbstractPalsController {
     private UserService userService;
     private ActivityService activityService;
     private AccountService accountService;
+    private CompetitionService competitionService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -39,6 +41,10 @@ public class HomeController extends AbstractPalsController {
     	this.accountService = accountService;
     }
     
+    @Autowired
+    public void setCompetitionService(CompetitionService competitionService) {
+    	this.competitionService = competitionService;
+    }
 
 	@RequestMapping("/home")
 	public String get(Model model, HttpSession session) {
@@ -49,8 +55,11 @@ public class HomeController extends AbstractPalsController {
     	session.setAttribute("friendsSideList", friends);    	
     	session.setAttribute("user", getUserProfile());
     	session.setAttribute("accounts", accounts);
+    	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("myInvitationsCount", competitionService.getInvitationsForUserCount(getUserId()));
     	model.addAttribute("activitiesList", activities);    	
 		
 		return "userHomepageView";
 	}
+
 }

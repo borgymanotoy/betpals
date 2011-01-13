@@ -3,16 +3,19 @@
     <h2>Quick competition</h2>
     <c:choose>
     <c:when test="${not empty accounts}">
-        <form action='<c:url value="/quickcompetition.html"/>' method="post">
-	    <span style="padding-left: 16px;">I bet </span><input id="quickCompetitionStake" type="text" name="stake"/>
+        <form action='<c:url value="/quickcompetitionview.html"/>' method="post">
+	    <span style="padding-left: 16px;">I bet </span>
+	    <div class="formInlineDiv">
+	    <input id="quickCompetitionStake" type="text" name="stake"/>
 	    <select name="accountId">
 	    <c:forEach items="${accounts}" var="account">
 	        <option value="${account.id}">${account.currency}</option>
 	    </c:forEach>
 	    </select> 
+	    </div>
 	    <span>that </span> 
 	    <input id="quickCompetitionAlternative" type="text" name="alternative"/>
-	    <input type="submit" value="Next"/>
+	    <input type="submit" value="Next" id="quickCompetitionButton"/>
         </form>
     </c:when>
     <c:otherwise><span style="padding-left: 16px;">You need a valid <a href='<c:url value="/addaccount.html"/>'>account</a> to create competition. </span></c:otherwise>

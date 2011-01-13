@@ -11,4 +11,6 @@ public interface AccountRepository {
 	Account loadAccount(Long accountId);
 	
 	void storeAccount(Account account);
+	
+	Account loadUserAccountForCurrency(Long userId, String currency);
 }

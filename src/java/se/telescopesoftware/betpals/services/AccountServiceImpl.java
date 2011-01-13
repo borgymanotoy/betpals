@@ -52,4 +52,8 @@ public class AccountServiceImpl implements AccountService {
 		
 	}
 
+	public Account getUserAccountForCurrency(Long userId, String currency) {
+		return accountRepository.loadUserAccountForCurrency(userId, currency);
+	}
+
 }

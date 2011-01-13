@@ -13,19 +13,20 @@
         <put-attribute name="footer" value="/WEB-INF/jsp/tiles/footer.jsp"/>
     </definition>
 
-    <definition name="friendsAndGroupsView" extends="homeView">
-        <put-attribute name="content" value="/WEB-INF/jsp/tiles/friends.jsp"/>
-    </definition>
-
-    <definition name="friendsResultsView" extends="homeView">
-        <put-attribute name="content" value="/WEB-INF/jsp/tiles/friendsResults.jsp"/>
-    </definition>
-
     <definition name="editProfileView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/editProfile.jsp"/>
     </definition>
 
-<!-- Account definitions =========================================================== -->
+<!-- Friends and groups definitions ______________________________________________ -->
+    <definition name="friendsAndGroupsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/friends.jsp"/>
+    </definition>
+    <definition name="friendsResultsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/friendsResults.jsp"/>
+    </definition>
+<!-- ______________________________________________________________________________ -->
+
+<!-- Account definitions __________________________________________________________ -->
     <definition name="addAccountView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountAdd.jsp"/>
     </definition>
@@ -38,6 +39,26 @@
     <definition name="accountWithdrawView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountWithdraw.jsp"/>
     </definition>
-<!-- =============================================================================== -->    
+<!-- _______________________________________________________________________________ -->    
+
+<!-- Competition definitions _______________________________________________________ -->
+    <definition name="quickCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionQuick.jsp"/>
+    </definition>
+    <definition name="manageCompetitionsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionsManage.jsp"/>
+    </definition>
+<!-- _______________________________________________________________________________ -->
+
+<!-- Invitation definitions _______________________________________________________ -->
+    <definition name="activeInvitationsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationList.jsp"/>
+    </definition>
+    <definition name="invitationView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationView.jsp"/>
+    </definition>
+<!-- _______________________________________________________________________________ -->
+
+
 
 </tiles-definitions>

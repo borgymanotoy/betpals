@@ -50,7 +50,7 @@
                 <td>${transaction.transactionType}</td><!-- //TODO: change to message resource -->
                 <td>${transaction.description}</td>
                 <td>${transaction.amount}</td>
-                <td>${transaction.transactionDate}</td>
+                <td><fmt:formatDate value="${transaction.transactionDate}" pattern="yyyy-MM-dd HH:mm"/></td>
             </tr>
             </c:forEach>
         </table>
@@ -64,6 +64,14 @@
                 <th>Details</th>
                 <th>Placed</th>
             </tr>
+            <c:forEach items="${activeBets}" var="activeBet">
+            <tr>
+                <td>${activeBet.id}</td>
+                <td>${activeBet.stake}</td>
+                <td>${activeBet.details}</td>
+                <td><fmt:formatDate value="${activeBet.placed}" pattern="yyyy-MM-dd HH:mm"/></td>
+            </tr>
+            </c:forEach>
         </table>
         <p>&nbsp;</p>
     </div>

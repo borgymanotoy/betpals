@@ -19,7 +19,7 @@ import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.ActivityService;
 
 @Controller
-public class ActivitiesController {
+public class ActivitiesController extends AbstractPalsController {
 
     private ActivityService activityService;
 
@@ -30,13 +30,11 @@ public class ActivitiesController {
 
     @RequestMapping(value="/activities", method = RequestMethod.POST)
     public String post(@RequestParam("message") String message) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	User user = (User) authentication.getPrincipal();
-    	UserProfile userProfile = user.getUserProfile();
+    	UserProfile userProfile = getUserProfile();
     	
     	Activity activity = new Activity();
     	activity.setCreated(new Date());
-    	activity.setOwnerId(user.getId());
+    	activity.setOwnerId(getUserId());
     	activity.setOwnerName(userProfile.getFullName());
     	activity.setActivityType(ActivityType.MESSAGE);
     	activity.setMessage(message);
@@ -48,13 +46,11 @@ public class ActivitiesController {
 
     @RequestMapping(value="/activitycomment", method = RequestMethod.POST)
     public String postComment(@RequestParam("message") String message, @RequestParam("activityId") Long activityId) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	User user = (User) authentication.getPrincipal();
-    	UserProfile userProfile = user.getUserProfile();
+    	UserProfile userProfile = getUserProfile();
     	
     	ActivityComment comment = new ActivityComment();
     	comment.setCreated(new Date());
-    	comment.setOwnerId(user.getId());
+    	comment.setOwnerId(getUserId());
     	comment.setOwnerName(userProfile.getFullName());
     	comment.setMessage(message);
     	comment.setActivityId(activityId);
@@ -66,13 +62,11 @@ public class ActivitiesController {
     
     @RequestMapping(value="/activitylike", method = RequestMethod.POST)
     public String postLike(@RequestParam("activityId") Long activityId) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	User user = (User) authentication.getPrincipal();
-    	UserProfile userProfile = user.getUserProfile();
+    	UserProfile userProfile = getUserProfile();
     	
     	ActivityLike like = new ActivityLike();
     	like.setCreated(new Date());
-    	like.setOwnerId(user.getId());
+    	like.setOwnerId(getUserId());
     	like.setOwnerName(userProfile.getFullName());
     	like.setActivityId(activityId);
     	

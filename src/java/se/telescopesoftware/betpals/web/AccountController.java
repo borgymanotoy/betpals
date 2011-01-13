@@ -18,15 +18,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.services.AccountService;
+import se.telescopesoftware.betpals.services.CompetitionService;
 
 @Controller
 public class AccountController extends AbstractPalsController {
 
 	private AccountService accountService;
+	private CompetitionService competitionService;
 	
 	@Autowired
 	public void setAccountService(AccountService accountService) {
 		this.accountService = accountService;
+	}
+	
+	@Autowired
+	public void setCompetitionService(CompetitionService competitionService) {
+		this.competitionService = competitionService;
 	}
 	
 	@RequestMapping(value="/addaccount", method = RequestMethod.GET)	
@@ -61,8 +68,9 @@ public class AccountController extends AbstractPalsController {
     	Account account = accountService.getAccount(accountId);
     	logger.debug("Retrieved account for id " + accountId);
     	logger.debug("Account owner id " + account.getOwnerId());
-    	if (account.getOwnerId().equals(getUser().getId()) ) {
+    	if (account.getOwnerId().equals(getUserId()) ) {
     		model.addAttribute("account", account);
+    		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(getUserId(), accountId));
     	}
     	
 		return "accountDetailsView";

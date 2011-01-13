@@ -41,9 +41,9 @@
 	    <div class="orangeTitle">Invites and competitions</div>
 	    <div class="panelNoPadding">
 	        <ul id="invitesAndCompetitions">
-	           <li><a href='<c:url value="/home.html"/>'>Active invites</a> (0)</li>
+	           <li><a href='<c:url value="/invitations.html"/>'>Active invites</a> (${myInvitationsCount})</li>
                <li><a href='<c:url value="/home.html"/>'>Ongoing competitions</a> (0)</li>
-               <li><a href='<c:url value="/home.html"/>'>Manage competitions</a> (0)</li>
+               <li><a href='<c:url value="/managecompetitions.html"/>'>Manage competitions</a> (${myCompetitionsCount})</li>
                <li><a href='<c:url value="/home.html"/>'>Search public competitions</a></li>
 	        </ul>
 	    </div>

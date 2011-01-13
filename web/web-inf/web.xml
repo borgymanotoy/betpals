@@ -75,13 +75,12 @@
         <servlet-name>betpals</servlet-name>
         <url-pattern>*.html</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>betpals</servlet-name>
+        <url-pattern>*.jpeg</url-pattern>
+    </servlet-mapping>
     <error-page>
-            <exception-type>org.springframework.web.util.NestedServletException</exception-type>
-            <location>/index.html</location>
-    </error-page>
-    <error-page>
-            <error-code>404</error-code>
-            <location>/error404.html</location>
+            <location>/error.jsp</location>
     </error-page>
 
     <welcome-file-list>

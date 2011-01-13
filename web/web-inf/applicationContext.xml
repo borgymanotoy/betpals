@@ -39,6 +39,11 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 			<list>
 				<value>se.telescopesoftware.betpals.domain.Account</value>
 				<value>se.telescopesoftware.betpals.domain.AccountTransaction</value>
+				<value>se.telescopesoftware.betpals.domain.Competition</value>
+				<value>se.telescopesoftware.betpals.domain.Event</value>
+				<value>se.telescopesoftware.betpals.domain.Alternative</value>
+				<value>se.telescopesoftware.betpals.domain.Bet</value>
+				<value>se.telescopesoftware.betpals.domain.Invitation</value>
 			</list>
 		</property>
 		<property name="mappingResources">
@@ -76,6 +81,10 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/login.html"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/facebooklogin.html"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/favicon.ico"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/robots.txt"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		<security:form-login login-page='/login.html'
