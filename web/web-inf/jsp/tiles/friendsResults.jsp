@@ -6,7 +6,7 @@
         <button id="searchButton" onclick="document.search_form.submit();">&nbsp;</button>
     </form>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <h4>Friends</h4>
     <ul id="friendList">
     <c:forEach items="${friendsList}" var="friend">

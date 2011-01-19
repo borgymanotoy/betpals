@@ -21,10 +21,10 @@
 	    <form:input id="quickCompetitionAlternative2" path="name"/>
     </div>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <div class="formSectionDiv">
         Description<br/>
-        <form:textarea path="description" id="competitionDescription"/>
+        <form:textarea path="description" id="quickCompetitionDescription"/>
     </div>    
     <div class="formSectionDiv">
         <img class="userPic" src='<c:url value="/images/competitions/empty.jpg"/>'/>

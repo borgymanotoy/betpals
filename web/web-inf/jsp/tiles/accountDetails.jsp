@@ -2,7 +2,7 @@
 <div>
     <h2 class="dark">Account details (${account.currency})</h2>
 </div>
-<div id="tabs">
+<div id="tabs" class="rbDiv">
     <div class="contentDiv">
         <h4>${account.currency} account</h4>
         <table id="accountDetailsTable" class="palsTable">

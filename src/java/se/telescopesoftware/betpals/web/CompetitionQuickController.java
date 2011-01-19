@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import se.telescopesoftware.betpals.domain.Account;
+import se.telescopesoftware.betpals.domain.Activity;
+import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
+import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.utils.ThumbnailUtil;
 
@@ -36,11 +39,17 @@ public class CompetitionQuickController extends AbstractPalsController {
 	
 	private CompetitionService competitionService;
 	private AccountService accountService;
+	private ActivityService activityService;
     private String appRoot;
 
     private static Logger logger = Logger.getLogger(CompetitionQuickController.class);
 
     
+    @Autowired
+    public void setActivityService(ActivityService activityService) {
+        this.activityService = activityService;
+    }
+
 	@Autowired
 	public void setCompetitionService(CompetitionService competitionService) {
 		this.competitionService = competitionService;
@@ -84,6 +93,7 @@ public class CompetitionQuickController extends AbstractPalsController {
     	
     	Bet bet = new Bet();
     	bet.setOwnerId(getUserId());
+    	bet.setOwnerName(getUserProfile().getFullName());
     	bet.setAccountId(quickCompetition.getAccountId());
     	bet.setStake(quickCompetition.getStake());
     	bet.setDetails(quickCompetition.getName());
@@ -96,6 +106,16 @@ public class CompetitionQuickController extends AbstractPalsController {
     	} else {
     		competitionService.sendInvitationsToFriends(competition, quickCompetition.getFriendsIdSet(), getUserProfile());
     	}
+    	
+    	Activity activity = new Activity();
+    	activity.setCreated(new Date());
+    	activity.setOwnerId(getUserId());
+    	activity.setOwnerName(getUserProfile().getFullName());
+    	activity.setActivityType(ActivityType.MESSAGE);
+    	activity.setMessage("Created new competition: " + competition.getName());
+    	
+    	activityService.addActivity(activity);
+
     	
     	//TODO: Implement group invitation
     	quickCompetition.getGroupIdSet();

@@ -27,7 +27,7 @@
         <input type="text" name="message" value="What's on your mind?" onfocus="this.value=''"/>
     </form>
 </div>
-<div class="ui-widget-content ui-corner-all">
+<div class="rbDiv">
     <ul id="activitiesList">
     <c:forEach items="${activitiesList}" var="activity">
         <li>

@@ -2,7 +2,7 @@
 <div>
     <h2 class="dark">Place bet</h2>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <div class="formSectionDiv">
         <img src='<c:url value="/i/ex.png"/>' style="vertical-align: bottom;"/>&nbsp;
         <a href="#">${invitation.ownerName}</a> wants you to join this competition.<br/>

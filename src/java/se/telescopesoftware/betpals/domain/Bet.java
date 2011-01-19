@@ -26,6 +26,7 @@ public class Bet {
 	private Date placed;
 	private Date settled;
 	private BigDecimal profitOrLoss;
+	private String ownerName;
 	
 	
 	public Long getId() {
@@ -115,6 +116,14 @@ public class Bet {
 
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
 	}
 
 	

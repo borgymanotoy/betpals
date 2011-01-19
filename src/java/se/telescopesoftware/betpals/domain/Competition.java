@@ -1,8 +1,11 @@
 package se.telescopesoftware.betpals.domain;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +20,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Entity
@@ -27,14 +35,18 @@ public class Competition {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private Long ownerId;
+	private Long accountId;
 	@Enumerated(EnumType.STRING)
 	private CompetitionType competitionType;
 	@Enumerated(EnumType.STRING)
 	private AccessType accessType;
+	@NotNull
 	private String name;
 	private String description;
 	private Date created;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date deadline;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date settlingDeadline;
 	private String currency;
 	private BigDecimal fixedStake;
@@ -48,6 +60,11 @@ public class Competition {
     )
 	private Set<Event> events = new HashSet<Event>();
 
+
+	@Transient
+	private MultipartFile imageFile;
+	@Transient
+	private boolean goToNextStep;
 	
 	public Competition() {
 	}
@@ -106,7 +123,7 @@ public class Competition {
 	}
 
 	@SuppressWarnings("unused")
-	private void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -171,6 +188,99 @@ public class Competition {
 			}
 		}
 		return null;
+	}
+	
+	public Alternative getAlternativeById(Long alternativeId) {
+		for (Event event : events) {
+			for (Alternative alternative : event.getAlternatives()) {
+				if (alternative.getId().compareTo(alternativeId) == 0) {
+					return alternative;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public List<Alternative> getAllAlternatives() {
+		List<Alternative> result = new ArrayList<Alternative>();
+		for (Event event : events) {
+			result.addAll(event.getAlternatives());
+		}
+		
+		return result;
+	}
+	
+	public int getNumberOfParticipants() {
+		int result = 0;
+		for ( Alternative alternative : getAllAlternatives() ) {
+			result += alternative.getBets().size();
+		}
+		return result; 
+	}
+	
+	public BigDecimal getTurnover() {
+		BigDecimal result = BigDecimal.ZERO;
+		for ( Alternative alternative : getAllAlternatives() ) {
+			for ( Bet bet : alternative.getBets() ) {
+				result = result.add(bet.getStake());
+			}
+		}
+		return result; 
+	}
+	
+	/**
+	 * Find and return default event for competition, currently first (and only) event in list.
+	 * 
+	 */
+	public Event getDefaultEvent() {
+		Set<Event> events = getEvents();
+		if (events == null || events.isEmpty()) {
+			Event event = new Event(getName());
+			event.setCompetitionId(getId());
+			addEvent(event);
+		}
+		return getEvents().iterator().next();
+	}
+	
+	public boolean isPublic() {
+		return getAccessType() == AccessType.PUBLIC;
+	}
+	
+	public void setPublic(boolean bool) {
+		setAccessType(bool ? AccessType.PUBLIC : AccessType.PRIVATE);
+	}
+
+	public Long getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
+
+	public MultipartFile getImageFile() {
+		return imageFile;
+	}
+
+	public void setImageFile(MultipartFile imageFile) {
+		this.imageFile = imageFile;
+	}
+
+	public boolean isGoToNextStep() {
+		return goToNextStep;
+	}
+
+	public void setGoToNextStep(boolean goToNextStep) {
+		this.goToNextStep = goToNextStep;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer("Competition: ");
+		sb.append(this.id);
+		sb.append(" ");
+		sb.append(this.name);
+		return sb.toString();
 	}
 	
 }

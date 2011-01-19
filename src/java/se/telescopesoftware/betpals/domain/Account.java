@@ -120,7 +120,7 @@ public class Account implements Serializable {
 		//TODO: Check balance and available calculation
 		//TODO: Write test for balance and available calculation
 		if (transaction.getTransactionType() == AccountTransactionType.RESERVATION) {
-			this.available = available.subtract(transaction.getAmount());
+			this.available = available.add(transaction.getAmount());
 		} else {
 			this.balance = balance.add(transaction.getAmount());
 			this.available = available.add(transaction.getAmount());

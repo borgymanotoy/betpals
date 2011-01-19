@@ -10,8 +10,10 @@ import org.hibernate.Session;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 
 public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
@@ -24,7 +26,7 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 	public Collection<Competition> loadActiveCompetitionsByUser(Long userId) {
 		List<Competition> result = new ArrayList<Competition>();
 		Session session = getSession();
-    	Query query = session.createQuery("from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate");
+    	Query query = session.createQuery("from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate order by c.created desc");
     	query.setDate("currentDate", new Date());
     	query.setLong("ownerId", userId);
     	result = query.list();
@@ -76,6 +78,30 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 
 	public void deleteInvitation(Invitation invitation) {
 		getHibernateTemplate().delete(invitation);
+	}
+
+	public Event loadEventById(Long id) {
+		return getHibernateTemplate().get(Event.class, id);
+	}
+
+	public Alternative storeAlternative(Alternative alternative) {
+		return getHibernateTemplate().merge(alternative);
+	}
+
+	public Event storeEvent(Event event) {
+		return getHibernateTemplate().merge(event);
+	}
+
+	public void deleteCompetition(Competition competition) {
+		getHibernateTemplate().delete(competition);
+	}
+
+	public Collection<Bet> loadActiveBetsBySelectionId(Long selectionId) {
+		return getHibernateTemplate().findByNamedParam("from Bet b where b.selectionId = :selectionId", "selectionId", selectionId);
+	}
+
+	public void deleteBet(Bet bet) {
+		getHibernateTemplate().delete(bet);
 	}
 
 }

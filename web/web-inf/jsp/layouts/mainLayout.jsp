@@ -5,14 +5,15 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title>betPals</title>
-    <link rel="stylesheet" href='<c:url value="/css/ui-lightness/jquery-ui-1.8.6.custom.css"/>' type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/screen.css"/>' type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/print.css"/>' type="text/css" media="print"/>
     <!--[if IE]><link rel="stylesheet" href='<c:url value="/css/blueprint/ie.css"/>' type="text/css" media="screen, projection"/><![endif]-->
+    <link rel="stylesheet" href='<c:url value="/css/custom-theme/jquery-ui-1.8.8.custom.css"/>' type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href='<c:url value="/css/site.css"/>' type="text/css" media="screen, projection"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <script type="text/javascript" src='<c:url value="/js/jquery-1.4.3.min.js"/>'></script>
-    <script type="text/javascript" src='<c:url value="/js/jquery-ui-1.8.6.custom.min.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/jquery-1.4.4.min.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/jquery-ui-1.8.8.custom.min.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/jquery-ui-timepicker-addon.js"/>'></script>
     <script type="text/javascript">
        function changeBgColor(color) {
             jQuery("html").css("backgroundColor", color);

@@ -2,7 +2,7 @@
 <div>
     <h2 class="dark">Edit user profile</h2>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <c:url var="editProfileURL" value="/editprofile.html"/>
             <form:form commandName="userProfile" action="${editProfileURL}" method="post" enctype="multipart/form-data">
             <form:hidden path="userId"/>

@@ -22,9 +22,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     	    jQuery("body").css("backgroundColor", color);
        }
 
+       function facebookLogin() {
+    	   window.location = '<c:url value="/facebooklogin.html"/>';
+       } 
+
        jQuery(document).ready(function() {
            jQuery("#usernameField").focus();
-      });
+       });
       
     </script>
 </head>
@@ -51,8 +55,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <a href="">Forgot your password?</a>
         </div>
         <div id="loginButtonPane" class="span-4 last">
-            <button class="buttonG" onclick="document.login_form.submit();">Login</button><br/>
-            <button class="buttonB" onclick="window.location = '<c:url value="/facebooklogin.html"/>'">Facebook login</button>
+            <input type="submit" id="loginButton" value="Login"/><br/>
+            <button id="facebookLink" onclick="facebookLogin();return false;">Facebook login</button>
         </div>
         </form>
     </div>
@@ -78,10 +82,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <div class="span-9 last"><input type="submit" id="registerButton" value="Register and login"/></div>
             <div class="span-4">&nbsp;</div>
             </form>
-            <div class="span-9 last"><img src='<c:url value="/i/facebook.jpg"/>'/>&nbsp;<a href='<c:url value="/facebooklogin.html"/>'>Facebook login</a></div>
+            <div class="span-9 last">&nbsp;</div>
         </div>
     </div>
     <div class="span-24" id="bottom">&nbsp;</div>
 </div>
+<form action='<c:url value="/facebooklogin.html"/>' method="get" id="facebookLoginForm">
+</form>
+
 </body>
 </html>

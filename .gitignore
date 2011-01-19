@@ -1,2 +1,7 @@
 /dist
 /incoming
+/.metadata
+/.settings
+.project
+.classpath
+/bin

@@ -9,20 +9,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.telescopesoftware.betpals.domain.Activity;
+import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.Invitation;
+import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 
 @Controller
 public class InvitationController extends AbstractPalsController {
 
 	private CompetitionService competitionService;
+	private ActivityService activityService;
+
 	
 	@Autowired
 	public void setCompetitionService(CompetitionService competitionService) {
 		this.competitionService = competitionService;
 	}
+	
+    @Autowired
+    public void setActivityService(ActivityService activityService) {
+        this.activityService = activityService;
+    }
 	
 	@RequestMapping(value="/invitations", method = RequestMethod.GET)
 	public String showActiveInvitations(Model model) {
@@ -55,6 +65,15 @@ public class InvitationController extends AbstractPalsController {
     	bet.setPlaced(new Date());
     	competitionService.placeBet(bet);
     	competitionService.deleteInvitation(invitationId);
+    	
+    	Activity activity = new Activity();
+    	activity.setCreated(new Date());
+    	activity.setOwnerId(getUserId());
+    	activity.setOwnerName(getUserProfile().getFullName());
+    	activity.setActivityType(ActivityType.MESSAGE);
+    	activity.setMessage("Joined the competition: " + competition.getName());
+    	
+    	activityService.addActivity(activity);
 
 		return "userHomepageAction";
 	}

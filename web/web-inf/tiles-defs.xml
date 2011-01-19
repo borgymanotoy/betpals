@@ -48,6 +48,21 @@
     <definition name="manageCompetitionsView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionsManage.jsp"/>
     </definition>
+    <definition name="manageCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionManage.jsp"/>
+    </definition>
+    <definition name="createCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionCreate.jsp"/>
+    </definition>
+    <definition name="createAlternativeView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionAlternatives.jsp"/>
+    </definition>
+    <definition name="confirmCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionConfirm.jsp"/>
+    </definition>
+    <definition name="inviteToCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionInvite.jsp"/>
+    </definition>
 <!-- _______________________________________________________________________________ -->
 
 <!-- Invitation definitions _______________________________________________________ -->

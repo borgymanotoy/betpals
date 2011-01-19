@@ -8,7 +8,7 @@
 <div>
     <h2 class="dark">Active invites</h2>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <h4>Active invites</h4>
     <ul id="friendList">
     <c:forEach items="${invitationList}" var="invitation">
@@ -19,7 +19,7 @@
 	            </div>
 	            <div class="span-10 last invitationDiv">
                     <h5 onclick="getInvitationDetails(${invitation.id});">${invitation.competitionName}</h5>
-                    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${invitation.deadline}" pattern="yyyy-MM-dd"/><br/>
+                    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${invitation.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
                     <span class="detailTitle">Owner: </span><a href="#">${invitation.ownerName}</a>
 	            </div>
 	        </div>

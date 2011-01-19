@@ -33,6 +33,7 @@
         </property>
     </bean>
 
+
     <util:properties id="buildProperties" location="classpath:betpals.properties"/>
     
     <util:map id="supportedCurrencies">

@@ -2,7 +2,7 @@
 <div>
     <h2 class="dark">Account</h2>
 </div>
-<div class="ui-widget-content ui-corner-all contentDiv">
+<div class="rbDiv contentDiv">
     <h4>Add new account</h4>
     <p>Here you can create new account in selected currency. And probably more descriptive text should be added here also.</p>
     <c:choose>
