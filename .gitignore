@@ -2,6 +2,6 @@
 /incoming
 /.metadata
 /.settings
-.project
 .classpath
 /bin
+/web/images
