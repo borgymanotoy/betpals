@@ -44,6 +44,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 				<value>se.telescopesoftware.betpals.domain.Alternative</value>
 				<value>se.telescopesoftware.betpals.domain.Bet</value>
 				<value>se.telescopesoftware.betpals.domain.Invitation</value>
+				<value>se.telescopesoftware.betpals.domain.UserRequest</value>
 			</list>
 		</property>
 		<property name="mappingResources">

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import se.telescopesoftware.betpals.domain.Country;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.UserService;
 import se.telescopesoftware.betpals.utils.ThumbnailUtil;
@@ -43,6 +44,7 @@ public class EditUserProfileController extends AbstractPalsController {
     @RequestMapping(value="/editprofile", method = RequestMethod.GET)
     protected String formBackingObject(ModelMap model) {
     	model.addAttribute("userProfile", getUserProfile());
+    	model.addAttribute("countryList", Country.values());
         return "editProfileView";
     }
 
@@ -58,6 +60,11 @@ public class EditUserProfileController extends AbstractPalsController {
     	
     	userProfile.setName(updatedUserProfile.getName());
     	userProfile.setSurname(updatedUserProfile.getSurname());
+    	userProfile.setAddress(updatedUserProfile.getAddress());
+    	userProfile.setBio(updatedUserProfile.getBio());
+    	userProfile.setCity(updatedUserProfile.getCity());
+    	userProfile.setCountry(updatedUserProfile.getCountry());
+    	userProfile.setPostalCode(updatedUserProfile.getPostalCode());
     	
         userService.updateUserProfile(userProfile);
         

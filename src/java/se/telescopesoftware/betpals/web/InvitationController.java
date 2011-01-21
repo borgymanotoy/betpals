@@ -1,5 +1,6 @@
 package se.telescopesoftware.betpals.web;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Invitation;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
@@ -51,15 +53,20 @@ public class InvitationController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/placebet", method = RequestMethod.POST)
-	public String placeBet(@RequestParam("invitationId") Long invitationId, @RequestParam("alternativeId") Long alternativeId, Model model) {
+	public String placeBet(@RequestParam("invitationId") Long invitationId, @RequestParam("alternativeId") Long alternativeId, @RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
 		
 		Invitation invitation = competitionService.getInvitationById(invitationId);
 		Competition competition = competitionService.getCompetitionById(invitation.getCompetitionId());
 
     	Bet bet = new Bet();
     	bet.setOwnerId(getUserId());
+    	bet.setOwnerName(getUserProfile().getFullName());
     	bet.setCurrency(competition.getCurrency());
-    	bet.setStake(competition.getFixedStake());
+    	if (competition.getCompetitionType() == CompetitionType.POOL_BETTING) {
+    		bet.setStake(stake); //TODO: add validation
+    	} else {
+    		bet.setStake(competition.getFixedStake());
+    	}
     	bet.setDetails(competition.getName());
     	bet.setSelectionId(alternativeId);
     	bet.setPlaced(new Date());

@@ -2,7 +2,6 @@ package se.telescopesoftware.betpals.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -40,6 +40,8 @@ public class Competition {
 	private CompetitionType competitionType;
 	@Enumerated(EnumType.STRING)
 	private AccessType accessType;
+	@Enumerated(EnumType.STRING)
+	private CompetitionStatus status;
 	@NotNull
 	private String name;
 	private String description;
@@ -60,7 +62,10 @@ public class Competition {
     )
 	private Set<Event> events = new HashSet<Event>();
 
-
+	@OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name="ownerId", insertable=false, updatable=false, referencedColumnName="userid")	
+    private UserProfile owner;
+	
 	@Transient
 	private MultipartFile imageFile;
 	@Transient
@@ -221,9 +226,7 @@ public class Competition {
 	public BigDecimal getTurnover() {
 		BigDecimal result = BigDecimal.ZERO;
 		for ( Alternative alternative : getAllAlternatives() ) {
-			for ( Bet bet : alternative.getBets() ) {
-				result = result.add(bet.getStake());
-			}
+			result = result.add(alternative.getTurnover());
 		}
 		return result; 
 	}
@@ -281,6 +284,22 @@ public class Competition {
 		sb.append(" ");
 		sb.append(this.name);
 		return sb.toString();
+	}
+
+	public UserProfile getOwner() {
+		return owner;
+	}
+
+	public void setOwner(UserProfile owner) {
+		this.owner = owner;
+	}
+
+	public CompetitionStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(CompetitionStatus status) {
+		this.status = status;
 	}
 	
 }

@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,6 +35,12 @@ public class Event {
     )
 	private Set<Alternative> alternatives = new HashSet<Alternative>();
 
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinTable(name="join_competition_event",
+        joinColumns = @JoinColumn(name="event_id"),
+        inverseJoinColumns = @JoinColumn(name="competition_id")
+    )
+	private Competition competition;
 	
 	public Event() {
 	}
@@ -85,6 +92,14 @@ public class Event {
 
 	public void setCompetitionId(Long competitionId) {
 		this.competitionId = competitionId;
+	}
+
+	public Competition getCompetition() {
+		return competition;
+	}
+
+	public void setCompetition(Competition competition) {
+		this.competition = competition;
 	}
 	
 	

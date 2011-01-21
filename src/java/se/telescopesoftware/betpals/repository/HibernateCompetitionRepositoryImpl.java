@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 
@@ -26,9 +27,10 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 	public Collection<Competition> loadActiveCompetitionsByUser(Long userId) {
 		List<Competition> result = new ArrayList<Competition>();
 		Session session = getSession();
-    	Query query = session.createQuery("from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate order by c.created desc");
+    	Query query = session.createQuery("from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate and c.status != :status order by c.created desc");
     	query.setDate("currentDate", new Date());
     	query.setLong("ownerId", userId);
+    	query.setString("status", CompetitionStatus.SETTLED.toString());
     	result = query.list();
     	session.close();
 
@@ -37,9 +39,9 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 	
 	public Integer getActiveCompetitionsByUserCount(Long userId) {
 		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam(
-				"select count(*) from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate", 
-				new String[] {"ownerId", "currentDate"}, 
-				new Object[] {userId, new Date()}));
+				"select count(*) from Competition c where c.ownerId = :ownerId and c.deadline >= :currentDate and c.status != :status", 
+				new String[] {"ownerId", "currentDate", "status"}, 
+				new Object[] {userId, new Date(), CompetitionStatus.SETTLED}));
 	}
 
 	public void storeBet(Bet bet) {
@@ -102,6 +104,25 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 
 	public void deleteBet(Bet bet) {
 		getHibernateTemplate().delete(bet);
+	}
+
+	public Alternative loadAlternativeById(Long id) {
+		return getHibernateTemplate().get(Alternative.class, id);
+	}
+
+	public void deleteInvitationsByCompetitionId(Long competitionId) {
+		Collection<Invitation> invitations = getHibernateTemplate().findByNamedParam("from Invitation i where i.competitionId = :competitionId", "competitionId", competitionId);
+		for (Invitation invitation : invitations) {
+			deleteInvitation(invitation);
+		}
+	}
+
+	public Integer getTotalUserCompetitionsCount(Long userId) {
+		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from Competition c where c.ownerId = :userId", "userId", userId));
+	}
+
+	public Integer getTotalUserBetsCount(Long userId) {
+		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from Bet b where b.ownerId = :userId", "userId", userId));
 	}
 
 }

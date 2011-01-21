@@ -16,6 +16,12 @@
     <definition name="editProfileView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/editProfile.jsp"/>
     </definition>
+    <definition name="userProfileView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/userProfile.jsp"/>
+    </definition>
+    <definition name="userRequestsListView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/userRequestList.jsp"/>
+    </definition>
 
 <!-- Friends and groups definitions ______________________________________________ -->
     <definition name="friendsAndGroupsView" extends="homeView">
@@ -62,6 +68,12 @@
     </definition>
     <definition name="inviteToCompetitionView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionInvite.jsp"/>
+    </definition>
+    <definition name="ongoingCompetitionsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionOngoingList.jsp"/>
+    </definition>
+    <definition name="ongoingCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionOngoing.jsp"/>
     </definition>
 <!-- _______________________________________________________________________________ -->
 

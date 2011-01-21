@@ -5,7 +5,7 @@
 <div class="rbDiv contentDiv">
     <div class="formSectionDiv">
         <img src='<c:url value="/i/ex.png"/>' style="vertical-align: bottom;"/>&nbsp;
-        <a href="#">${invitation.ownerName}</a> wants you to join this competition.<br/>
+        <a href='<c:url value="/viewprofile/${invitation.ownerId}.html"/>'>${invitation.ownerName}</a> wants you to join this competition.<br/>
     </div>
     <div class="formSectionDiv">
 	    <img class="userPic" src='<c:url value="/competition/images/${invitation.competitionId}.jpeg"/>'/>
@@ -14,8 +14,8 @@
 	       ${competition.description}<br/>
 	    </div>
 	    <div style="padding-top: 10px;">
-		    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd"/><br/>
-		    <span class="detailTitle">Resolved: </span><fmt:formatDate value="${competition.settlingDeadline}" pattern="yyyy-MM-dd"/><br/>
+		    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
+		    <span class="detailTitle">Resolved: </span><fmt:formatDate value="${competition.settlingDeadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
 	    </div>
     </div>
     
@@ -28,26 +28,33 @@
                     <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
                 </div>
                 <div class="span-5 invViewDiv">
-                    ${alternative.name}
+                    ${alternative.name}<br/>
+                    <span class="detailTitle">${alternative.turnover} ${competition.currency} on this alternative.</span>
                 </div>
-                <div class="span-2 invViewDiv">
-		            ${competition.fixedStake} ${competition.currency}
-		        </div>
-		        <div class="span-3 last invViewButtonDiv">
 		        <c:choose>
 		          <c:when test="${alternative.taken}">
-		              Already taken by<br/>
-		              <a href="#">${invitation.ownerName}</a>
+	                <div class="span-5 last invViewDiv right">
+			              Already taken by <br/><a href='<c:url value="/viewprofile/${alternative.participantId}.html"/>'>${alternative.participantName}</a>
+	                </div>
 		          </c:when>
 		          <c:otherwise>
 		            <form action='<c:url value="/placebet.html"/>' method="post">
+                    <div class="span-5 last invViewButtonDiv right">
+                        <c:choose>
+                        <c:when test="${competition.competitionType == 'POOL_BETTING'}">
+                            <input type="text" id="myStake" size="3" name="stake"/> ${competition.currency}&nbsp;
+                        </c:when>
+                        <c:otherwise>
+                            ${competition.fixedStake} ${competition.currency}&nbsp;
+                        </c:otherwise>
+                        </c:choose>
 		                <input type="hidden" name="invitationId" value="${invitation.id}"/>
 		                <input type="hidden" name="alternativeId" value="${alternative.id}"/>
-		                <input type="submit" class="greenButton110" value="Place bet"/>
+		                <input type="submit" class="greenButton90" value="Place bet"/>
+                    </div>
 		            </form>
 		          </c:otherwise>
 		        </c:choose>
-                </div>
             </div>
             </li>
         </c:forEach>

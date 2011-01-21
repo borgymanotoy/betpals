@@ -31,8 +31,8 @@
 	    <c:forEach items="${accounts}" var="account">
 	        <tr onclick="getAccountDetails(${account.id});">
 	            <td class="currencyCell">${account.currency}</td>
-	            <td>${account.balance}</td>
-	            <td>${account.available}</td>
+	            <td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.balance}</fmt:formatNumber></td>
+	            <td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.available}</fmt:formatNumber></td>
 	        </tr>
 	    </c:forEach>    
 	    </table>
@@ -42,7 +42,7 @@
 	    <div class="panelNoPadding">
 	        <ul id="invitesAndCompetitions">
 	           <li><a href='<c:url value="/invitations.html"/>'>Active invites</a> (${myInvitationsCount})</li>
-               <li><a href='<c:url value="/home.html"/>'>Ongoing competitions</a> (0)</li>
+               <li><a href='<c:url value="/ongoingcompetitions.html"/>'>Ongoing competitions</a> (${myOngoingCompetitionsCount})</li>
                <li><a href='<c:url value="/managecompetitions.html"/>'>Manage competitions</a> (${myCompetitionsCount})</li>
                <li><a href='<c:url value="/home.html"/>'>Search public competitions</a></li>
 	        </ul>
@@ -52,6 +52,7 @@
 	    <div class="panel">
 	        &nbsp;<br/>
 	        <a class="greenDotLink" href='<c:url value="/allfriends.html"/>'>All friends</a><br/>
+	        <a class="greenDotLink" href='<c:url value="/myrequests.html"/>'>New requests (${myRequestsCount})</a><br/>
 	        <ul id="friendsSideList">
 	        <c:forEach items="${friendsSideList}" var="friend">
 	           <li>

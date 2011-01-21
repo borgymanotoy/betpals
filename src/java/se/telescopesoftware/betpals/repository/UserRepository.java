@@ -6,6 +6,7 @@ import java.util.Date;
 
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.domain.UserRequest;
 
 public interface UserRepository {
 
@@ -46,4 +47,17 @@ public interface UserRepository {
     Collection<User> findUsersByRole(String userRole);
     
     Collection<UserProfile> findUserProfiles(String query);
+    
+    void storeUserRequest(UserRequest userRequest);
+
+    void deleteUserRequest(UserRequest userRequest);
+    
+    UserRequest loadUserRequestById(Long id);
+
+    Collection<UserRequest> loadUserRequestForUser(Long userId);
+
+    Collection<UserRequest> loadUserRequestByUser(Long userId);
+    
+    Integer getUserRequestForUserCount(Long userId);
+
 }

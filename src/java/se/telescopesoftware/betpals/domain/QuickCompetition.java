@@ -18,8 +18,10 @@ public class QuickCompetition {
 	private String name;
 	private String description;
 	private BigDecimal stake;
-	@DateTimeFormat(pattern="dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date deadline;
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
+	private Date settlingDeadline;
 	private boolean facebookPublish;
 	private boolean allFriends;
 	private Set<Long> friendsIdSet;
@@ -109,17 +111,14 @@ public class QuickCompetition {
 	}
 
 	public Competition createCompetition() {
-    	//TODO: What about default names for Competition/Event/Alternative in quick competition?
     	Competition competition = new Competition(getName());
     	competition.setCompetitionType(CompetitionType.QUICK);
     	competition.setFixedStake(getStake());
     	competition.setAccessType(AccessType.PRIVATE);
     	competition.setDescription(getDescription());
     	
-    	//TODO: Should deadline be specified for Event, not for Competition?
     	competition.setDeadline(getDeadline());
-    	//TODO: What is or is there a default settling deadline ?
-//    	competition.setSettlingDeadline(settlingDeadline);
+    	competition.setSettlingDeadline(getSettlingDeadline());
 
     	Event event = new Event(getName());
     	Alternative alternative = new Alternative("True");
@@ -133,6 +132,14 @@ public class QuickCompetition {
     	competition.addEvent(event);
 
     	return competition;
+	}
+
+	public Date getSettlingDeadline() {
+		return settlingDeadline;
+	}
+
+	public void setSettlingDeadline(Date settlingDeadline) {
+		this.settlingDeadline = settlingDeadline;
 	}
 	
 }

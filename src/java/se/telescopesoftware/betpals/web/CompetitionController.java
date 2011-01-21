@@ -27,6 +27,7 @@ import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.AlternativeType;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.InvitationHelper;
 import se.telescopesoftware.betpals.services.AccountService;
@@ -86,6 +87,8 @@ public class CompetitionController extends AbstractPalsController {
 	@RequestMapping(value="/confirmcompetition", method = {RequestMethod.POST, RequestMethod.GET})	
 	public String confirmCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
+		competition.setStatus(CompetitionStatus.OPEN);
+		competition = competitionService.addCompetition(competition);
 		model.addAttribute(competition);
 		InvitationHelper invitationHelper = new InvitationHelper();
 		invitationHelper.setCompetitionId(competitionId);
@@ -129,7 +132,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/savecompetition", method = {RequestMethod.POST, RequestMethod.GET})	
-	public String processSubmit(@ModelAttribute("competition") Competition competition, BindingResult result, Model model) {
+	public String saveCompetition(@ModelAttribute("competition") Competition competition, BindingResult result, Model model) {
     	if (result.hasErrors()) {
     		logger.debug("Error found: " + result.getErrorCount());
     		return "createCompetitionView";
@@ -179,11 +182,14 @@ public class CompetitionController extends AbstractPalsController {
 		
 		Competition competition = competitionService.getCompetitionById(invitationHelper.getCompetitionId());
 		
+		Set<Long> idSet = new HashSet<Long>();
+		idSet.add(getUserId());
     	if (invitationHelper.isAllFriends()) {
-    		competitionService.sendInvitationsToFriends(competition, getUserProfile().getFriendsIdSet(), getUserProfile());
+    		idSet.addAll(getUserProfile().getFriendsIdSet());
     	} else {
-    		competitionService.sendInvitationsToFriends(competition, invitationHelper.getFriendsIdSet(), getUserProfile());
+    		idSet.addAll(invitationHelper.getFriendsIdSet());
     	}
+    	competitionService.sendInvitationsToFriends(competition, idSet, getUserProfile());
     	
     	//TODO: Implement group invitations
     	//TODO: Implement community invitations

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserSearchForm;
 import se.telescopesoftware.betpals.repository.UserRepository;
 
@@ -146,6 +147,26 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return result;
+	}
+
+	public void sendUserRequest(UserRequest userRequest) {
+		userRepository.storeUserRequest(userRequest);
+	}
+
+	public Collection<UserRequest> getUserRequestForUser(Long userId) {
+		return userRepository.loadUserRequestForUser(userId);
+	}
+
+	public Collection<UserRequest> getUserRequestByUser(Long userId) {
+		return userRepository.loadUserRequestByUser(userId);
+	}
+
+	public Integer getUserRequestForUserCount(Long userId) {
+		return userRepository.getUserRequestForUserCount(userId);
+	}
+
+	public void deleteUserRequest(Long requestId) {
+		userRepository.deleteUserRequest(userRepository.loadUserRequestById(requestId));
 	}
     
     

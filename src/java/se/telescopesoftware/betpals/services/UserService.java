@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserSearchForm;
 
 
@@ -40,4 +41,14 @@ public interface UserService extends UserDetailsService {
     Collection<User> searchUsers(UserSearchForm searchForm);
     
     Collection<User> getUsersByRole(String userRole);
+    
+    void sendUserRequest(UserRequest userRequest);
+
+    void deleteUserRequest(Long requestId);
+    
+    Collection<UserRequest> getUserRequestForUser(Long userId);
+
+    Collection<UserRequest> getUserRequestByUser(Long userId);
+    
+    Integer getUserRequestForUserCount(Long userId);
 }

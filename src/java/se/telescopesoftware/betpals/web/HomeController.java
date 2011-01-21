@@ -55,7 +55,9 @@ public class HomeController extends AbstractPalsController {
     	session.setAttribute("friendsSideList", friends);    	
     	session.setAttribute("user", getUserProfile());
     	session.setAttribute("accounts", accounts);
+    	session.setAttribute("myRequestsCount", userService.getUserRequestForUserCount(getUserId()));
     	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("myOngoingCompetitionsCount", competitionService.getOngoingCompetitionsByUserCount(getUserId()));
     	session.setAttribute("myInvitationsCount", competitionService.getInvitationsForUserCount(getUserId()));
     	model.addAttribute("activitiesList", activities);    	
 		

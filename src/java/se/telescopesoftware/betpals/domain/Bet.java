@@ -3,10 +3,14 @@ package se.telescopesoftware.betpals.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,6 +32,13 @@ public class Bet {
 	private BigDecimal profitOrLoss;
 	private String ownerName;
 	
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinTable(name="join_alternative_bet",
+        joinColumns = @JoinColumn(name="bet_id"),
+        inverseJoinColumns = @JoinColumn(name="alternative_id")
+    )
+	private Alternative alternative;
 	
 	public Long getId() {
 		return id;
@@ -124,6 +135,14 @@ public class Bet {
 
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
+	}
+
+	public Alternative getAlternative() {
+		return alternative;
+	}
+
+	public void setAlternative(Alternative alternative) {
+		this.alternative = alternative;
 	}
 
 	

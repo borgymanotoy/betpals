@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import se.telescopesoftware.betpals.domain.Authority;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.domain.UserRequest;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -310,6 +311,30 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         transaction.commit();
         session.close();
         return result;
+	}
+
+	public void storeUserRequest(UserRequest userRequest) {
+		getHibernateTemplate().merge(userRequest);
+	}
+
+	public Collection<UserRequest> loadUserRequestForUser(Long userId) {
+		return getHibernateTemplate().findByNamedParam("from UserRequest ur where ur.inviteeId = :userId", "userId", userId);
+	}
+
+	public Collection<UserRequest> loadUserRequestByUser(Long userId) {
+		return getHibernateTemplate().findByNamedParam("from UserRequest ur where ur.ownerId = :userId", "userId", userId);
+	}
+
+	public Integer getUserRequestForUserCount(Long userId) {
+		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from UserRequest ur where ur.inviteeId = :userId", "userId", userId));
+	}
+
+	public void deleteUserRequest(UserRequest userRequest) {
+		getHibernateTemplate().delete(userRequest);
+	}
+
+	public UserRequest loadUserRequestById(Long id) {
+		return getHibernateTemplate().get(UserRequest.class, id);
 	}
     
 }

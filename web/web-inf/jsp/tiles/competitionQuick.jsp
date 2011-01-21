@@ -1,7 +1,8 @@
 <%@include file="includes.jsp"%>
 <script type="text/javascript">
    jQuery(document).ready(function() {
-        jQuery("#competitionDeadline").datepicker({ dateFormat: 'dd.mm.yy', minDate: 0 });
+        jQuery("#competitionDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
+        jQuery("#settlingDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
    });
 </script>
 <!-- TODO: All strings to message resources -->
@@ -34,8 +35,23 @@
         </div>
     </div>    
     <div class="formSectionDiv" style="padding-top: 5px; padding-bottom: 15px;">
-        Deadline for competition
-        <form:input path="deadline" id="competitionDeadline"/>
+        <div class="span-12">
+            <div class="span-2 labelDiv">
+                Deadline for competition
+            </div>
+            <div class="span-10 last">
+                <form:input path="deadline" id="competitionDeadline"/>
+            </div>
+        </div>
+        <div class="span-12">
+            <div class="span-2 labelDiv">
+                Deadline for settling
+            </div>
+            <div class="span-10 last">
+                <form:input path="settlingDeadline" id="settlingDeadline"/>
+            </div>
+        </div>
+        &nbsp;
     </div>    
     <div class="formSectionDiv span-12">
         <div class="span-4">

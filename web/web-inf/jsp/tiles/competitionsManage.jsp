@@ -4,7 +4,6 @@
        jQuery('#competitionToManage').val(competitionId);
        jQuery('#manageCompetitionForm').submit();
    } 
-
    
 </script>
 <div>

@@ -1,20 +1,18 @@
 package se.telescopesoftware.betpals.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
-public class EditFriendsController {
+public class EditFriendsController extends AbstractPalsController {
 
     private UserService userService;
 
@@ -23,16 +21,41 @@ public class EditFriendsController {
         this.userService = userService;
     }
 
-    @RequestMapping(value="/addfriend", method = RequestMethod.POST)
-    public String post(@RequestParam("friendId") Long friendId) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	User user = (User) authentication.getPrincipal();
-    	UserProfile userProfile = user.getUserProfile();
-    	userProfile.addFriend(friendId);
-    	
-    	userService.updateUserProfile(userProfile);
-    	
+    @RequestMapping(value="/invitefriend", method = RequestMethod.POST)
+    public String inviteFriend(@RequestParam("friendId") Long friendId) {
+    	UserRequest request = new UserRequest();
+    	request.setInviteeId(friendId);
+    	request.setOwnerId(getUserId());
+    	request.setOwnerName(getUserProfile().getFullName());
+
+    	userService.sendUserRequest(request);
     	return "friendsAndGroupsAction";
     }
     
+    @RequestMapping(value="/addfriend", method = RequestMethod.POST)
+    public String post(@RequestParam("friendId") Long friendId, @RequestParam("requestId") Long requestId) {
+    	
+    	UserRequest request = new UserRequest();
+    	request.setInviteeId(friendId);
+    	request.setOwnerId(getUserId());
+    	request.setOwnerName(getUserProfile().getFullName());
+    	UserProfile userProfile = getUserProfile();
+    	userProfile.addFriend(friendId);
+    	
+    	userService.updateUserProfile(userProfile);
+
+    	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
+    	friendProfile.addFriend(getUserId());
+    	userService.updateUserProfile(friendProfile);
+    	userService.deleteUserRequest(requestId);
+    	
+    	return "friendsAndGroupsAction";
+    }
+
+    @RequestMapping(value="/myrequests", method = RequestMethod.GET)
+    public String viewUserRequests(Model model) {
+    	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
+    	return "userRequestsListView";
+    }
+
 }

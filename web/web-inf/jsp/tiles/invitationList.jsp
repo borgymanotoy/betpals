@@ -20,7 +20,7 @@
 	            <div class="span-10 last invitationDiv">
                     <h5 onclick="getInvitationDetails(${invitation.id});">${invitation.competitionName}</h5>
                     <span class="detailTitle">Deadline: </span><fmt:formatDate value="${invitation.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
-                    <span class="detailTitle">Owner: </span><a href="#">${invitation.ownerName}</a>
+                    <span class="detailTitle">Owner: </span><a href='<c:url value="/viewprofile/${invitation.ownerId}.html"/>'>${invitation.ownerName}</a>
 	            </div>
 	        </div>
         </li>

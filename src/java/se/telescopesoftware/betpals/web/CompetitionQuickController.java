@@ -28,6 +28,7 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
@@ -79,7 +80,7 @@ public class CompetitionQuickController extends AbstractPalsController {
 	@RequestMapping(value="/quickcompetition", method = RequestMethod.POST)	
 	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, Model model) {
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getErrorCount());
+    		logger.debug("Error found: " + result.getFieldErrorCount());
     		return "quickCompetitionView";
     	}
     	
@@ -87,6 +88,7 @@ public class CompetitionQuickController extends AbstractPalsController {
     	competition.setOwnerId(getUserId());
     	Account account = accountService.getAccount(quickCompetition.getAccountId());
     	competition.setCurrency(account.getCurrency());
+    	competition.setStatus(CompetitionStatus.OPEN);
     	
     	competition = competitionService.addCompetition(competition);
     	saveImage(quickCompetition.getImageFile(), competition.getId());

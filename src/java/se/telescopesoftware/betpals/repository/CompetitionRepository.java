@@ -36,13 +36,21 @@ public interface CompetitionRepository {
 	
 	void deleteInvitation(Invitation invitation);
 	
+	void deleteInvitationsByCompetitionId(Long competitionId);
+	
 	Event loadEventById(Long id);
 	
 	Alternative storeAlternative(Alternative alternative);
+	
+	Alternative loadAlternativeById(Long id);
 	
 	Event storeEvent(Event event);
 	
 	void deleteCompetition(Competition competition);
 	
 	void deleteBet(Bet bet);
+	
+	Integer getTotalUserCompetitionsCount(Long userId);
+
+	Integer getTotalUserBetsCount(Long userId);
 }

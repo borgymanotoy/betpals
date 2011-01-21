@@ -15,8 +15,12 @@ public interface CompetitionService {
 	Competition addCompetition(Competition competition);
 	
 	Collection<Competition> getActiveCompetitionsByUser(Long userId);
+
+	Collection<Competition> getOngoingCompetitionsByUser(Long userId);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
+
+	Integer getOngoingCompetitionsByUserCount(Long userId);
 
 	void placeBet(Bet bet);
 	
@@ -46,7 +50,12 @@ public interface CompetitionService {
 	
 	void deleteCompetition(Long id);
 	
-	void settleCompetition(Long id);
+	void settleCompetition(Long competitionId, Long alternativeId);
 	
 	void voidAlternative(Long competitionId, Long alternativeId);
+	
+	Integer getTotalUserCompetitionsCount(Long userId);
+
+	Integer getTotalUserBetsCount(Long userId);
+
 }

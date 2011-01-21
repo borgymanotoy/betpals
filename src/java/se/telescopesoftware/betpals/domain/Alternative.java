@@ -1,5 +1,6 @@
 package se.telescopesoftware.betpals.domain;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -33,16 +35,21 @@ public class Alternative {
 	private String description;
 	private boolean taken;
 	
-	//FIXME: set relation between alternative and bets
-//	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-//    @JoinTable(
-//            name="join_alternative_bet",
-//            joinColumns = @JoinColumn(name="alternative_id"),
-//            inverseJoinColumns = @JoinColumn(name="bet_id")
-//    )
-	@Transient
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(
+            name="join_alternative_bet",
+            joinColumns = @JoinColumn(name="alternative_id"),
+            inverseJoinColumns = @JoinColumn(name="bet_id")
+    )
 	private Set<Bet> bets = new HashSet<Bet>();
 	
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinTable(name="join_event_alternative",
+        joinColumns = @JoinColumn(name="alternative_id"),
+        inverseJoinColumns = @JoinColumn(name="event_id")
+    )
+	private Event event;
 	
 	@Transient
 	private MultipartFile imageFile;
@@ -141,5 +148,48 @@ public class Alternative {
 	public void addBet(Bet bet) {
 		getBets().add(bet);
 	}
+	
+	public void removeBet(Bet bet) {
+		Set<Bet> filteredBets = new HashSet<Bet>();
+		for (Bet b : getBets()) {
+			if (bet.getId().compareTo(b.getId()) != 0) {
+				filteredBets.add(b);
+			}
+		}
+		setBets(filteredBets);
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+	
+	public String getParticipantName() {
+		Bet bet = getBets().iterator().next();
+		if (bet != null) {
+			return bet.getOwnerName();
+		}
+		return "";
+	}
+	
+	public Long getParticipantId() {
+		Bet bet = getBets().iterator().next();
+		if (bet != null) {
+			return bet.getOwnerId();
+		}
+		return null;
+	}
+	
+	public BigDecimal getTurnover() {
+		BigDecimal result = BigDecimal.ZERO;
+		for ( Bet bet : getBets() ) {
+			result = result.add(bet.getStake());
+		}
+		return result; 
+	}
+
 
 }

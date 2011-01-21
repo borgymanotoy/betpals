@@ -25,6 +25,11 @@
         <property name="registrationDate"/>
         <property name="lastLoginDate"/>
         <property name="numberOfVisits"/>
+        <property name="address"/>
+        <property name="city"/>
+        <property name="postalCode"/>
+        <property name="country"/>
+        <property name="bio"/>
         
         <set name="friendsIdSet" table="user_friends" lazy="false">
             <key column="user_id"/>

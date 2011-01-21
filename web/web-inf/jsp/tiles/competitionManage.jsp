@@ -11,19 +11,33 @@
 	} 
 	
 	function settleCompetition() {
-        jQuery('#settleCompetitionForm').submit();
+		
+		var alternativeId;
+		jQuery('input[name=correctAlternative]:radio').each(function() {
+			if (jQuery(this).attr('checked')) {
+				alternativeId = jQuery(this).val();
+			}
+		});
+		if (alternativeId) {
+		    jQuery("#winningAlternative").val(alternativeId);
+		    jQuery('#settleCompetitionForm').submit();
+        } else {
+        	jQuery("#selectDialog").dialog('open');
+        }
 	} 
 	
     jQuery(document).ready(function() {
         jQuery("#competitionDeadline").datetimepicker({ 
         	dateFormat: 'yy-mm-dd', 
         	minDate: 0, 
+        	timeFormat: 'hh:mm',
         	onClose: function(datetext, inst) {
         		 jQuery('#competitionForm').submit();} 
         });
         jQuery("#settlingDeadline").datetimepicker({ 
         	dateFormat: 'yy-mm-dd', 
         	minDate: 0, 
+            timeFormat: 'hh:mm',
             onClose: function(datetext, inst) {
                 jQuery('#competitionForm').submit();} 
         });
@@ -55,6 +69,18 @@
                     $( this ).dialog( "close" );
                 },
                 Cancel: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+
+        jQuery("#selectDialog").dialog({
+            resizable: false,
+            autoOpen: false,
+            height:140,
+            modal: true,
+            buttons: {
+                Ok: function() {
                     $( this ).dialog( "close" );
                 }
             }
@@ -156,6 +182,9 @@
 <div id="confirmVoid" title="Void alternative?">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This alternative will be void. <br/>Are you sure?</p>
 </div>
+<div id="selectDialog" title="Select alternative">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please select correct alternative.</p>
+</div>
 
 <form action='<c:url value="/deletecompetition.html"/>' method="post" id="deleteCompetitionForm">
     <input type="hidden" name="competitionId" value="${competition.id}"/>
@@ -166,4 +195,5 @@
 </form>
 <form action='<c:url value="/settlecompetition.html"/>' method="post" id="settleCompetitionForm">
     <input type="hidden" name="competitionId" value="${competition.id}"/>
+    <input type="hidden" name="alternativeId" value="" id="winningAlternative"/>
 </form>

@@ -1,6 +1,9 @@
 package se.telescopesoftware.betpals.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +15,8 @@ import se.telescopesoftware.betpals.domain.AccountTransactionType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
+import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 import se.telescopesoftware.betpals.domain.UserProfile;
@@ -44,7 +49,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Collection<Competition> getActiveCompetitionsByUser(Long userId) {
-		return populateBets(competitionRepository.loadActiveCompetitionsByUser(userId));
+		return competitionRepository.loadActiveCompetitionsByUser(userId);
 	}
 
 	public Integer getActiveCompetitionsByUserCount(Long userId) {
@@ -68,7 +73,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 			accountService.saveAccount(account);
 			bet.setAccountId(account.getId());
 			bet.setCurrency(account.getCurrency());
-			competitionRepository.storeBet(bet);
+			Alternative alternative = competitionRepository.loadAlternativeById(bet.getSelectionId());
+			alternative.addBet(bet);
+			Competition competition = alternative.getEvent().getCompetition();
+			if (competition.getCompetitionType() != CompetitionType.POOL_BETTING) {
+				alternative.setTaken(true);
+			}
+			saveAlternative(alternative);
 		}
 	}
 
@@ -101,12 +112,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Competition getCompetitionById(Long id) {
-		Competition competition = competitionRepository.loadCompetitionById(id);
-		for (Alternative alternative : competition.getAllAlternatives()) {
-			alternative.getBets().addAll(getActiveBetsBySelectionId(alternative.getId()));
-		}
-
-		return competition;
+		return competitionRepository.loadCompetitionById(id);
 	}
 
 	public void deleteInvitation(Long id) {
@@ -134,14 +140,72 @@ public class CompetitionServiceImpl implements CompetitionService {
 			voidAlternative(alternative, competition);
 		}
 		competitionRepository.deleteCompetition(competition);
+		competitionRepository.deleteInvitationsByCompetitionId(competition.getId());
 	}
 
-	public void settleCompetition(Long id) {
-		// TODO Auto-generated method stub
-		Competition competition = competitionRepository.loadCompetitionById(id);
+	/**
+	 *  The formula for settling pool bets is "part * (turnover - commision)"
+	 *  
+	 *  Example:
+	 *  
+	 *	Alt A and B
+	 *	Peter placed 100 on A
+	 *	Pavel placed 300 on A
+	 *	I placed 200 on B
+	 *	A was the right alternative
+	 *	Peter get 0,25 * 600 = 150
+	 *	Pavel gets 0,75 * 600 = 450
+	 *	And I get mad
+	 */
+	public void settleCompetition(Long competitionId, Long alternativeId) {
+		Competition competition = competitionRepository.loadCompetitionById(competitionId);
+		competition.setStatus(CompetitionStatus.SETTLED);
 		logger.info("Settle " + competition.toString());
+		for (Alternative alternative : competition.getAllAlternatives()) {
+			if (alternative.getId().compareTo(alternativeId) == 0) {
+				alternativeWon(alternative, competition);
+			} else {
+				alternativeLost(alternative);
+			}
+		}
+		addCompetition(competition);
+		competitionRepository.deleteInvitationsByCompetitionId(competitionId);
 	}
 
+	private void alternativeWon(Alternative alternative, Competition competition) {
+		for (Bet bet : alternative.getBets()) {
+			BigDecimal part = bet.getStake().divide(alternative.getTurnover(), 2, RoundingMode.HALF_UP); //TODO: Find out about required precision
+			BigDecimal competitionTurnoverWithCommission = calculateAmountWithCommission(competition.getTurnover()) ;
+			BigDecimal amountWon = part.multiply(competitionTurnoverWithCommission).subtract(bet.getStake());
+			Account account = accountService.getAccount(bet.getAccountId());
+			AccountTransaction transaction = new AccountTransaction(account, bet.getStake(), AccountTransactionType.RESERVATION);
+			account.addTransaction(transaction);
+			transaction = new AccountTransaction(account, amountWon, AccountTransactionType.WON);
+			account.addTransaction(transaction);
+			
+			accountService.saveAccount(account);
+			bet.setSettled(new Date());
+			saveAlternative(alternative);
+		}
+	}
+
+	private void alternativeLost(Alternative alternative) {
+		for (Bet bet : alternative.getBets()) {
+			Account account = accountService.getAccount(bet.getAccountId());
+			AccountTransaction transaction = new AccountTransaction(account, bet.getStake().negate(), AccountTransactionType.LOST);
+			account.addTransaction(transaction);
+			
+			accountService.saveAccount(account);
+			bet.setSettled(new Date());
+			saveAlternative(alternative);
+		}
+	}
+	
+	private BigDecimal calculateAmountWithCommission(BigDecimal amount) {
+		BigDecimal percentage = amount.multiply(new BigDecimal("0.1"));
+		return amount.subtract(percentage);
+	}
+	
 	public void voidAlternative(Long competitionId, Long alternativeId) {
 		Competition competition = getCompetitionById(competitionId);
 		voidAlternative(competition.getAlternativeById(alternativeId), competition);
@@ -169,15 +233,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadActiveBetsBySelectionId(selectionId);
 	}
 
-	private Collection<Competition> populateBets(Collection<Competition> competitionList) {
-		for (Competition competition : competitionList) {
-			for (Alternative alternative : competition.getAllAlternatives()) {
-				alternative.getBets().addAll(getActiveBetsBySelectionId(alternative.getId()));
-			}
-		}
-		return competitionList;
-	}
-	
 	private void removeBet(Bet bet) {
 		//TODO: Check this!
 		Account account = null;
@@ -192,8 +247,39 @@ public class CompetitionServiceImpl implements CompetitionService {
 			account.addTransaction(transaction);
 			
 			accountService.saveAccount(account);
-			competitionRepository.deleteBet(bet);
+			Alternative alternative = competitionRepository.loadAlternativeById(bet.getSelectionId());
+			alternative.removeBet(bet);
+			saveAlternative(alternative);
 		}
+	}
+
+	public Collection<Competition> getOngoingCompetitionsByUser(Long userId) {
+		Set<Competition> result = new HashSet<Competition>();
+		for (Bet bet : getActiveBetsByUser(userId)) {
+			try {
+				Competition competition = bet.getAlternative().getEvent().getCompetition();
+				if (competition.getStatus() != CompetitionStatus.SETTLED) {
+					result.add(competition);
+				}
+			} catch (Exception ex) {
+				logger.error(ex);
+			}
+		}
+		
+		return result;
+	}
+
+	public Integer getOngoingCompetitionsByUserCount(Long userId) {
+		//TODO: Rewrite to something more effective
+		return getOngoingCompetitionsByUser(userId).size();
+	}
+
+	public Integer getTotalUserCompetitionsCount(Long userId) {
+		return competitionRepository.getTotalUserCompetitionsCount(userId);
+	}
+
+	public Integer getTotalUserBetsCount(Long userId) {
+		return competitionRepository.getTotalUserBetsCount(userId);
 	}
 
 

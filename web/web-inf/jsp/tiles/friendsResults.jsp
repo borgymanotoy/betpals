@@ -20,7 +20,7 @@
 	                    <h5>${friend.fullName}</h5>
 	                </div>
 	                <div class="span-2 last right userControlDiv">
-				        <form action='<c:url value="/addfriend.html"/>' method="post">
+				        <form action='<c:url value="/invitefriend.html"/>' method="post">
 				            <input type="hidden" name="friendId" value="${friend.userId}"/>
 				            <button class="addFriendButton" onclick="submit();">Add</button>
 				        </form>
