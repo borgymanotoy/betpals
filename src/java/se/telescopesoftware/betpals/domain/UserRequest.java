@@ -1,7 +1,5 @@
 package se.telescopesoftware.betpals.domain;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +16,7 @@ public class UserRequest {
 	private Long ownerId;
 	private Long inviteeId;
 	private String ownerName;
+	private String inviteeName;
 	
 	public Long getId() {
 		return id;
@@ -49,6 +48,14 @@ public class UserRequest {
 	
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
+	}
+
+	public String getInviteeName() {
+		return inviteeName;
+	}
+
+	public void setInviteeName(String inviteeName) {
+		this.inviteeName = inviteeName;
 	}
 	
 

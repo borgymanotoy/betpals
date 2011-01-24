@@ -10,6 +10,10 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <mvc:annotation-driven />
+    <mvc:resources mapping="/i/**" location="/i/" />    
+    <mvc:resources mapping="/images/**" location="/images/" />    
+    <mvc:resources mapping="/css/**" location="/css/" />    
+    <mvc:resources mapping="/js/**" location="/js/" />    
 
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
@@ -58,17 +62,16 @@
     </bean>
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
     
-    <bean class="se.telescopesoftware.betpals.web.FacebookLoginController">
-        <property name="userService" ref="userDetailsService"/>
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="viewName" value="userHomepageAction"/>
-        <property name="clientId" value="119321918127784"/>
-	    <property name="clientSecret" value="e03b93a9954a8727f7da34e641a8b8ec"/>
-	    <property name="returnUrl" value="http://terminus.namaskar.lv/facebooklogin.html"/>
-	    <property name="facebookAuthorizeUrl" value="https://graph.facebook.com/oauth/authorize"/>
-	    <property name="facebookAccessTokenUrl" value="https://graph.facebook.com/oauth/access_token"/>
-	    <property name="facebookUserInfoUrl" value="https://graph.facebook.com/me"/>
+    <bean id="facebookReturnUrl" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="http://www.mybetpals.com/facebooklogin.html" />
     </bean>
+    <bean id="facebookClientId" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="119321918127784" />
+    </bean>
+    <bean id="facebookClientSecret" class="java.lang.String">
+        <constructor-arg type="java.lang.String" value="e03b93a9954a8727f7da34e641a8b8ec" />
+    </bean>
+    
 
     <!-- Repositories ========================================================= -->
     <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">

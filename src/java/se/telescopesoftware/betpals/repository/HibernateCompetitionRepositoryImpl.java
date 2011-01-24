@@ -14,6 +14,7 @@ import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
+import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 
@@ -123,6 +124,20 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 
 	public Integer getTotalUserBetsCount(Long userId) {
 		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from Bet b where b.ownerId = :userId", "userId", userId));
+	}
+
+	public Collection<Competition> loadSettledCompetitionsByUser(Long userId) {
+		return getHibernateTemplate().findByNamedParam(
+				"from Competition c where c.ownerId = :userId and c.status = :status", 
+				new String [] {"userId", "status"}, 
+				new Object [] {userId, CompetitionStatus.SETTLED });
+	}
+
+	public Integer getSettledCompetitionsByUserCount(Long userId) {
+		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam(
+				"select count(*) from Competition c where c.ownerId = :userId and c.status = :status", 
+				new String [] {"userId", "status"}, 
+				new Object [] {userId, CompetitionStatus.SETTLED }));
 	}
 
 }

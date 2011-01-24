@@ -75,6 +75,12 @@
     <definition name="ongoingCompetitionView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionOngoing.jsp"/>
     </definition>
+    <definition name="settledCompetitionsView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionSettledList.jsp"/>
+    </definition>
+    <definition name="settledCompetitionView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionSettled.jsp"/>
+    </definition>
 <!-- _______________________________________________________________________________ -->
 
 <!-- Invitation definitions _______________________________________________________ -->

@@ -13,8 +13,12 @@ public interface CompetitionRepository {
 	Competition storeCompetition(Competition competition);
 	
 	Collection<Competition> loadActiveCompetitionsByUser(Long userId);
+
+	Collection<Competition> loadSettledCompetitionsByUser(Long userId);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
+
+	Integer getSettledCompetitionsByUserCount(Long userId);
 	
 	void storeBet(Bet bet);
 	

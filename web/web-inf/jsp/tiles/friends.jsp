@@ -36,6 +36,29 @@
 	    </c:forEach>
 	    </ul>
 	    <p>&nbsp;</p>
+        <c:if test="${not empty userRequestList}">
+        <h4>Awaiting confirmation</h4>
+        <ul id="friendList">
+        <c:forEach items="${userRequestList}" var="userRequest">
+            <li>
+                <div class="span-12">
+                    <div class="span-2 userPicDiv">
+                        <img class="userPic" src='<c:url value="/images/users/${userRequest.inviteeId}.jpg"/>'/>
+                    </div>
+                    <div class="span-10 last userNameDiv">
+                        <div class="span-9">
+                            <h5>${userRequest.inviteeName}</h5>
+                        </div>
+                        <div class="span-1 last right">
+                        &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </c:forEach>
+        </ul>
+        <p>&nbsp;</p>
+        </c:if>
     </div>
     <div id="groups" class="contentDiv">
         <div class="right"><a class="blueDotLink" href='<c:url value="/creategroup.html"/>'>Create new group</a></div>

@@ -85,4 +85,35 @@ public class InvitationController extends AbstractPalsController {
 		return "userHomepageAction";
 	}
 	
+	@RequestMapping(value="/placeanotherbet", method = RequestMethod.POST)
+	public String placeAnotherBet(@RequestParam("alternativeId") Long alternativeId, @RequestParam("competitionId") Long competitionId, @RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
+	
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		
+		Bet bet = new Bet();
+		bet.setOwnerId(getUserId());
+		bet.setOwnerName(getUserProfile().getFullName());
+		bet.setCurrency(competition.getCurrency());
+		if (competition.getCompetitionType() == CompetitionType.POOL_BETTING) {
+			bet.setStake(stake); //TODO: add validation
+		} else {
+			bet.setStake(competition.getFixedStake());
+		}
+		bet.setDetails(competition.getName());
+		bet.setSelectionId(alternativeId);
+		bet.setPlaced(new Date());
+		competitionService.placeBet(bet);
+		
+//		Activity activity = new Activity();
+//		activity.setCreated(new Date());
+//		activity.setOwnerId(getUserId());
+//		activity.setOwnerName(getUserProfile().getFullName());
+//		activity.setActivityType(ActivityType.MESSAGE);
+//		activity.setMessage("Joined the competition: " + competition.getName());
+		
+//		activityService.addActivity(activity);
+		
+		return "userHomepageAction";
+	}
+	
 }

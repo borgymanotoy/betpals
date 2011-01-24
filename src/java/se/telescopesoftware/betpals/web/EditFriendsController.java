@@ -28,21 +28,23 @@ public class EditFriendsController extends AbstractPalsController {
     	request.setOwnerId(getUserId());
     	request.setOwnerName(getUserProfile().getFullName());
 
+    	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
+    	request.setInviteeName(friendProfile.getFullName());
+    	
     	userService.sendUserRequest(request);
     	return "friendsAndGroupsAction";
     }
     
-    @RequestMapping(value="/addfriend", method = RequestMethod.POST)
-    public String post(@RequestParam("friendId") Long friendId, @RequestParam("requestId") Long requestId) {
+    /**
+     * Accept request and add friend.
+     */
+    @RequestMapping(value="/acceptrequest", method = RequestMethod.POST)
+    public String acceptRequest(@RequestParam("friendId") Long friendId, @RequestParam("requestId") Long requestId) {
     	
-    	UserRequest request = new UserRequest();
-    	request.setInviteeId(friendId);
-    	request.setOwnerId(getUserId());
-    	request.setOwnerName(getUserProfile().getFullName());
-    	UserProfile userProfile = getUserProfile();
-    	userProfile.addFriend(friendId);
+//    	UserProfile userProfile = getUserProfile();
+//    	userProfile.addFriend(friendId);
     	
-    	userService.updateUserProfile(userProfile);
+//    	userService.updateUserProfile(userProfile);
 
     	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
     	friendProfile.addFriend(getUserId());
@@ -52,6 +54,13 @@ public class EditFriendsController extends AbstractPalsController {
     	return "friendsAndGroupsAction";
     }
 
+    @RequestMapping(value="/rejectrequest", method = RequestMethod.POST)
+    public String rejectRequest(@RequestParam("requestId") Long requestId, Model model) {
+    	userService.deleteUserRequest(requestId);
+    	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
+    	return "userRequestsListView";
+    }
+    
     @RequestMapping(value="/myrequests", method = RequestMethod.GET)
     public String viewUserRequests(Model model) {
     	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));

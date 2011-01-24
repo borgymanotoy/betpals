@@ -1,7 +1,7 @@
 <%@include file="includes.jsp"%>
 <!-- TODO: All strings to message resources -->
 <div>
-    <h2 class="dark">Ongoing competition</h2>
+    <h2 class="dark">Settled competition</h2>
 </div>
 <div class="rbDiv contentDiv">
     <div class="span-12">
@@ -37,7 +37,7 @@
                 <div class="span-10 last altListDetails">
                 </c:otherwise>
                 </c:choose>
-                <div class="span-5">
+                <div class="span-10 last">
                     ${altFromList.name}<br/>
                     <c:if test="${empty altFromList.bets}"><span class="detailTitle">No bets<br/></span></c:if>
                     <c:forEach items="${altFromList.bets}" var="bet">
@@ -45,30 +45,6 @@
                     </c:forEach>
                     <span class="detailTitle">${altFromList.turnover} ${competition.currency} on this alternative.</span>
                 </div>
-                <c:choose>
-                  <c:when test="${altFromList.taken}">
-                    <div class="span-5 last right">
-                          Already taken by <br/><a href='<c:url value="/viewprofile/${altFromList.participantId}.html"/>'>${altFromList.participantName}</a>
-                    </div>
-                  </c:when>
-                  <c:otherwise>
-                    <form action='<c:url value="/placeanotherbet.html"/>' method="post">
-                    <div class="span-5 last right">
-                        <c:choose>
-                        <c:when test="${competition.competitionType == 'POOL_BETTING'}">
-                            <input type="text" id="myStake" size="3" name="stake"/> ${competition.currency}&nbsp;
-                        </c:when>
-                        <c:otherwise>
-                            ${competition.fixedStake} ${competition.currency}&nbsp;
-                        </c:otherwise>
-                        </c:choose>
-                        <input type="hidden" name="competitionId" value="${competition.id}"/>
-                        <input type="hidden" name="alternativeId" value="${altFromList.id}"/>
-                        <input type="submit" class="greenButton90" value="Place bet"/>
-                    </div>
-                    </form>
-                  </c:otherwise>
-                </c:choose>
                 </div>
             </div>
         </li>

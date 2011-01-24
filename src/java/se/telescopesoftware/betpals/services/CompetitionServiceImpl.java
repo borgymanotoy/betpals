@@ -28,6 +28,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 	private AccountService accountService;
 	private ActivityService activityService;
 	
+	private BigDecimal SYSTEM_COMMISION = new BigDecimal("0.04");
+	
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
     
@@ -202,7 +204,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 	
 	private BigDecimal calculateAmountWithCommission(BigDecimal amount) {
-		BigDecimal percentage = amount.multiply(new BigDecimal("0.1"));
+		BigDecimal percentage = amount.multiply(SYSTEM_COMMISION);
 		return amount.subtract(percentage);
 	}
 	
@@ -280,6 +282,14 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	public Integer getTotalUserBetsCount(Long userId) {
 		return competitionRepository.getTotalUserBetsCount(userId);
+	}
+
+	public Collection<Competition> getSettledCompetitionsByUser(Long userId) {
+		return competitionRepository.loadSettledCompetitionsByUser(userId);
+	}
+
+	public Integer getSettledCompetitionsByUserCount(Long userId) {
+		return competitionRepository.getSettledCompetitionsByUserCount(userId);
 	}
 
 

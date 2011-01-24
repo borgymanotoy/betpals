@@ -16,9 +16,13 @@ public interface CompetitionService {
 	
 	Collection<Competition> getActiveCompetitionsByUser(Long userId);
 
+	Collection<Competition> getSettledCompetitionsByUser(Long userId);
+
 	Collection<Competition> getOngoingCompetitionsByUser(Long userId);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
+
+	Integer getSettledCompetitionsByUserCount(Long userId);
 
 	Integer getOngoingCompetitionsByUserCount(Long userId);
 

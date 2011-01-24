@@ -8,66 +8,68 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.UserService;
 
-public class FacebookLoginController extends ParameterizableViewController {
+@Controller
+public class FacebookLoginController extends AbstractPalsController {
 	
 	private UserService userService;
 	private AuthenticationManager authenticationManager;
 	
-	private String clientId;
-	private String clientSecret;
-	private String returnUrl;
-	private String facebookAuthorizeUrl;
-	private String facebookAccessTokenUrl;
-	private String facebookUserInfoUrl;
+	private String facebookClientId;
+	private String facebookClientSecret;
+	//TODO: Generate from context
+	private String facebookReturnUrl;
+	private String facebookAuthorizeUrl = "https://graph.facebook.com/oauth/authorize";
+	private String facebookAccessTokenUrl = "https://graph.facebook.com/oauth/access_token";
+	private String facebookUserInfoUrl = "https://graph.facebook.com/me";
 
-	
+	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
+	@Autowired
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
 	
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+	@Autowired
+	@Qualifier("facebookClientId")
+	public void setFacebookClientId(String clientId) {
+		this.facebookClientId = clientId;
 	}
 
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
+	@Autowired
+	@Qualifier("facebookClientSecret")
+	public void setFacebookClientSecret(String clientSecret) {
+		this.facebookClientSecret = clientSecret;
 	}
 
-	public void setReturnUrl(String returnUrl) {
-		this.returnUrl = returnUrl;
+	@Autowired
+	@Qualifier("facebookReturnUrl")
+	public void setFacebookReturnUrl(String returnUrl) {
+		this.facebookReturnUrl = returnUrl;
 	}
 
-	public void setFacebookAuthorizeUrl(String facebookAuthorizeUrl) {
-		this.facebookAuthorizeUrl = facebookAuthorizeUrl;
-	}
-
-	public void setFacebookAccessTokenUrl(String facebookAccessTokenUrl) {
-		this.facebookAccessTokenUrl = facebookAccessTokenUrl;
-	}
-
-	public void setFacebookUserInfoUrl(String facebookUserInfoUrl) {
-		this.facebookUserInfoUrl = facebookUserInfoUrl;
-	}
-
+	@RequestMapping(value="/facebooklogin", method = {RequestMethod.GET, RequestMethod.POST})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -75,12 +77,12 @@ public class FacebookLoginController extends ParameterizableViewController {
 		
 		if (code == null || code.length() == 0) {
 			logger.debug("redirecting to facebook..");
-			String redirectUrl = facebookAuthorizeUrl + "?client_id=" + clientId + "&redirect_uri=" + returnUrl;
+			String redirectUrl = facebookAuthorizeUrl + "?client_id=" + facebookClientId + "&redirect_uri=" + facebookReturnUrl;
 			RedirectView rView = new RedirectView(redirectUrl);
 			return new ModelAndView(rView);
 		} else {
 			RestTemplate restTemplate = new RestTemplate();
-			String accessTokenString = restTemplate.getForObject("{url}?client_id={clientId}&redirect_uri={redirect}&client_secret={secret}&code={code}", String.class, facebookAccessTokenUrl, clientId, returnUrl, clientSecret, code);
+			String accessTokenString = restTemplate.getForObject("{url}?client_id={clientId}&redirect_uri={redirect}&client_secret={secret}&code={code}", String.class, facebookAccessTokenUrl, facebookClientId, facebookReturnUrl, facebookClientSecret, code);
 			logger.debug("access token string: " + accessTokenString);
 			
 			if (accessTokenString != null) {
@@ -124,7 +126,7 @@ public class FacebookLoginController extends ParameterizableViewController {
 			}
 		}
 
-		return new ModelAndView(getViewName());
+		return new ModelAndView("userHomepageAction");
 	}
 	
 	

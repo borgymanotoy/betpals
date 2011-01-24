@@ -20,4 +20,15 @@ public class LoginController {
 	public String get() {
 		return "loginView";
 	}
+
+	@RequestMapping("/index")
+	public String getIndex() {
+		return "userHomepageAction";
+	}
+
+	@RequestMapping("/")
+	public String getRoot() {
+		return "userHomepageAction";
+	}
+	
 }

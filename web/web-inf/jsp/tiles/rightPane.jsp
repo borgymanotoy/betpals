@@ -7,8 +7,8 @@
 </script>
 <div id="rightPane">
     <div class="blueTitle">Create competitions</div>
-    <div class="panel">
-        <button id="competitionButton" onclick="createCompetition();">Create competition</button>
+    <div class="panel nopadding">
+        <button id="competitionButton" onclick="createCompetition();">&nbsp;</button>
     </div>
     <div class="panelFooter">&nbsp;</div>
     <div class="greyTitle">Promotions</div>

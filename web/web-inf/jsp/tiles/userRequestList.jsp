@@ -12,15 +12,22 @@
 	                <img class="userPic" src='<c:url value="/images/users/${userRequest.ownerId}.jpg"/>'/>
 	            </div>
 	            <div class="span-10 last userNameDiv">
-	                <div class="span-8">
+	                <div class="span-6">
 	                    <h5>${userRequest.ownerName}</h5>
 	                    wants to be your friend
 	                </div>
-	                <div class="span-2 last right userControlDiv">
-				        <form action='<c:url value="/addfriend.html"/>' method="post">
+	                <div class="span-2 right userControlDiv">
+				        <form action='<c:url value="/acceptrequest.html"/>' method="post">
 				            <input type="hidden" name="friendId" value="${userRequest.ownerId}"/>
 				            <input type="hidden" name="requestId" value="${userRequest.id}"/>
 				            <button class="addFriendButton" onclick="submit();">Accept</button>
+				        </form>
+	                </div>
+	                <div class="span-2 last right userControlDiv">
+				        <form action='<c:url value="/rejectrequest.html"/>' method="post">
+				            <input type="hidden" name="friendId" value="${userRequest.ownerId}"/>
+				            <input type="hidden" name="requestId" value="${userRequest.id}"/>
+				            <button class="addFriendButton" onclick="submit();">Reject</button>
 				        </form>
 	                </div>
 	            </div>

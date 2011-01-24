@@ -14,6 +14,11 @@ input[type=text], input[type=password] {
     vertical-align: bottom;
 }
 
+.logo1 { background: transparent url("../i/logo01.png") 0 0 no-repeat !important; }
+.logo2 { background: transparent url("../i/logo02.png") 0 0 no-repeat !important; }
+.logo3 { background: transparent url("../i/logo03.png") 0 0 no-repeat !important; }
+.logo4 { background: transparent url("../i/logo04.png") 0 0 no-repeat !important; }
+
 .headerPane {
 	height: 129px;
     font-family: "MS Trebuchet", sans-serif;
@@ -23,7 +28,6 @@ input[type=text], input[type=password] {
 }
 
 .headerPane:hover { cursor: pointer; }
-
 .headerPane input[type='text'] {
     width: 148px;
     height: 24px;
@@ -321,7 +325,6 @@ p {
 #introArea {
     height: 301px;
     background-color: #ffffff;
-    padding-top: 50px;
     padding-bottom: 50px;
 }
 
@@ -336,7 +339,7 @@ p {
     font-size: 11px;
     color: #242b21;
     height: 306px;
-    background: transparent url("../i/signup.jpg") 0 0 no-repeat; 
+    background: transparent url("../i/signup.png") 0 0 no-repeat; 
 }
 
 #signupArea input[type='text'] {
@@ -372,16 +375,10 @@ p {
     cursor: pointer;
 }
 #competitionButton {
-    height: 26px;
-    width: 147px;
-    background: transparent url("../i/btn_b_147.jpg") 0 0 no-repeat; 
+    width: 174px;
+    height: 126px;
+	background: transparent url("../i/competition.jpg") 2px 0 no-repeat; 
     border: none;
-    font-family: "MS Trebuchet", sans-serif;
-    font-size: 11px;
-    color: #ffffff;
-    margin-top: 14px;
-    margin-bottom: 12px;
-    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -497,7 +494,7 @@ p {
 
 #bottom {
     height: 85px;
-    background: transparent url("../i/btm.jpg") 0 0 no-repeat; 
+    background: transparent url("../i/btm.png") 0 0 no-repeat; 
 }
 
 #footerPane {

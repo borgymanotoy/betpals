@@ -50,7 +50,7 @@
             <form:select path="country" style="width: 310px; height: 30px;">
                 <form:option value=""></form:option>
                 <c:forEach items="${countryList}" var="country">
-                <option value="${country}"><spring:message code="${country}"/></option>
+                <form:option value="${country}"><spring:message code="${country}"/></form:option>
                 </c:forEach>
             </form:select>
         </div>

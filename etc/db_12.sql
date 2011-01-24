@@ -1,0 +1,1 @@
+alter table userrequest add column inviteename varchar;

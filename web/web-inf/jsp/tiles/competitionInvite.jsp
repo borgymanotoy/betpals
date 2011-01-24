@@ -24,7 +24,7 @@ ${competition.name}
 ${competition.description}
 
 Do you wanna join?
-https://www.betpals.com/ce12ceab21
+https://www.mybetpals.com/ce12ceab21
             </textarea>
         </div>
     </div>

@@ -4,7 +4,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%@include file="includes.jsp"%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>betPals</title>
+    <title>myBetpals</title>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/screen.css"/>' type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/print.css"/>' type="text/css" media="print"/>
     <!--[if IE]><link rel="stylesheet" href='<c:url value="/css/blueprint/ie.css"/>' type="text/css" media="screen, projection"/><![endif]-->
@@ -15,10 +15,15 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-1.8.8.custom.min.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-timepicker-addon.js"/>'></script>
     <script type="text/javascript">
-       function changeBgColor(color) {
-            jQuery("html").css("backgroundColor", color);
-            jQuery("body").css("backgroundColor", color);
-       }
+       function changeBgColor(color, logo) {
+	        jQuery("html").css("backgroundColor", color);
+	        jQuery("body").css("backgroundColor", color);
+	        jQuery("#headerPane").removeClass("logo1");
+	        jQuery("#headerPane").removeClass("logo2");
+	        jQuery("#headerPane").removeClass("logo3");
+	        jQuery("#headerPane").removeClass("logo4");
+	        jQuery("#headerPane").addClass(logo);
+	   }
 
        jQuery(document).ready(function() {
     	    jQuery("table.altRows tr:even").addClass("even");

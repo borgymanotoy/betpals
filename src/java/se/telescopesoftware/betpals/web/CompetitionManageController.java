@@ -32,10 +32,27 @@ public class CompetitionManageController extends AbstractPalsController {
 	public String getCompetitionsListView(Model model, HttpSession session) {
 
 		model.addAttribute("competitionList", competitionService.getActiveCompetitionsByUser(getUserId()));
+		model.addAttribute("settledCompetitionCount", competitionService.getSettledCompetitionsByUserCount(getUserId()));
     	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
 
 		return "manageCompetitionsView";
 	}
+	
+	@RequestMapping(value="/settledcompetitions", method = RequestMethod.GET)	
+	public String getSettledCompetitionsListView(Model model, HttpSession session) {
+		
+		model.addAttribute("competitionList", competitionService.getSettledCompetitionsByUser(getUserId()));
+		return "settledCompetitionsView";
+	}
+
+	@RequestMapping(value="/settledcompetition", method = RequestMethod.POST)	
+	public String getSettledCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		model.addAttribute(competition);
+
+		return "settledCompetitionView";
+	}
+	
 	
 	@RequestMapping(value="/ongoingcompetitions", method = RequestMethod.GET)	
 	public String getOngoingCompetitionsListView(Model model, HttpSession session) {
