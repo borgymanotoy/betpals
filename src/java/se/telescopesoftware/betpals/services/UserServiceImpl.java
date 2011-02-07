@@ -150,6 +150,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void sendUserRequest(UserRequest userRequest) {
+		for (UserRequest request : getUserRequestByUser(userRequest.getOwnerId())) {
+			if (request.getInviteeId().compareTo(userRequest.getInviteeId()) == 0) {
+				return; // Do not send duplicate requests
+			}
+		}
 		userRepository.storeUserRequest(userRequest);
 	}
 
@@ -166,7 +171,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deleteUserRequest(Long requestId) {
-		userRepository.deleteUserRequest(userRepository.loadUserRequestById(requestId));
+		UserRequest userRequest = userRepository.loadUserRequestById(requestId);
+		if (userRequest != null) {
+			userRepository.deleteUserRequest(userRequest);
+		}
 	}
     
     

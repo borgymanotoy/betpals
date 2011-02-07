@@ -18,7 +18,7 @@
         </div>
         <div class="span-10 last">
             <textarea name="invitation" id="competitionDescription">
-<security:authentication property="principal.userProfile.fullName"/> is inviting you to a competition at betPals!
+<security:authentication property="principal.userProfile.fullName"/> is inviting you to a competition at myBetpals!
 
 ${competition.name}
 ${competition.description}
