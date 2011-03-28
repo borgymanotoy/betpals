@@ -49,6 +49,10 @@ a { color: #297085 !important; }
     background: transparent url("../i/greenDot.jpg") 0 2px no-repeat;   
     padding-left: 15px;
 }
+.whiteDotLink {
+    background: transparent url("../i/whiteDot.png") 0 2px no-repeat;   
+    padding-left: 15px;
+}
 .blueDotLink {
     background: transparent url("../i/blueDot.jpg") 0 5px no-repeat;   
     padding-left: 15px;
@@ -741,6 +745,8 @@ tr.odd td {background-color: #e5e5e5;}
 .nopadding{ padding: 0 !important; }
 .nowrap { white-space: nowrap; }
 .noborder { border: none !important; }
+
+.white { color: white !important;}
 
 
 .error {

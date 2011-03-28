@@ -1,9 +1,31 @@
 <%@include file="includes.jsp"%>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        var searchField = jQuery("#searchFriendsField"); 
+        searchField.val(searchField.attr('title'));
+        searchField.focus( function() {
+            jQuery(this).val("");
+        });
+        searchField.blur( function() {
+            if (jQuery(this).val() == "") {
+                jQuery(this).val(jQuery(this).attr('title'));
+            }
+        });
+    });
+    
+    function searchFriends() {
+        var queryValue = jQuery("#searchFriendsField").val();
+        if ( queryValue != "" && queryValue != jQuery("#searchFriendsField").attr('title')) {
+            document.search_form.submit();
+        }
+    }
+</script>
+
 <div id="searchFriendsDiv">
     <h2>Search result</h2>
     <form action='<c:url value="/searchfriends.html"/>' name="search_form" method="post">
-        <input type="text" name="query" value="Search again" onfocus="this.value=''"/>
-        <button id="searchButton" onclick="document.search_form.submit();">&nbsp;</button>
+        <input id="searchFriendsField" type="text" name="query" value="" title="Search again"/>
+        <button id="searchButton" onclick="searchFriends(); return false;">&nbsp;</button>
     </form>
 </div>
 <div class="rbDiv contentDiv">
@@ -13,11 +35,13 @@
         <li>
 	        <div class="span-12">
 	            <div class="span-2 userPicDiv">
+	               <a href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
 	                <img class="userPic" src='<c:url value="/images/users/${friend.userId}.jpg"/>'/>
+	               </a>
 	            </div>
 	            <div class="span-10 last userNameDiv">
 	                <div class="span-8">
-	                    <h5>${friend.fullName}</h5>
+	                    <h5><a class="noline" href='<c:url value="/viewprofile/${friend.userId}.html"/>'>${friend.fullName}</a></h5>
 	                </div>
 	                <div class="span-2 last right userControlDiv">
 				        <form action='<c:url value="/invitefriend.html"/>' method="post">

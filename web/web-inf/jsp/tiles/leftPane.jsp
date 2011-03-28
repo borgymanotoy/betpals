@@ -59,7 +59,9 @@
 	               <table id="friendsTable">
 	                   <tr>
 		                   <td rowspan="2" width="56px">
+		                      <a href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
 		                       <img class="userPic" src='<c:url value="/images/users/${friend.userId}.jpg"/>'/>
+		                      </a> 
 		                   </td>
 		                   <td class="bottom">
 	    	                   ${friend.name}&nbsp;

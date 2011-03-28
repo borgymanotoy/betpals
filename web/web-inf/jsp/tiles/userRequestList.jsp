@@ -9,11 +9,13 @@
         <li>
 	        <div class="span-12">
 	            <div class="span-2 userPicDiv">
+	               <a href='<c:url value="/viewprofile/${userRequest.ownerId}.html"/>'>
 	                <img class="userPic" src='<c:url value="/images/users/${userRequest.ownerId}.jpg"/>'/>
+	               </a>
 	            </div>
 	            <div class="span-10 last userNameDiv">
 	                <div class="span-6">
-	                    <h5>${userRequest.ownerName}</h5>
+	                    <h5><a class="noline" href='<c:url value="/viewprofile/${userRequest.ownerId}.html"/>'>${userRequest.ownerName}</a></h5>
 	                    wants to be your friend
 	                </div>
 	                <div class="span-2 right userControlDiv">

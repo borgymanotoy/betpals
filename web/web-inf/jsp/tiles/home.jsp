@@ -1,4 +1,31 @@
 <%@include file="includes.jsp"%>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery(".commentField").each(function() {
+            jQuery(this).val(jQuery(this).attr('title'));
+            jQuery(this).focus( function() {
+                jQuery(this).val("");
+            });
+            jQuery(this).blur( function() {
+                if (jQuery.trim(jQuery(this).val()) == "") {
+                    jQuery(this).val(jQuery(this).attr('title'));
+                }
+            });
+        }); 
+        jQuery(".commentButton").each(function() {
+            jQuery(this).click( function() {
+                var form = jQuery(this).parents('form');
+                var field = form.find('.commentField');
+                var queryValue = jQuery.trim(field.val());
+                if ( queryValue != "" && queryValue != field.attr('title')) {
+                    form.submit();
+                }
+                return false;
+            });
+        }); 
+    });
+    
+</script>
 <div id="quickCompetitionDiv">
     <h2>Quick competition</h2>
     <c:choose>
@@ -34,10 +61,12 @@
 	        <table>
 	           <tr>
 	            <td class="userPicCell">
-	                <img class="userPic" src='<c:url value="/images/users/${activity.ownerId}.jpg"/>'/>
+	                <a href='<c:url value="/viewprofile/${activity.ownerId}.html"/>'>
+	                   <img class="userPic" src='<c:url value="/images/users/${activity.ownerId}.jpg"/>'/>
+	                </a>
 	            </td>
 	            <td class="">
-	               <h5>${activity.ownerName}</h5>
+	               <h5><a class="noline" href='<c:url value="/viewprofile/${activity.ownerId}.html"/>'>${activity.ownerName}</a></h5>
 	               <p>${activity.message}</p>
 	               <form name="likeForm_${activity.id}" action='<c:url value="/activitylike.html"/>' method="post">
                    <input type="hidden" name="activityId" value="${activity.id}"/>
@@ -55,7 +84,7 @@
 	                   <tr class="topTr"><td colspan="2"></td></tr>
 	                   <tr>
 		                   <td class="nowrap">
-			                   <h5>${like.ownerName}:</h5>
+			                   <h5><a class="noline" href='<c:url value="/viewprofile/${like.ownerId}.html"/>'>${like.ownerName}</a>:</h5>
 		                   </td>
 		                   <td width="100%">
 			                   likes this.
@@ -69,10 +98,12 @@
 	                   <tr class="topTr"><td colspan="2"></td></tr>
 	                   <tr>
 			               <td class="userPicCellComment">
+			                 <a href='<c:url value="/viewprofile/${comment.ownerId}.html"/>'>
 			                   <img class="userPic" src='<c:url value="/images/users/${comment.ownerId}.jpg"/>'/>
+			                 </a>  
 			               </td>
 		                   <td class="">
-			                   <h5>${comment.ownerName}</h5>
+			                   <h5><a class="noline" href='<c:url value="/viewprofile/${comment.ownerId}.html"/>'>${comment.ownerName}</a></h5>
 			                   <p>${comment.message}</p>
 		                   </td>
 	                   </tr>
@@ -86,9 +117,9 @@
                        <tr class="topTr"><td colspan="2"></td></tr>
                        <tr>
                         <td>
-		                  <input type="text" name="message" value="Write a comment" onfocus="this.value=''"/>
+		                  <input type="text" class="commentField" name="message" value="" title="Write a comment"/>
 		                </td>         
-		                <td class="nopadding"><button class="commentButton" onclick="submit();">&nbsp;</button></td>  
+		                <td class="nopadding"><button class="commentButton">&nbsp;</button></td>  
                        </tr>
                        <tr class="bottomTr"><td colspan="2" class="nopadding"></td></tr>
                    </table>

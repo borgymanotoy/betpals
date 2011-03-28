@@ -14,6 +14,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     <script type="text/javascript" src='<c:url value="/js/jquery-1.4.4.min.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-1.8.8.custom.min.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-timepicker-addon.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/jquery.Storage.js"/>'></script>
     <script type="text/javascript">
        function changeBgColor(color, logo) {
 	        jQuery("html").css("backgroundColor", color);
@@ -23,6 +24,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	        jQuery("#headerPane").removeClass("logo3");
 	        jQuery("#headerPane").removeClass("logo4");
 	        jQuery("#headerPane").addClass(logo);
+	        jQuery.Storage.set("backgroundColor", color);
 	   }
 
        jQuery(document).ready(function() {
@@ -30,6 +32,11 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     	    jQuery("table.altRows tr:odd").addClass("odd");
 
     	    jQuery("#tabs").tabs();
+    	    var bgColor = jQuery.Storage.get("backgroundColor");
+    	    if (bgColor) {
+                jQuery("html").css("backgroundColor", bgColor);
+                jQuery("body").css("backgroundColor", bgColor);
+    	    }
 	   });
 
 	   function goHome() {
