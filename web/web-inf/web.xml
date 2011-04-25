@@ -74,20 +74,108 @@
         <servlet-name>betpals</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    
-    
+<!--     
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type> 
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
+ -->    
+    <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=400</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=401</location>
+    </error-page>
+    <error-page>
+        <error-code>402</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=402</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=403</location>
+    </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/WEB-INF/jsp/errors/404.jsp</location>
+        <location>/WEB-INF/jsp/error.jsp?code=404</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=405</location>
+    </error-page>
+    <error-page>
+        <error-code>406</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=406</location>
+    </error-page>
+    <error-page>
+        <error-code>407</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=407</location>
+    </error-page>
+    <error-page>
+        <error-code>408</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=408</location>
+    </error-page>
+    <error-page>
+        <error-code>409</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=409</location>
+    </error-page>
+    <error-page>
+        <error-code>410</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=410</location>
+    </error-page>
+    <error-page>
+        <error-code>411</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=411</location>
+    </error-page>
+    <error-page>
+        <error-code>412</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=412</location>
+    </error-page>
+    <error-page>
+        <error-code>413</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=413</location>
+    </error-page>
+    <error-page>
+        <error-code>414</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=414</location>
+    </error-page>
+    <error-page>
+        <error-code>415</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=415</location>
+    </error-page>
+    <error-page>
+        <error-code>416</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=416</location>
+    </error-page>
+    <error-page>
+        <error-code>417</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=417</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/WEB-INF/jsp/errors/500.jsp</location>
+        <location>/WEB-INF/jsp/error.jsp?code=500</location>
     </error-page>
     <error-page>
-            <location>/WEB-INF/jsp/errors/default.jsp</location>
+        <error-code>501</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=501</location>
     </error-page>
-
+    <error-page>
+        <error-code>502</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=502</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=503</location>
+    </error-page>
+    <error-page>
+        <error-code>504</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=504</location>
+    </error-page>
+    <error-page>
+        <error-code>505</error-code>
+        <location>/WEB-INF/jsp/error.jsp?code=505</location>
+    </error-page>
     <welcome-file-list>
         <welcome-file>
             index.html

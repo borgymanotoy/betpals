@@ -1,5 +1,6 @@
 package se.telescopesoftware.betpals.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 //TODO: move to other package
 
@@ -11,13 +12,16 @@ import java.util.Set;
  */
 public class InvitationHelper {
 
+	public static final Integer MEDIA_FACEBOOK = 1; 
+	public static final Integer MEDIA_TWEETER = 2; 
+	
 	private Long competitionId;
 	private String invitation;
 	private boolean allFriends;
-	private Set<Long> friendsIdSet;
-	private Set<Long> groupIdSet;
-	private Set<Long> communityIdSet;
-	private Set<Long> mediaIdSet;
+	private Set<Long> friendsIdSet = new HashSet<Long>();
+	private Set<Long> groupIdSet = new HashSet<Long>();
+	private Set<Long> communityIdSet = new HashSet<Long>();
+	private Set<Integer> mediaIdSet = new HashSet<Integer>();
 	
 	
 	public String getInvitation() {
@@ -37,7 +41,7 @@ public class InvitationHelper {
 	}
 	
 	public Set<Long> getFriendsIdSet() {
-		return friendsIdSet;
+		return friendsIdSet != null ? friendsIdSet : new HashSet<Long>();
 	}
 	
 	public void setFriendsIdSet(Set<Long> friendsIdSet) {
@@ -45,7 +49,7 @@ public class InvitationHelper {
 	}
 	
 	public Set<Long> getGroupIdSet() {
-		return groupIdSet;
+		return groupIdSet != null ? groupIdSet : new HashSet<Long>();
 	}
 	
 	public void setGroupIdSet(Set<Long> groupIdSet) {
@@ -53,18 +57,18 @@ public class InvitationHelper {
 	}
 	
 	public Set<Long> getCommunityIdSet() {
-		return communityIdSet;
+		return communityIdSet != null ? communityIdSet : new HashSet<Long>();
 	}
 	
 	public void setCommunityIdSet(Set<Long> communityIdSet) {
 		this.communityIdSet = communityIdSet;
 	}
 	
-	public Set<Long> getMediaIdSet() {
+	public Set<Integer> getMediaIdSet() {
 		return mediaIdSet;
 	}
 	
-	public void setMediaIdSet(Set<Long> mediaIdSet) {
+	public void setMediaIdSet(Set<Integer> mediaIdSet) {
 		this.mediaIdSet = mediaIdSet;
 	}
 
@@ -74,6 +78,10 @@ public class InvitationHelper {
 
 	public void setCompetitionId(Long competitionId) {
 		this.competitionId = competitionId;
+	}
+	
+	public boolean shouldInviteToFacebook() {
+		return mediaIdSet != null ? mediaIdSet.contains(MEDIA_FACEBOOK) : false;
 	}
 
 }

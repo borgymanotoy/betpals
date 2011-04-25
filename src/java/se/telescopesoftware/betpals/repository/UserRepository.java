@@ -4,6 +4,7 @@ package se.telescopesoftware.betpals.repository;
 import java.util.Collection;
 import java.util.Date;
 
+import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -60,4 +61,11 @@ public interface UserRepository {
     
     Integer getUserRequestForUserCount(Long userId);
 
+    void storeGroup(Group group);
+    
+    Group loadGroupById(Long groupId);
+    
+    Collection<Group> loadUserGroups(Long userId);
+    
+    void deleteGroup(Long groupId);
 }

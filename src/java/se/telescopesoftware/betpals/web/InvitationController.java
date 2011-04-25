@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Activity;
@@ -36,14 +35,14 @@ public class InvitationController extends AbstractPalsController {
         this.activityService = activityService;
     }
 	
-	@RequestMapping(value="/invitations", method = RequestMethod.GET)
+	@RequestMapping(value="/invitations")
 	public String showActiveInvitations(Model model) {
 		
 		model.addAttribute("invitationList", competitionService.getInvitationsForUser(getUserId()));
 		return "activeInvitationsView";
 	}
 	
-	@RequestMapping(value="/invitation", method = RequestMethod.POST)
+	@RequestMapping(value="/invitation")
 	public String viewInvitation(@RequestParam("invitationId") Long invitationId, Model model) {
 		
 		Invitation invitation = competitionService.getInvitationById(invitationId);
@@ -52,7 +51,16 @@ public class InvitationController extends AbstractPalsController {
 		return "invitationView";
 	}
 	
-	@RequestMapping(value="/placebet", method = RequestMethod.POST)
+	@RequestMapping(value="/linkinvitation")
+	public String viewLinkInvitation(@RequestParam("competitionId") Long competitionId, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		Invitation invitation = new Invitation(competition, getUserId());
+		model.addAttribute("invitation", invitation);
+		model.addAttribute("competition", competition);
+		return "invitationView";
+	}
+	
+	@RequestMapping(value="/placebet")
 	public String placeBet(@RequestParam("invitationId") Long invitationId, @RequestParam("alternativeId") Long alternativeId, @RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
 		
 		Invitation invitation = competitionService.getInvitationById(invitationId);
@@ -85,7 +93,7 @@ public class InvitationController extends AbstractPalsController {
 		return "userHomepageAction";
 	}
 	
-	@RequestMapping(value="/placeanotherbet", method = RequestMethod.POST)
+	@RequestMapping(value="/placeanotherbet")
 	public String placeAnotherBet(@RequestParam("alternativeId") Long alternativeId, @RequestParam("competitionId") Long competitionId, @RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
 	
 		Competition competition = competitionService.getCompetitionById(competitionId);

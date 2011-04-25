@@ -225,6 +225,19 @@ p {
     padding-bottom: 2px;
     cursor: pointer;
 }
+.orangeButton90 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    width: 90px;
+    background-color: #fa7600;
+    border: 1px solid #a0cd70;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
 
 .addFriendButton {
     background-color: #ffffff;
@@ -504,6 +517,12 @@ p {
 #footerPane {
     height: 39px;
     background: transparent url("../i/btm_narrow.png") 0 0 no-repeat; 
+    padding-bottom: 30px;
+}
+
+#clearFooter {
+    height: 39px;
+    background: transparent url("../i/btm_n.png") 0 0 no-repeat; 
     padding-bottom: 30px;
 }
 

@@ -21,6 +21,16 @@ public class Activity {
 	private Collection<ActivityLike> likes;
 	
 	
+	public Activity() {
+	}
+	
+	public Activity(UserProfile userProfile, ActivityType type) {
+    	this.setCreated(new Date());
+    	this.setOwnerId(userProfile.getUserId());
+    	this.setOwnerName(userProfile.getFullName());
+    	this.setActivityType(type);
+	}
+	
 	public Long getId() {
 		return id;
 	}

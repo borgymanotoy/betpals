@@ -36,7 +36,7 @@ public class AccountController extends AbstractPalsController {
 		this.competitionService = competitionService;
 	}
 	
-	@RequestMapping(value="/addaccount", method = RequestMethod.GET)	
+	@RequestMapping(value="/addaccount", method=RequestMethod.GET)	
 	public String addNewAccount(ModelMap model) {
 		Collection<String> currencies = accountService.getSupportedCurrencies();
     	model.addAttribute("account", new Account());
@@ -45,7 +45,7 @@ public class AccountController extends AbstractPalsController {
 		return "addAccountView";
 	}
 	
-	@RequestMapping(value="/addaccount", method = RequestMethod.POST)	
+	@RequestMapping(value="/addaccount", method=RequestMethod.POST)	
 	public String saveNewAccount(@Valid Account account, BindingResult result, Model model, HttpSession session) {
     	if (result.hasErrors()) {
     		logger.debug("Error found: " + result.getErrorCount());
@@ -63,7 +63,7 @@ public class AccountController extends AbstractPalsController {
 		return "accountDetailsView";
 	}
 	
-	@RequestMapping(value="/accountdetails", method = RequestMethod.POST)	
+	@RequestMapping(value="/accountdetails")	
 	public String getAccount(@RequestParam("accountId") Long accountId, Model model) {
     	Account account = accountService.getAccount(accountId);
     	logger.debug("Retrieved account for id " + accountId);

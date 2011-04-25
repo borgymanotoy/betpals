@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +32,11 @@ public class UserProfile implements Serializable {
     private String checkPassword;
     private String oldPassword;
 
-	private Set<Long> friendsIdSet;
+	private Set<Long> friendsIdSet = new HashSet<Long>();
 
 	private MultipartFile userImageFile;
-    
+    private FacebookUser facebookUser;
+    private String facebookAccessToken;
 	
 	public UserProfile() {
     }
@@ -217,6 +219,22 @@ public class UserProfile implements Serializable {
 
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+
+	public FacebookUser getFacebookUser() {
+		return facebookUser;
+	}
+
+	public void setFacebookUser(FacebookUser facebookUser) {
+		this.facebookUser = facebookUser;
+	}
+
+	public String getFacebookAccessToken() {
+		return facebookAccessToken;
+	}
+
+	public void setFacebookAccessToken(String facebookAccessToken) {
+		this.facebookAccessToken = facebookAccessToken;
 	}
 
 }

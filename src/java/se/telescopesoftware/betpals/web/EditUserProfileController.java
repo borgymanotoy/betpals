@@ -41,14 +41,14 @@ public class EditUserProfileController extends AbstractPalsController {
     	this.appRoot = appRoot;
     }
 
-    @RequestMapping(value="/editprofile", method = RequestMethod.GET)
+    @RequestMapping(value="/editprofile", method=RequestMethod.GET)
     protected String formBackingObject(ModelMap model) {
     	model.addAttribute("userProfile", getUserProfile());
     	model.addAttribute("countryList", Country.values());
         return "editProfileView";
     }
 
-    @RequestMapping(value="/editprofile", method = RequestMethod.POST)
+    @RequestMapping(value="/editprofile", method=RequestMethod.POST)
     protected String onSubmit(@Valid UserProfile updatedUserProfile, BindingResult result, Model model) {
     	
     	if (result.hasErrors()) {

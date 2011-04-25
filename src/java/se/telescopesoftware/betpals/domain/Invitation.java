@@ -30,6 +30,10 @@ public class Invitation implements Serializable {
 	public Invitation() {
 	}
 
+	public Invitation(Competition competition, Long inviteeId) {
+		this(competition, competition.getOwner(), inviteeId);
+	}
+
 	public Invitation(Competition competition, UserProfile owner, Long inviteeId) {
 		this.ownerId = owner.getUserId();
 		this.ownerName = owner.getFullName();
@@ -38,7 +42,7 @@ public class Invitation implements Serializable {
 		this.competitionName = competition.getName();
 		this.deadline = competition.getDeadline();
 	}
-
+	
 	public Long getId() {
 		return id;
 	}

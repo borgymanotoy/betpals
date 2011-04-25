@@ -46,7 +46,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     
-	public Competition addCompetition(Competition competition) {
+	public Competition saveCompetition(Competition competition) {
 		return competitionRepository.storeCompetition(competition);
 	}
 
@@ -170,7 +170,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 				alternativeLost(alternative);
 			}
 		}
-		addCompetition(competition);
+		saveCompetition(competition);
 		competitionRepository.deleteInvitationsByCompetitionId(competitionId);
 	}
 
@@ -227,7 +227,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			}
 		}
 		competition.getDefaultEvent().setAlternatives(filteredAlternatives);
-		addCompetition(competition);
+		saveCompetition(competition);
 
 	}
 	

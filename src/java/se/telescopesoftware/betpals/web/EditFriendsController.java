@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.UserProfile;
@@ -21,7 +20,7 @@ public class EditFriendsController extends AbstractPalsController {
         this.userService = userService;
     }
 
-    @RequestMapping(value="/invitefriend", method = RequestMethod.POST)
+    @RequestMapping(value="/invitefriend")
     public String inviteFriend(@RequestParam("friendId") Long friendId) {
     	UserRequest request = new UserRequest();
     	request.setInviteeId(friendId);
@@ -38,7 +37,7 @@ public class EditFriendsController extends AbstractPalsController {
     /**
      * Accept request and add friend.
      */
-    @RequestMapping(value="/acceptrequest", method = RequestMethod.POST)
+    @RequestMapping(value="/acceptrequest")
     public String acceptRequest(@RequestParam("friendId") Long friendId, @RequestParam("requestId") Long requestId) {
     	
 //    	UserProfile userProfile = getUserProfile();
@@ -54,14 +53,14 @@ public class EditFriendsController extends AbstractPalsController {
     	return "friendsAndGroupsAction";
     }
 
-    @RequestMapping(value="/rejectrequest", method = RequestMethod.POST)
+    @RequestMapping(value="/rejectrequest")
     public String rejectRequest(@RequestParam("requestId") Long requestId, Model model) {
     	userService.deleteUserRequest(requestId);
     	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
     	return "userRequestsListView";
     }
     
-    @RequestMapping(value="/myrequests", method = RequestMethod.GET)
+    @RequestMapping(value="/myrequests")
     public String viewUserRequests(Model model) {
     	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
     	return "userRequestsListView";

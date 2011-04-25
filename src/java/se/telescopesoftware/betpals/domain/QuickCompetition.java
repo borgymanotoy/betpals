@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -79,7 +80,7 @@ public class QuickCompetition {
 	}
 	
 	public Set<Long> getFriendsIdSet() {
-		return friendsIdSet;
+		return friendsIdSet != null ? friendsIdSet : new HashSet<Long>();
 	}
 	
 	public void setFriendsIdSet(Set<Long> friendsIdSet) {
@@ -87,7 +88,7 @@ public class QuickCompetition {
 	}
 	
 	public Set<Long> getGroupIdSet() {
-		return groupIdSet;
+		return groupIdSet != null ? groupIdSet : new HashSet<Long>();
 	}
 	
 	public void setGroupIdSet(Set<Long> groupIdSet) {
@@ -110,9 +111,12 @@ public class QuickCompetition {
 		this.accountId = accountId;
 	}
 
-	public Competition createCompetition() {
+	public Competition createCompetition(Long ownerId, String currency) {
     	Competition competition = new Competition(getName());
+    	competition.setOwnerId(ownerId);
+    	competition.setCurrency(currency);
     	competition.setCompetitionType(CompetitionType.QUICK);
+    	competition.setStatus(CompetitionStatus.OPEN);
     	competition.setFixedStake(getStake());
     	competition.setAccessType(AccessType.PRIVATE);
     	competition.setDescription(getDescription());
@@ -132,6 +136,18 @@ public class QuickCompetition {
     	competition.addEvent(event);
 
     	return competition;
+	}
+	
+	public Bet createBet(UserProfile userProfile) {
+    	Bet bet = new Bet();
+    	bet.setOwnerId(userProfile.getUserId());
+    	bet.setOwnerName(userProfile.getFullName());
+    	bet.setAccountId(getAccountId());
+    	bet.setStake(getStake());
+    	bet.setDetails(getName());
+    	bet.setPlaced(new Date());
+    	
+    	return bet;
 	}
 
 	public Date getSettlingDeadline() {

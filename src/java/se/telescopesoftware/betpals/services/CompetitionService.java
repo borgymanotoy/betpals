@@ -12,7 +12,7 @@ import se.telescopesoftware.betpals.domain.UserProfile;
 public interface CompetitionService {
 
 	
-	Competition addCompetition(Competition competition);
+	Competition saveCompetition(Competition competition);
 	
 	Collection<Competition> getActiveCompetitionsByUser(Long userId);
 

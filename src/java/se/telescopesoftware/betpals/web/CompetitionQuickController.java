@@ -5,21 +5,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,11 +27,13 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
-import se.telescopesoftware.betpals.domain.CompetitionStatus;
+import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
+import se.telescopesoftware.betpals.services.FacebookService;
+import se.telescopesoftware.betpals.services.UserService;
 import se.telescopesoftware.betpals.utils.ThumbnailUtil;
 
 @Controller
@@ -41,10 +42,8 @@ public class CompetitionQuickController extends AbstractPalsController {
 	private CompetitionService competitionService;
 	private AccountService accountService;
 	private ActivityService activityService;
-    private String appRoot;
-
-    private static Logger logger = Logger.getLogger(CompetitionQuickController.class);
-
+	private FacebookService facebookService;
+	private UserService userService;
     
     @Autowired
     public void setActivityService(ActivityService activityService) {
@@ -61,78 +60,77 @@ public class CompetitionQuickController extends AbstractPalsController {
 		this.accountService = accountService;
 	}
 
-    @Autowired
-    public void setAppRoot(String appRoot) {
-    	this.appRoot = appRoot;
-    }
+	@Autowired
+	public void setFacebookService(FacebookService facebookService) {
+		this.facebookService = facebookService;
+	}
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+	
 
-	@RequestMapping(value="/quickcompetitionview", method = RequestMethod.POST)	
+	@RequestMapping(value="/quickcompetitionview")	
 	public String getView(@RequestParam("accountId") Long accountId, @RequestParam("stake") BigDecimal stake, @RequestParam("alternative") String alternative, Model model) {
 		QuickCompetition competition = new QuickCompetition();
 		competition.setName(alternative);
 		competition.setStake(stake);
 		competition.setAccountId(accountId);
     	model.addAttribute("quickCompetition", competition);
+    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+    	model.addAttribute("friendList", userService.getUserFriends(getUserId()));
 		
 		return "quickCompetitionView";
 	}
 	
-	@RequestMapping(value="/quickcompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/quickcompetition")	
 	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, Model model) {
     	if (result.hasErrors()) {
     		logger.debug("Error found: " + result.getFieldErrorCount());
     		return "quickCompetitionView";
     	}
     	
-    	Competition competition = quickCompetition.createCompetition();
-    	competition.setOwnerId(getUserId());
     	Account account = accountService.getAccount(quickCompetition.getAccountId());
-    	competition.setCurrency(account.getCurrency());
-    	competition.setStatus(CompetitionStatus.OPEN);
-    	
-    	competition = competitionService.addCompetition(competition);
+    	Competition competition = quickCompetition.createCompetition(getUserId(), account.getCurrency());
+    	competition = competitionService.saveCompetition(competition);
     	saveImage(quickCompetition.getImageFile(), competition.getId());
     	
-    	Bet bet = new Bet();
-    	bet.setOwnerId(getUserId());
-    	bet.setOwnerName(getUserProfile().getFullName());
-    	bet.setAccountId(quickCompetition.getAccountId());
-    	bet.setStake(quickCompetition.getStake());
-    	bet.setDetails(quickCompetition.getName());
+    	Bet bet = quickCompetition.createBet(getUserProfile());
     	bet.setSelectionId(competition.getOwnerAlternativeId());
-    	bet.setPlaced(new Date());
     	competitionService.placeBet(bet);
     	
+    	Set<Long> friendsIdSet = new HashSet<Long>();
+   	
     	if (quickCompetition.isAllFriends()) {
-    		competitionService.sendInvitationsToFriends(competition, getUserProfile().getFriendsIdSet(), getUserProfile());
+    		friendsIdSet.addAll(getUserProfile().getFriendsIdSet());
     	} else {
-    		competitionService.sendInvitationsToFriends(competition, quickCompetition.getFriendsIdSet(), getUserProfile());
+    		friendsIdSet.addAll(quickCompetition.getFriendsIdSet());
+    		Set<Long> groupIdSet = quickCompetition.getGroupIdSet();
+    		for (Long groupId : groupIdSet) {
+    			Group group = userService.getGroupById(groupId);
+    			friendsIdSet.addAll(group.getMembersIdSet());
+    		}
     	}
     	
-    	Activity activity = new Activity();
-    	activity.setCreated(new Date());
-    	activity.setOwnerId(getUserId());
-    	activity.setOwnerName(getUserProfile().getFullName());
-    	activity.setActivityType(ActivityType.MESSAGE);
+    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
+
+    	Activity activity = new Activity(getUserProfile(), ActivityType.MESSAGE);
     	activity.setMessage("Created new competition: " + competition.getName());
-    	
     	activityService.addActivity(activity);
 
-    	
-    	//TODO: Implement group invitation
-    	quickCompetition.getGroupIdSet();
-
-    	//TODO: Implement facebook publishing of quick competition
-    	quickCompetition.isFacebookPublish();
+    	if (quickCompetition.isFacebookPublish()) {
+    		facebookService.postCompetitionToUserWall(competition, getUserProfile());
+    	}
     	
 		return "userHomepageAction";
 	}
 
-	@RequestMapping(value="/competition/images/{competitionId}", method = RequestMethod.GET)	
+	@RequestMapping(value="/competition/images/{competitionId}")	
 	public void getImage(@PathVariable String competitionId, HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("Get image for competition: " + competitionId);
 
-    	String path = appRoot + "images" + File.separator + "competitions";
+    	String path = getAppRoot() + "images" + File.separator + "competitions";
     	File imageFile = new File(path, competitionId + ".jpg");
     	if (!imageFile.exists()) {
     		imageFile = new File(path, "empty.jpg");
@@ -155,7 +153,7 @@ public class CompetitionQuickController extends AbstractPalsController {
 	        	BufferedImage image = ImageIO.read(inputStream);
 	        	BufferedImage thumbnailImage = ThumbnailUtil.getScaledInstance(image, 50, 50);
 	
-	        	String path = appRoot + "images" + File.separator + "competitions";
+	        	String path = getAppRoot() + "images" + File.separator + "competitions";
 	        	File outputFile = new File(path, competitionId + ".jpg");
 	        	ImageIO.write(thumbnailImage, "jpg", outputFile);
 	        	logger.debug("Writing competition picture to " + outputFile.getPath());

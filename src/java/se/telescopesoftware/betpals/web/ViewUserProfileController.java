@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.CompetitionService;
@@ -29,7 +28,7 @@ public class ViewUserProfileController extends AbstractPalsController {
 	}
 
 	
-    @RequestMapping(value="/viewprofile/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value="/viewprofile/{userId}")
     protected String viewUserProfile(@PathVariable("userId") Long userId, ModelMap model) {
     	UserProfile userProfile = userService.getUserProfileByUserId(userId);
     	model.addAttribute("userProfile", userProfile);

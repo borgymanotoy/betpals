@@ -51,3 +51,9 @@ https://graph.facebook.com/me?access_token=119321918127784|2.j8WNMGUrM3Vgv1kyoXy
     </script>
   </body>
 </html>
+
+events, v1.0: only when creating a bet 
+
+- text: [user] just created the competition [betname] at Mybetpals. (whole text linked back to Mybetpals)
+
+- where: users own facebook wall

@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Competition;
@@ -28,7 +27,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		this.competitionService = competitionService;
 	}
 	
-	@RequestMapping(value="/managecompetitions", method = RequestMethod.GET)	
+	@RequestMapping(value="/managecompetitions")	
 	public String getCompetitionsListView(Model model, HttpSession session) {
 
 		model.addAttribute("competitionList", competitionService.getActiveCompetitionsByUser(getUserId()));
@@ -38,14 +37,14 @@ public class CompetitionManageController extends AbstractPalsController {
 		return "manageCompetitionsView";
 	}
 	
-	@RequestMapping(value="/settledcompetitions", method = RequestMethod.GET)	
+	@RequestMapping(value="/settledcompetitions")	
 	public String getSettledCompetitionsListView(Model model, HttpSession session) {
 		
 		model.addAttribute("competitionList", competitionService.getSettledCompetitionsByUser(getUserId()));
 		return "settledCompetitionsView";
 	}
 
-	@RequestMapping(value="/settledcompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/settledcompetition")	
 	public String getSettledCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
@@ -54,14 +53,14 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	
-	@RequestMapping(value="/ongoingcompetitions", method = RequestMethod.GET)	
+	@RequestMapping(value="/ongoingcompetitions")	
 	public String getOngoingCompetitionsListView(Model model, HttpSession session) {
 		model.addAttribute("competitionList", competitionService.getOngoingCompetitionsByUser(getUserId()));
 		
 		return "ongoingCompetitionsView";
 	}
 	
-	@RequestMapping(value="/ongoingcompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/ongoingcompetition")	
 	public String getOngoingCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
@@ -69,7 +68,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		return "ongoingCompetitionView";
 	}
 	
-	@RequestMapping(value="/managecompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/managecompetition")	
 	public String getManageCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
@@ -77,14 +76,14 @@ public class CompetitionManageController extends AbstractPalsController {
 		return "manageCompetitionView";
 	}
 	
-	@RequestMapping(value="/deletecompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/deletecompetition")	
 	public String deleteCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
 		competitionService.deleteCompetition(competitionId);
 		
 		return "manageCompetitionsAction";
 	}
 	
-	@RequestMapping(value="/voidalternative", method = RequestMethod.POST)	
+	@RequestMapping(value="/voidalternative")	
 	public String voidAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
 		competitionService.voidAlternative(competitionId, alternativeId);
 		
@@ -94,14 +93,14 @@ public class CompetitionManageController extends AbstractPalsController {
 		return "manageCompetitionView";
 	}
 	
-	@RequestMapping(value="/settlecompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/settlecompetition")	
 	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
 		competitionService.settleCompetition(competitionId, alternativeId);
 		
 		return "manageCompetitionsAction";
 	}
 	
-	@RequestMapping(value="/updatecompetition", method = RequestMethod.POST)	
+	@RequestMapping(value="/updatecompetition")	
 	public String inviteToCompetition(@ModelAttribute("competition") Competition competition, BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			logger.debug("Error found: " + result.getErrorCount());
@@ -111,7 +110,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		Competition storedCompetition = competitionService.getCompetitionById(competition.getId());
 		storedCompetition.setDeadline(competition.getDeadline());
 		storedCompetition.setSettlingDeadline(competition.getSettlingDeadline());
-		competitionService.addCompetition(storedCompetition);
+		competitionService.saveCompetition(storedCompetition);
 		
 		
 		return "manageCompetitionsAction";

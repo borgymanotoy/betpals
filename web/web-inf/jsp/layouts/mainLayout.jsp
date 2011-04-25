@@ -19,6 +19,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
        function changeBgColor(color, logo) {
 	        jQuery("html").css("backgroundColor", color);
 	        jQuery("body").css("backgroundColor", color);
+	        jQuery("#langSelector").css("backgroundColor", color);
 	        jQuery("#headerPane").removeClass("logo1");
 	        jQuery("#headerPane").removeClass("logo2");
 	        jQuery("#headerPane").removeClass("logo3");
@@ -36,12 +37,20 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     	    if (bgColor) {
                 jQuery("html").css("backgroundColor", bgColor);
                 jQuery("body").css("backgroundColor", bgColor);
+                jQuery("#langSelector").css("backgroundColor", bgColor);
     	    }
 	   });
 
 	   function goHome() {
 		    window.location = '<c:url value="/home.html"/>';
 	   }
+	   
+       function changeLanguage() {
+    	   var language = jQuery("#langSelector option:selected").val();
+           jQuery('input', '#languageForm').val(language);
+           jQuery('#languageForm').submit();
+       } 
+
     		          
     </script>
 </head>
@@ -62,4 +71,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 		<tiles:insertAttribute name="footer"/>
 	</div>
 </body>
+<form action="" method="post" id="languageForm">
+    <input type="hidden" name="lang" value=""/>
+</form>
+
 </html>

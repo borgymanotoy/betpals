@@ -24,25 +24,28 @@
     </definition>
 
 <!-- Friends and groups definitions ______________________________________________ -->
-    <definition name="friendsAndGroupsView" extends="homeView">
+    <definition name="friendsAndGroupsTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/friends.jsp"/>
     </definition>
-    <definition name="friendsResultsView" extends="homeView">
+    <definition name="friendsResultsTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/friendsResults.jsp"/>
+    </definition>
+    <definition name="editGroupTilesView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/groupEdit.jsp"/>
     </definition>
 <!-- ______________________________________________________________________________ -->
 
 <!-- Account definitions __________________________________________________________ -->
-    <definition name="addAccountView" extends="homeView">
+    <definition name="addAccountTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountAdd.jsp"/>
     </definition>
-    <definition name="accountDetailsView" extends="homeView">
+    <definition name="accountDetailsTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountDetails.jsp"/>
     </definition>
-    <definition name="accountDepositView" extends="homeView">
+    <definition name="accountDepositTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountDeposit.jsp"/>
     </definition>
-    <definition name="accountWithdrawView" extends="homeView">
+    <definition name="accountWithdrawTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/accountWithdraw.jsp"/>
     </definition>
 <!-- _______________________________________________________________________________ -->    

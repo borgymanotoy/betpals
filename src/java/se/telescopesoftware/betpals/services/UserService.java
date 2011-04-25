@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import se.telescopesoftware.betpals.domain.FacebookUser;
+import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -13,7 +15,9 @@ import se.telescopesoftware.betpals.domain.UserSearchForm;
 public interface UserService extends UserDetailsService {
 
     Long registerUser(User user);
-
+    
+    Long registerFacebookUser(FacebookUser facebookUser);
+    
     void updateUserProfile(UserProfile userProfile);
 
     Collection<User> getAllUsers(User user, Integer lastLog, Integer lastReg);
@@ -51,4 +55,13 @@ public interface UserService extends UserDetailsService {
     Collection<UserRequest> getUserRequestByUser(Long userId);
     
     Integer getUserRequestForUserCount(Long userId);
+    
+    void saveGroup(Group group);
+    
+    Group getGroupById(Long groupId);
+    
+    Collection<Group> getUserGroups(Long userId);
+    
+    void deleteGroup(Long groupId);
+    
 }

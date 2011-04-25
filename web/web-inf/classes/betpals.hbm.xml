@@ -60,20 +60,6 @@
         </set>
     </class>
 
-    <class name="se.telescopesoftware.betpals.domain.Group" table="groups">
-        <id name="id" column="id">
-            <generator class="native"/>
-        </id>
-        <property name="ownerId"/>    
-        <property name="created"/>    
-        <property name="name"/>    
-        <property name="description"/>    
-        <set name="membersIdSet" table="group_members" lazy="false">
-            <key column="group_id"/>
-            <element column="member_id" type="long"/>
-        </set>
-    </class>
-    
     <class name="se.telescopesoftware.betpals.domain.Activity" table="activities">
         <id name="id" column="id">
             <generator class="native"/>

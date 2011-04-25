@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Account;
@@ -26,7 +25,7 @@ public class AccountDepositController extends AbstractPalsController {
 		this.accountService = accountService;
 	}
 	
-	@RequestMapping(value="/accountdepositview", method = RequestMethod.POST)	
+	@RequestMapping(value="/accountdepositview")	
 	public String getView(@RequestParam("accountId") Long accountId, Model model) {
     	model.addAttribute("accountId", accountId);
 		
@@ -34,7 +33,7 @@ public class AccountDepositController extends AbstractPalsController {
 	}
 	
 	//TODO: Add transaction (not account transaction) around deposit method	
-	@RequestMapping(value="/accountdeposit", method = RequestMethod.POST)	
+	@RequestMapping(value="/accountdeposit")	
 	public String depositToAccount(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
 		//TODO: Add parameter validation
 		//TODO: Add validation for account

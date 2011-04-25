@@ -11,6 +11,11 @@
 				jQuery(this).val(jQuery(this).attr('title'));
 			}
 		});
+		
+		var selectedTab = "${tab}";
+		if (selectedTab == "groups") {
+			jQuery("#tabs").tabs("select", 1);
+		}
 	});
 	
 	function searchFriends() {
@@ -86,9 +91,23 @@
         </c:if>
     </div>
     <div id="groups" class="contentDiv">
-        <div class="right"><a class="blueDotLink" href='<c:url value="/creategroup.html"/>'>Create new group</a></div>
-        <ul id="groupList">
-        
+        <div class="right"><a class="blueDotLink" href='<c:url value="/editgroup.html"/>'>Create new group</a></div>
+        <ul id="friendList">
+        <c:forEach items="${groupList}" var="group">
+            <li>
+                <div class="span-12 userNameDiv">
+                    <div class="span-11">
+                        <h5><a class="noline" href='<c:url value="/editgroup.html?groupId=${group.id}"/>'>${group.name}</a></h5>
+                    </div>
+                    <div class="span-1 last right">
+                        <form action='<c:url value="/deletegroup.html"/>' method="post">
+                            <input type="hidden" name="groupId" value="${group.id}"/>
+                            <button class="deleteButton" onclick="submit();">&nbsp;</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        </c:forEach>
         </ul>
         <p>&nbsp;</p>
     </div>

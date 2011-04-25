@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import se.telescopesoftware.betpals.domain.FacebookUser;
+import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -175,6 +178,41 @@ public class UserServiceImpl implements UserService {
 		if (userRequest != null) {
 			userRepository.deleteUserRequest(userRequest);
 		}
+	}
+
+	public Long registerFacebookUser(FacebookUser facebookUser) {
+		User user = new User(facebookUser.getMybetpalsUsername());
+		user.encodeAndSetPassword(facebookUser.getMybetpalsPassword());
+		Long userId = registerUser(user);
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserId(userId);
+		userProfile.setName(facebookUser.getFirstName());
+		userProfile.setSurname(facebookUser.getLastName());
+		userProfile.setEmail(facebookUser.getEmail());
+		userProfile.setRegistrationDate(new Date());
+		updateUserProfile(userProfile);
+		
+		return userId;
+	}
+
+	public void saveGroup(Group group) {
+		for (Long memberId : group.getMembersIdSet()) {
+			group.addMember(getUserProfileByUserId(memberId));
+		}
+		
+		userRepository.storeGroup(group);
+	}
+
+	public Group getGroupById(Long groupId) {
+		return userRepository.loadGroupById(groupId);
+	}
+
+	public Collection<Group> getUserGroups(Long userId) {
+		return userRepository.loadUserGroups(userId);
+	}
+
+	public void deleteGroup(Long groupId) {
+		userRepository.deleteGroup(groupId);
 	}
     
     

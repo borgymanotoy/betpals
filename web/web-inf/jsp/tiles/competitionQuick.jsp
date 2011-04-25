@@ -62,7 +62,7 @@
             <h6>Friends</h6>
             <div class="selectionDiv115">
 		        <ul class="selectionList">
-		        <c:forEach items="${friendsSideList}" var="friend">
+		        <c:forEach items="${friendList}" var="friend">
 			        <li><form:checkbox path="friendsIdSet" label="${friend.fullName}" value="${friend.id}"/></li>
 		        </c:forEach>
 		        </ul>
@@ -71,6 +71,11 @@
         <div class="span-4 last">
             <h6>Groups</h6>
             <div class="selectionDiv115">
+                <ul class="selectionList">
+                <c:forEach items="${groupList}" var="group">
+                    <li><form:checkbox path="groupIdSet" label="${group.name}" value="${group.id}"/></li>
+                </c:forEach>
+                </ul>
             </div>
         </div>
     </div>    

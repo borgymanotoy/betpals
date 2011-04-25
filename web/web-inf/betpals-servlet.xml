@@ -10,12 +10,24 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <mvc:annotation-driven />
+    <mvc:interceptors>
+	    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+	        <property name="paramName" value="lang"/>
+	    </bean>
+    </mvc:interceptors>
     <mvc:resources mapping="/i/**" location="/i/" />    
     <mvc:resources mapping="/images/**" location="/images/" />    
     <mvc:resources mapping="/css/**" location="/css/" />    
     <mvc:resources mapping="/js/**" location="/js/" />    
+    <mvc:resources mapping="/Changes.txt" location="/Changes.txt" />    
+    
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en" />
+        <property name="cookieName" value="clientlanguage"/>
+        <!-- in seconds. If set to -1, the cookie is not persisted (deleted when browser shuts down) -->
+        <property name="cookieMaxAge" value="100000"/>
+    </bean>
 
-    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
 
     <bean id="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator"/>
@@ -54,25 +66,17 @@
 
     <context:component-scan base-package="se.telescopesoftware.betpals.web"/>
     
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-    <!--     <property name="webBindingInitializer">
-            <bean class="org.springframework.samples.petclinic.web.ClinicBindingInitializer"/>
-        </property>
-         -->
-    </bean>
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
     <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
     
-    <bean id="facebookReturnUrl" class="java.lang.String">
-        <constructor-arg type="java.lang.String" value="http://www.mybetpals.com/facebooklogin.html" />
+<!--     <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">defaultErrorView</prop>
+            </props>
+        </property>
     </bean>
-    <bean id="facebookClientId" class="java.lang.String">
-        <constructor-arg type="java.lang.String" value="119321918127784" />
-    </bean>
-    <bean id="facebookClientSecret" class="java.lang.String">
-        <constructor-arg type="java.lang.String" value="e03b93a9954a8727f7da34e641a8b8ec" />
-    </bean>
-    
-
+ -->
     <!-- Repositories ========================================================= -->
     <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -98,6 +102,17 @@
         <property name="accountService" ref="accountService"/>
         <property name="activityService" ref="activityService"/>
     </bean>
+    <bean id="facebookService" class="se.telescopesoftware.betpals.services.FacebookServiceImpl">
+        <property name="facebookClientId" value="119321918127784"/>
+        <property name="facebookClientSecret" value="e03b93a9954a8727f7da34e641a8b8ec"/>
+        <property name="facebookReturnUrl" value="http://www.mybetpals.com/facebooklogin.html"/>
+        <property name="facebookAuthorizeUrl" value="https://graph.facebook.com/oauth/authorize"/>
+        <property name="facebookAccessTokenUrl" value="https://graph.facebook.com/oauth/access_token"/>
+        <property name="facebookUserInfoUrl" value="https://graph.facebook.com/me"/>
+        <property name="facebookApiUrl" value="https://graph.facebook.com/"/>
+        <property name="competitionUrl" value="https://www.mybetpals.com/join/"/>
+    </bean>
+    
     <!-- ================================================================= -->
 
 </beans>

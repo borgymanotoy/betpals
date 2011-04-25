@@ -45,6 +45,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 				<value>se.telescopesoftware.betpals.domain.Bet</value>
 				<value>se.telescopesoftware.betpals.domain.Invitation</value>
 				<value>se.telescopesoftware.betpals.domain.UserRequest</value>
+				<value>se.telescopesoftware.betpals.domain.Group</value>
 			</list>
 		</property>
 		<property name="mappingResources">
@@ -72,8 +73,10 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
 	<security:http create-session="always">
 		<security:intercept-url pattern="/i/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/css/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/join/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/login.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/facebooklogin.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -82,17 +85,12 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		<security:form-login login-page='/login.html' default-target-url='/home.html' authentication-failure-url="/login.html" />
 		<security:logout logout-success-url="/login.html"/>
+		<security:remember-me key="abracadabra"/>
 	</security:http>
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider
 			ref="daoAuthenticationProvider" />
 	</security:authentication-manager>
-
-	<bean id="rememberMeServices"
-		class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
-		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="key" value="abracadabra" />
-	</bean>
 
 	<bean id="daoAuthenticationProvider"
 		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">

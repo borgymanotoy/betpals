@@ -16,37 +16,59 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     <link rel="stylesheet" href='<c:url value="/css/site.css"/>' type="text/css" media="screen, projection"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src='<c:url value="/js/jquery-1.4.4.min.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/jquery.Storage.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/fadegallery.jquery.js"/>'></script>
     <script type="text/javascript">
        function changeBgColor(color, logo) {
-    	    jQuery("html").css("backgroundColor", color);
-    	    jQuery("body").css("backgroundColor", color);
-    	    jQuery("#headerPane").removeClass("logo1");
-    	    jQuery("#headerPane").removeClass("logo2");
-    	    jQuery("#headerPane").removeClass("logo3");
-    	    jQuery("#headerPane").removeClass("logo4");
-    	    jQuery("#headerPane").addClass(logo);
+           jQuery("html").css("backgroundColor", color);
+           jQuery("body").css("backgroundColor", color);
+           jQuery("#langSelector").css("backgroundColor", color);
+           jQuery("#headerPane").removeClass("logo1");
+           jQuery("#headerPane").removeClass("logo2");
+           jQuery("#headerPane").removeClass("logo3");
+           jQuery("#headerPane").removeClass("logo4");
+           jQuery("#headerPane").addClass(logo);
+           jQuery.Storage.set("backgroundColor", color);
        }
 
        function facebookLogin() {
     	   window.location.href = '<c:url value="/facebooklogin.html"/>';
        } 
 
+       function changeLanguage() {
+           var language = jQuery("#langSelector option:selected").val();
+           jQuery('input', '#languageForm').val(language);
+           jQuery('#languageForm').submit();
+       } 
+       
        jQuery(document).ready(function() {
            jQuery("#usernameField").focus();
            jQuery("#gallery").gallery();
+           var bgColor = jQuery.Storage.get("backgroundColor");
+           if (bgColor) {
+               jQuery("html").css("backgroundColor", bgColor);
+               jQuery("body").css("backgroundColor", bgColor);
+               jQuery("#langSelector").css("backgroundColor", bgColor);
+           }
+           
        });
       
     </script>
 </head>
 <body>
 <div class="container">
-    <div class="span-24 colorDiv">
+    <div class="span-21 colorDiv">
     &nbsp;
         <a href="javascript:changeBgColor('#242b21', 'logo4');"><img src='<c:url value="/i/c1.jpg"/>'/></a>
         <a href="javascript:changeBgColor('#001d44', 'logo3');"><img src='<c:url value="/i/c2.jpg"/>'/></a>
         <a href="javascript:changeBgColor('#67b116', 'logo1');"><img src='<c:url value="/i/c3.jpg"/>'/></a>
         <a href="javascript:changeBgColor('#297085', 'logo2');"><img src='<c:url value="/i/c4.jpg"/>'/></a>
+    </div>
+    <div class="span-3 last left" style="padding-top: 42px;">
+	    <select id="langSelector" style="background-color: #67b116; color: white; margin: 0; font-size: 12px;" onchange="changeLanguage();">
+	        <option value="en" <c:if test="${pageContext.response.locale == 'en'}">selected="selected"</c:if>>English</option>
+	        <option value="sv_SE" <c:if test="${pageContext.response.locale == 'sv_SE'}">selected="selected"</c:if>>Svenska</option>
+	    </select>
     </div>
     <div class="span-24 headerPane logo1" id="headerPane">
         <form action="<c:url value='j_spring_security_check'/>" method="post"">
@@ -101,6 +123,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     </div>
     <div class="span-24" id="bottom">&nbsp;</div>
 </div>
+<form action="" method="post" id="languageForm">
+    <input type="hidden" name="lang" value=""/>
+</form>
 
 </body>
 </html>

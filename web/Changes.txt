@@ -1,0 +1,17 @@
+
+== Version 0.8.1 =======================================================
+
+New features and CRs
+
+    * Facebook publish for create competition invitations page
+    * Direct link to competition (like https://www.mybetpals.com/join/MTMwMzU3NjMwMzk0OC8xNg==)
+    * Invitation landing page (from links sent by mail, published to facebook, etc.)
+    * Custom error pages
+    * Language selection (still need translation work)
+    * User groups
+    
+
+Bug fixes
+    
+    * Remember me checkbox doesn't work
+    * Exception on facebook publish for not facebook users

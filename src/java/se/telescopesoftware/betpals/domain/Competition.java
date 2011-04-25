@@ -24,6 +24,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.codec.Base64;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -127,7 +128,6 @@ public class Competition {
 		return id;
 	}
 
-	@SuppressWarnings("unused")
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -181,8 +181,8 @@ public class Competition {
 	}
 	
 	/**
-	 * Find and return the alternative id for quick competition.
-	 * It will be alternative with type TRUE.
+	 * Find and return the Alternative id for quick competition.
+	 * It will be Alternative with type TRUE.
 	 */
 	public Long getOwnerAlternativeId() {
 		for (Event event : events) {
@@ -300,6 +300,14 @@ public class Competition {
 
 	public void setStatus(CompetitionStatus status) {
 		this.status = status;
+	}
+	
+	public String getEncodedLink() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(System.currentTimeMillis());
+		sb.append("/");
+		sb.append(getId());
+		return new String(Base64.encode(sb.toString().getBytes())); 
 	}
 	
 }

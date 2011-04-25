@@ -24,7 +24,7 @@ ${competition.name}
 ${competition.description}
 
 Do you wanna join?
-https://www.mybetpals.com/ce12ceab21
+https://www.mybetpals.com/join/${competition.encodedLink}
             </textarea>
         </div>
     </div>
@@ -40,7 +40,7 @@ https://www.mybetpals.com/ce12ceab21
             <h6>Friends</h6>
             <div class="selectionDiv115">
                 <ul class="selectionList">
-                <c:forEach items="${friendsSideList}" var="friend">
+                <c:forEach items="${friendList}" var="friend">
                     <li><form:checkbox path="friendsIdSet" label="${friend.fullName}" value="${friend.id}"/></li>
                 </c:forEach>
                 </ul>
@@ -49,6 +49,11 @@ https://www.mybetpals.com/ce12ceab21
         <div class="span-4">
             <h6>Groups</h6>
             <div class="selectionDiv115">
+                <ul class="selectionList">
+                <c:forEach items="${groupList}" var="group">
+                    <li><form:checkbox path="groupIdSet" label="${group.name}" value="${group.id}"/></li>
+                </c:forEach>
+                </ul>
             </div>
         </div>
         <div class="span-4 last">
