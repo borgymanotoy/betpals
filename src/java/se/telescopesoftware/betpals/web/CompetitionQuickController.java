@@ -79,7 +79,7 @@ public class CompetitionQuickController extends AbstractPalsController {
 		competition.setAccountId(accountId);
     	model.addAttribute("quickCompetition", competition);
     	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-    	model.addAttribute("friendList", userService.getUserFriends(getUserId()));
+    	model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "quickCompetitionView";
 	}
@@ -117,7 +117,7 @@ public class CompetitionQuickController extends AbstractPalsController {
 
     	Activity activity = new Activity(getUserProfile(), ActivityType.MESSAGE);
     	activity.setMessage("Created new competition: " + competition.getName());
-    	activityService.addActivity(activity);
+    	activityService.saveActivity(activity);
 
     	if (quickCompetition.isFacebookPublish()) {
     		facebookService.postCompetitionToUserWall(competition, getUserProfile());

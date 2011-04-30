@@ -102,7 +102,7 @@ public class CompetitionController extends AbstractPalsController {
 		invitationHelper.setCompetitionId(competitionId);
 		model.addAttribute(invitationHelper);
     	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-    	model.addAttribute("friendList", userService.getUserFriends(getUserId()));
+    	model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "inviteToCompetitionView";
 	}
@@ -216,7 +216,7 @@ public class CompetitionController extends AbstractPalsController {
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.MESSAGE);
     	activity.setMessage("Created new competition: " + competition.getName());
-    	activityService.addActivity(activity);
+    	activityService.saveActivity(activity);
 		
 		return "manageCompetitionsAction";
 	}

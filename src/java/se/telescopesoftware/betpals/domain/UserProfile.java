@@ -5,14 +5,30 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.springframework.web.multipart.MultipartFile;
 
+@Entity
+@Table(name="userprofile")
 public class UserProfile implements Serializable {
 
 	private static final long serialVersionUID = 7328993013096806624L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-    private Long userId;
     private String name;
     private String surname;
     private String email;
@@ -27,16 +43,37 @@ public class UserProfile implements Serializable {
     private Date lastLoginDate;
     private Integer numberOfVisits;
 
+    @Transient
     private String username;
+    @Transient
     private String password;
+    @Transient
     private String checkPassword;
+    @Transient
     private String oldPassword;
 
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="userId")
+    private User user;
+
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+        name="user_friends",
+        joinColumns = @JoinColumn(name="user_id"),
+        inverseJoinColumns = @JoinColumn(name="friend_id")
+    )
+	private Set<UserProfile> friends = new HashSet<UserProfile>();
+
+	@Transient
 	private Set<Long> friendsIdSet = new HashSet<Long>();
 
+	@Transient
 	private MultipartFile userImageFile;
+	@Transient
     private FacebookUser facebookUser;
+	@Transient
     private String facebookAccessToken;
+	
 	
 	public UserProfile() {
     }
@@ -51,13 +88,19 @@ public class UserProfile implements Serializable {
     }
 
     public Long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     public void setUserId(Long userId) {
-        this.userId = userId;
+    	System.out.println("Setting user id!");
+
+//        this.userId = userId;
     }
 
+    public void setUser(User user) {
+    	this.user = user;
+    }
+    
 	public String getName() {
         return name;
     }
@@ -161,10 +204,31 @@ public class UserProfile implements Serializable {
         this.oldPassword = oldPassword;
     }
 
-	public Set<Long> getFriendsIdSet() {
-		return friendsIdSet;
+	public void setFriends(Set<UserProfile> friends) {
+		this.friends = friends;
 	}
 
+	public Set<UserProfile> getFriends() {
+		return friends;
+	}
+	
+	public void addFriend(UserProfile userProfile) {
+		this.friends.add(userProfile);
+	}
+
+	public Set<Long> getFriendsIdSet() {
+		if (friendsIdSet != null && !friendsIdSet.isEmpty()) {
+			return friendsIdSet;
+		}
+		
+		Set<Long> idSet = new HashSet<Long>();
+		for (UserProfile friend : friends) {
+			idSet.add(friend.getId());
+		}
+		
+		return idSet;
+	}
+    
 	public void setFriendsIdSet(Set<Long> friendsIdSet) {
 		this.friendsIdSet = friendsIdSet;
 	}

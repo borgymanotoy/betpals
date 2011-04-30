@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,10 +27,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
         if (list == null || list.isEmpty()) {
             throw new UsernameNotFoundException("No user found.");
         }
-        User user = (User) list.get(0);
-        user.setUserProfile(loadUserProfile(user.getId()));
-        user.setRoles(loadUserRoles(user.getId()));
-        return user;
+        return (User) list.get(0);
     }
 
     public User loadUserByEmail(String email) {
@@ -45,10 +41,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     }
 
     public User loadUserByUserId(Long id) {
-        User user = (User) getHibernateTemplate().load(User.class, id);
-        user.setUserProfile(loadUserProfile(user.getId()));
-        user.setRoles(loadUserRoles(user.getId()));
-        return user;
+        return getHibernateTemplate().load(User.class, id);
     }
 
     public boolean isUsernameExists(String username) {
@@ -62,54 +55,21 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 
     private UserProfile loadUserProfile(Long userId) {
         @SuppressWarnings("unchecked")
-		List<UserProfile> list = getHibernateTemplate().find("from UserProfile profile where profile.userId = ?", userId);
+		List<UserProfile> list = getHibernateTemplate().find("from UserProfile profile where profile.user.id = ?", userId);
         if (list.isEmpty()) {
             UserProfile userProfile = new UserProfile();
             return userProfile;
         }
-        UserProfile userProfile = (UserProfile) list.get(0);
-        return userProfile;
-    }
-
-    private void storeUserRoles(User user) {
-    	deleteUserRoles(user);
-        Set<String> roles = user.getRoles();
-        String username = user.getUsername();
-        Long userId = user.getId();
-        for (String role : roles) {
-            Authority authority = new Authority();
-            authority.setAuthority(role);
-            authority.setUserId(userId);
-            authority.setUsername(username);
-            storeAuthority(authority);
-        }
-    }
-
-    private Collection<String> loadUserRoles(Long userId) {
-        @SuppressWarnings("unchecked")
-		List<Authority> list = getHibernateTemplate().find("from Authority auth where auth.userId = ?", userId);
-        List<String> roles = new ArrayList<String>();
-        for (Authority authority : list) {
-            roles.add(authority.getAuthority());
-        }
-        return roles;
-    }
-
-    private void storeAuthority(Authority authority) {
-        getHibernateTemplate().saveOrUpdate(authority);
+        return (UserProfile) list.get(0);
     }
 
     public void storeUser(User user) {
         getHibernateTemplate().saveOrUpdate(user);
-    	storeUserRoles(user);
     }
 
     public Long registerUser(User user) {
         User storedUser = (User) getHibernateTemplate().merge(user);
-        Long id = storedUser.getId();
-        storedUser.setRoles(user.getRoles());
-        storeUserRoles(storedUser);
-        return id;
+        return storedUser.getId();
     }
 
     public void updateUserProfile(UserProfile userProfile) {
@@ -119,11 +79,6 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     public Collection<User> loadAllUsers(User user, Integer lastLog, Integer lastReg) {
         @SuppressWarnings("unchecked")
 		List<User> list = getHibernateTemplate().find("from User u where u.id != ? and u.id != 0 order by username", user.getId());
-        for (User loadedUser : list) {
-            Long userId = loadedUser.getId();
-            UserProfile userProfile = loadUserProfile(userId);
-            loadedUser.setUserProfile(userProfile);
-        }
 
         if (lastLog != null) {
             list = filterUsersByLastLoginDate(list, lastLog);
@@ -362,11 +317,8 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 		return getHibernateTemplate().findByNamedParam("from Group g where g.ownerId = :userId", "userId", userId);
 	}
 
-	public void deleteGroup(Long groupId) {
-		Group group = loadGroupById(groupId);
-		if (group != null) {
-			getHibernateTemplate().delete(group);
-		}
+	public void deleteGroup(Group group) {
+		getHibernateTemplate().delete(group);
 	}
     
 }

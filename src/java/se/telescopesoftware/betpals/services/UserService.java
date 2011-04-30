@@ -62,6 +62,6 @@ public interface UserService extends UserDetailsService {
     
     Collection<Group> getUserGroups(Long userId);
     
-    void deleteGroup(Long groupId);
+    void deleteGroup(Long groupId, Long userId);
     
 }

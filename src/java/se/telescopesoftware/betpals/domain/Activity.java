@@ -3,21 +3,46 @@ package se.telescopesoftware.betpals.domain;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
+@Entity
+@Table(name="activities")
 public class Activity {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private Long ownerId;
 	private String ownerName;
+	@Enumerated(EnumType.STRING)
 	private ActivityType activityType;
 	private String message;
 	private Date created;
 	
+    @OneToMany(mappedBy="activity", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    @Fetch(FetchMode.SUBSELECT)
 	private Collection<ActivityComment> comments;
+    @OneToMany(mappedBy="activity", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    @Fetch(FetchMode.SUBSELECT)
 	private Collection<ActivityLike> likes;
 	
 	
@@ -29,6 +54,11 @@ public class Activity {
     	this.setOwnerId(userProfile.getUserId());
     	this.setOwnerName(userProfile.getFullName());
     	this.setActivityType(type);
+	}
+	
+	public Activity(UserProfile userProfile, String message, ActivityType type) {
+		this(userProfile, type);
+		this.message = message;
 	}
 	
 	public Long getId() {
@@ -88,12 +118,20 @@ public class Activity {
 		this.comments = collection;
 	}
 
+	public void addComment(ActivityComment comment) {
+		this.comments.add(comment);
+	}
+	
 	public Collection<ActivityLike> getLikes() {
 		return likes;
 	}
 
 	public void setLikes(Collection<ActivityLike> likes) {
 		this.likes = likes;
+	}
+	
+	public void addLike(ActivityLike like) {
+		this.likes.add(like);
 	}
 	
 	public String getTimeSinceCreated() {
@@ -118,6 +156,18 @@ public class Activity {
 	     .toFormatter();
 
 		return formatter.print(period);
+	}
+	
+	public boolean checkOwnership(Long userId) {
+		return getOwnerId().compareTo(userId) == 0;
+	}
+	
+	public boolean hasComments() {
+		return !this.comments.isEmpty();
+	}
+	
+	public boolean hasLikes() {
+		return !this.likes.isEmpty();
 	}
 	
 }

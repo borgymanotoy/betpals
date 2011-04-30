@@ -88,7 +88,7 @@ public class InvitationController extends AbstractPalsController {
     	activity.setActivityType(ActivityType.MESSAGE);
     	activity.setMessage("Joined the competition: " + competition.getName());
     	
-    	activityService.addActivity(activity);
+    	activityService.saveActivity(activity);
 
 		return "userHomepageAction";
 	}

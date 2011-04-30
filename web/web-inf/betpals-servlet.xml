@@ -77,6 +77,12 @@
         </property>
     </bean>
  -->
+ 
+     <bean id="activitiesPerPage" class="java.lang.Integer">
+        <constructor-arg type="java.lang.String" value="10" />
+    </bean>
+ 
+ 
     <!-- Repositories ========================================================= -->
     <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -92,6 +98,7 @@
     <!-- Services =========================================================== -->
     <bean id="activityService" class="se.telescopesoftware.betpals.services.ActivityServiceImpl">
         <property name="activityRepository" ref="activityRepository"/>
+        <property name="defaultItemsPerPage" ref="activitiesPerPage"/>
     </bean>
     <bean id="accountService" class="se.telescopesoftware.betpals.services.AccountServiceImpl">
         <property name="accountRepository" ref="accountRepository"/>

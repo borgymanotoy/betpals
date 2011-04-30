@@ -1,4 +1,18 @@
 
+== Version 0.8.2 =======================================================
+
+New features and CRs
+
+    * Remove comment function added
+    * Remove "like" function added
+    * Delete activity function added
+    * Pagination for user wall entries
+    * Support for administrative interface added (roles, login logic)
+
+Bug fixes
+
+
+
 == Version 0.8.1 =======================================================
 
 New features and CRs

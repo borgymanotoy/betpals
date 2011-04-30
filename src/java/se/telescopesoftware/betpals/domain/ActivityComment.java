@@ -2,15 +2,41 @@ package se.telescopesoftware.betpals.domain;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="activities_comments")
 public class ActivityComment {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private Long activityId;
 	private Long ownerId;
 	private String ownerName;
 	private String message;
 	private Date created;
 	
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="activityId")
+    private Activity activity;
+	
+	public ActivityComment() {
+	}
+
+	public ActivityComment(UserProfile userProfile, String message, Activity activity) {
+    	this.setCreated(new Date());
+    	this.setOwnerId(userProfile.getUserId());
+    	this.setOwnerName(userProfile.getFullName());
+    	this.setMessage(message);
+    	this.setActivity(activity);
+	}
 	
 	public Long getId() {
 		return id;
@@ -22,11 +48,11 @@ public class ActivityComment {
 	}
 	
 	public Long getActivityId() {
-		return activityId;
+		return activity.getId();
 	}
 	
-	public void setActivityId(Long activityId) {
-		this.activityId = activityId;
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 	
 	public Long getOwnerId() {
@@ -59,6 +85,16 @@ public class ActivityComment {
 	
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	
+	public boolean checkOwnership(Long userId) {
+		return getOwnerId().compareTo(userId) == 0;
+	}
+
+	public String toString() {
+		return "ActivityComment [id=" + id + ", activityId=" + getActivityId()
+				+ ", ownerId=" + ownerId + ", ownerName=" + ownerName
+				+ ", message=" + message + ", created=" + created + "]";
 	}
 	
 }

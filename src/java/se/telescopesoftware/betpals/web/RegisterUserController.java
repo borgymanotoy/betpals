@@ -71,12 +71,13 @@ public class RegisterUserController {
         User user = new User(username);
         user.encodeAndSetPassword(password);
 
-        Long userId = userService.registerUser(user);
-        userProfile.setUserId(userId);
         userProfile.setUsername(username);
         userProfile.setRegistrationDate(new Date(System.currentTimeMillis()));
-        userService.updateUserProfile(userProfile);
+        userProfile.setUser(user);
+
         user.setUserProfile(userProfile);
+        
+        Long userId = userService.registerUser(user);
         model.addAttribute(user);
 
         String path = appRoot + "images" + File.separator + "users";

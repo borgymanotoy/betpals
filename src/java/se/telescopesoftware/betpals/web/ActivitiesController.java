@@ -1,7 +1,5 @@
 package se.telescopesoftware.betpals.web;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +9,6 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
 import se.telescopesoftware.betpals.domain.ActivityType;
-import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.ActivityService;
 
 @Controller
@@ -26,47 +23,53 @@ public class ActivitiesController extends AbstractPalsController {
 
     @RequestMapping(value="/activities")
     public String post(@RequestParam("message") String message) {
-    	UserProfile userProfile = getUserProfile();
-    	
-    	Activity activity = new Activity();
-    	activity.setCreated(new Date());
-    	activity.setOwnerId(getUserId());
-    	activity.setOwnerName(userProfile.getFullName());
-    	activity.setActivityType(ActivityType.MESSAGE);
-    	activity.setMessage(message);
-    	
-    	activityService.addActivity(activity);
+    	Activity activity = new Activity(getUserProfile(), message, ActivityType.MESSAGE);
+    	activityService.saveActivity(activity);
     	
     	return "userHomepageAction";
     }
 
     @RequestMapping(value="/activitycomment")
     public String postComment(@RequestParam("message") String message, @RequestParam("activityId") Long activityId) {
-    	UserProfile userProfile = getUserProfile();
-    	
-    	ActivityComment comment = new ActivityComment();
-    	comment.setCreated(new Date());
-    	comment.setOwnerId(getUserId());
-    	comment.setOwnerName(userProfile.getFullName());
-    	comment.setMessage(message);
-    	comment.setActivityId(activityId);
-    	
-    	activityService.addActivityComment(comment);
-    	
+    	Activity activity = activityService.getActivity(activityId);
+    	if (activity != null) {
+    		ActivityComment comment = new ActivityComment(getUserProfile(), message, activity);
+    		activity.addComment(comment);
+    		activityService.saveActivity(activity);
+    	}    	
+
     	return "userHomepageAction";
     }
     
     @RequestMapping(value="/activitylike")
     public String postLike(@RequestParam("activityId") Long activityId) {
-    	UserProfile userProfile = getUserProfile();
+    	Activity activity = activityService.getActivity(activityId);
+    	if (activity != null) {
+    		ActivityLike like = new ActivityLike(getUserProfile(), activity);
+    		activity.addLike(like);
+    		activityService.saveActivity(activity);
+    	}
     	
-    	ActivityLike like = new ActivityLike();
-    	like.setCreated(new Date());
-    	like.setOwnerId(getUserId());
-    	like.setOwnerName(userProfile.getFullName());
-    	like.setActivityId(activityId);
+    	return "userHomepageAction";
+    }
+    
+    @RequestMapping(value="/removelike")
+    public String removeLike(@RequestParam("likeId") Long likeId) {
+    	activityService.deleteActivityLike(likeId, getUserId());
     	
-    	activityService.addActivityLike(like);
+    	return "userHomepageAction";
+    }
+    
+    @RequestMapping(value="/removecomment")
+    public String removeComment(@RequestParam("commentId") Long commentId) {
+    	activityService.deleteActivityComment(commentId, getUserId());
+    	
+    	return "userHomepageAction";
+    }
+    
+    @RequestMapping(value="/removeactivity")
+    public String removeActivity(@RequestParam("activityId") Long activityId) {
+    	activityService.deleteActivity(activityId, getUserId());
     	
     	return "userHomepageAction";
     }

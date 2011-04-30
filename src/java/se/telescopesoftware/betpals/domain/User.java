@@ -5,13 +5,24 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 
+@Entity
+@Table(name="users")
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = -707288000475263023L;
@@ -19,17 +30,22 @@ public class User implements UserDetails {
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_SUPERVISOR = "ROLE_SUPERVISOR";
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
     private String username;
     private String password;
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
     private boolean enabled = true;
-    private Set<String> roles = new HashSet<String>();
 
-    private UserProfile userProfile;
+    @OneToMany(mappedBy="user", fetch=FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    private Set<Authority> authorities = new HashSet<Authority>();
+    
+    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    private Set<UserProfile> userProfileSet = new HashSet<UserProfile>();
 
+    
     public User() {
     }
 
@@ -78,38 +94,11 @@ public class User implements UserDetails {
     }
 
     public Collection<GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
-        for (String role : roles) {
-            grantedAuthorities.add(new GrantedAuthorityImpl(role));
-        }
-        return grantedAuthorities;
+        return new HashSet<GrantedAuthority>(authorities);
     }
 
     public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    @SuppressWarnings("unused")
-	private void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    @SuppressWarnings("unused")
-	private void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    @SuppressWarnings("unused")
-	private void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+        return isEnabled();
     }
 
     public boolean isEnabled() {
@@ -121,27 +110,21 @@ public class User implements UserDetails {
     }
 
     public UserProfile getUserProfile() {
-        return userProfile;
+    	if (userProfileSet.isEmpty()) {
+    		return null;
+    	}
+        return userProfileSet.iterator().next();
     }
 
     public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<String> roles) {
-        this.roles.addAll(roles);
+    	Set<UserProfile> profileSet = new HashSet<UserProfile>();
+    	profileSet.add(userProfile);
+        this.userProfileSet = profileSet;
     }
 
     public void addRole(String role) {
-        this.roles.add(role);
-    }
-    
-    public void removeRole(String role) {
-    	this.roles.remove(role);
+    	Authority authority = new Authority(this, role);
+        this.authorities.add(authority);
     }
     
     public void encodeAndSetPassword(String password) {
@@ -152,11 +135,24 @@ public class User implements UserDetails {
     }
     
     public boolean isSupervisor() {
-    	return this.roles.contains(ROLE_SUPERVISOR);
+    	for (GrantedAuthority authority : authorities) {
+    		if (authority.getAuthority().equalsIgnoreCase(ROLE_SUPERVISOR)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 
     public boolean getSupervisor() {
     	return isSupervisor();
     }
+
+	public boolean isAccountNonLocked() {
+		return isEnabled();
+	}
+
+	public boolean isCredentialsNonExpired() {
+		return isEnabled();
+	}
 
 }

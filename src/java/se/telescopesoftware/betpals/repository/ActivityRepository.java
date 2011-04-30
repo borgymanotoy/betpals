@@ -18,9 +18,24 @@ public interface ActivityRepository {
 	
 	void saveActivityLike(ActivityLike like);
 	
-	Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds);
+	Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage);
 	
 	Collection<ActivityComment> loadActivityComments(Long activityId);
 	
 	Collection<ActivityLike> loadActivityLikes(Long activityId);
+	
+	ActivityComment loadActivityComment(Long commentId);
+	
+	ActivityLike loadActivityLike(Long likeId);
+	
+	Activity loadActivity(Long activityId);
+	
+	void deleteActivityComment(ActivityComment comment);
+	
+	void deleteActivityLike(ActivityLike like);
+	
+	void deleteActivity(Activity activity);
+	
+	Integer getActivitiesCountForUserProfile(Collection<Long> ownerIds);
+
 }

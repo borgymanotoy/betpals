@@ -34,7 +34,6 @@ public class Group {
 	private String name;
 	private String description;
 
-	//TODO: Check cascade type for possible side effects
 	@OneToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name="group_members",
@@ -115,6 +114,10 @@ public class Group {
 
 	public void setMembersIdSet(Set<Long> membersIdSet) {
 		this.membersIdSet = membersIdSet;
+	}
+
+	public boolean checkOwnership(Long userId) {
+		return getOwnerId().compareTo(userId) == 0;
 	}
 
 	

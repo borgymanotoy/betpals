@@ -70,6 +70,18 @@ h2.dark {
     margin-bottom: 0px;
 }
 
+h2.dark_long {
+    background: transparent url("../i/h2_dark_long.png") 0 0 no-repeat;   
+    height: 35px;
+    color: #FFFFFF;
+    font-family: "MS Trebuchet",sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 16px;
+    padding-top: 8px;
+    margin-bottom: 0px;
+}
+
 h3 {
     font-family: "MS Trebuchet", sans-serif;
     font-size: 20px;
@@ -146,6 +158,19 @@ p {
     padding-bottom: 2px;
     cursor: pointer;
 }
+.whiteButton110 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #9f9fa0;
+    width: 110px;
+    background-color: #ffffff;
+    border: 1px solid #a3a3a3;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
 .whiteButton140 {
     font-family: "MS Trebuchet", sans-serif;
     font-size: 11px;
@@ -160,6 +185,19 @@ p {
     cursor: pointer;
 }
 
+.blueButton90 {
+    font-family: "MS Trebuchet", sans-serif;
+    font-size: 11px;
+    color: #ffffff;
+    width: 90px;
+    background-color: #297085;
+    border: 1px solid #79a3b1;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
 .blueButton110 {
     font-family: "MS Trebuchet", sans-serif;
     font-size: 11px;

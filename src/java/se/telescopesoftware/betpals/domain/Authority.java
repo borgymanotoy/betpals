@@ -1,13 +1,42 @@
 package se.telescopesoftware.betpals.domain;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class Authority {
+import org.springframework.security.core.GrantedAuthority;
 
-    private long id;
-    private long userId;
+@Entity
+@Table(name="authority")
+public class Authority implements GrantedAuthority {
+
+	private static final long serialVersionUID = 4636060732805014021L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
     private String username;
     private String authority;
 
+    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="userId")
+    private User user;
+    
+    
+    public Authority() {
+    }
+
+    public Authority(User user, String role) {
+    	this.user = user;
+    	this.username = user.getUsername();
+    	this.authority = role;
+    }
+    
     public long getId() {
         return id;
     }
@@ -17,12 +46,8 @@ public class Authority {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public Long getUserId() {
+        return user.getId();
     }
 
     public String getUsername() {

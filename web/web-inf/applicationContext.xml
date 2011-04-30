@@ -37,6 +37,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		</property>
 		<property name="annotatedClasses">
 			<list>
+				<value>se.telescopesoftware.betpals.domain.User</value>
+				<value>se.telescopesoftware.betpals.domain.UserProfile</value>
 				<value>se.telescopesoftware.betpals.domain.Account</value>
 				<value>se.telescopesoftware.betpals.domain.AccountTransaction</value>
 				<value>se.telescopesoftware.betpals.domain.Competition</value>
@@ -46,11 +48,11 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 				<value>se.telescopesoftware.betpals.domain.Invitation</value>
 				<value>se.telescopesoftware.betpals.domain.UserRequest</value>
 				<value>se.telescopesoftware.betpals.domain.Group</value>
-			</list>
-		</property>
-		<property name="mappingResources">
-			<list>
-				<value>betpals.hbm.xml</value>
+				<value>se.telescopesoftware.betpals.domain.Community</value>
+				<value>se.telescopesoftware.betpals.domain.Authority</value>
+				<value>se.telescopesoftware.betpals.domain.Activity</value>
+				<value>se.telescopesoftware.betpals.domain.ActivityComment</value>
+				<value>se.telescopesoftware.betpals.domain.ActivityLike</value>
 			</list>
 		</property>
 		<property name="eventListeners">
@@ -83,7 +85,9 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/favicon.ico" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/robots.txt" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
-		<security:form-login login-page='/login.html' default-target-url='/home.html' authentication-failure-url="/login.html" />
+		<security:intercept-url pattern="/admin**" access="ROLE_SUPERVISOR" />
+		
+		<security:form-login login-page='/login.html' default-target-url='/index.html' authentication-failure-url="/login.html" />
 		<security:logout logout-success-url="/login.html"/>
 		<security:remember-me key="abracadabra"/>
 	</security:http>

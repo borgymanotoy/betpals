@@ -38,7 +38,7 @@ public class GroupsController extends AbstractPalsController {
     public String deleteGroup(@RequestParam(value="groupId") Long groupId, Model model) {
 		Group group = userService.getGroupById(groupId);
 		if (group.getOwnerId().compareTo(getUserId()) == 0) {
-			userService.deleteGroup(groupId);
+			userService.deleteGroup(groupId, getUserId());
 		}
     	
     	model.addAttribute("tab", "groups");
@@ -56,7 +56,7 @@ public class GroupsController extends AbstractPalsController {
     	} else {
     		model.addAttribute(new Group());
     	}
-    	model.addAttribute("friendsList", userService.getUserFriends(getUserId()));
+    	model.addAttribute("friendsList", getUserProfile().getFriends());
         return "editGroupView";
     }
 

@@ -20,7 +20,7 @@ public class SearchFriendsController extends AbstractPalsController {
 
     @RequestMapping(value="/allfriends")
     public String get(@RequestParam(value="tab", required=false) String selectedTab, Model model) {
-    	model.addAttribute("friendsList", userService.getUserFriends(getUserId()));
+    	model.addAttribute("friendsList", getUserProfile().getFriends());
     	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
     	model.addAttribute("userRequestList", userService.getUserRequestByUser(getUserId()));
 

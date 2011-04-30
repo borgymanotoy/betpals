@@ -67,5 +67,5 @@ public interface UserRepository {
     
     Collection<Group> loadUserGroups(Long userId);
     
-    void deleteGroup(Long groupId);
+    void deleteGroup(Group group);
 }

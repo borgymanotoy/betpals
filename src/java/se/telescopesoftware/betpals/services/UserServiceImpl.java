@@ -139,17 +139,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public Collection<UserProfile> getUserFriends(Long userId) {
-		List<UserProfile> result = new ArrayList<UserProfile>();
 		UserProfile userProfile = getUserProfileByUserId(userId);
 		if (userProfile == null) {
 			logger.error("Could not load user profile for userId " + userId);
-			return result;
-		}
-		for(Long friendId : userProfile.getFriendsIdSet()) {
-			result.add(getUserProfileByUserId(friendId));
+			return new ArrayList<UserProfile>();
 		}
 		
-		return result;
+		return userProfile.getFriends();
 	}
 
 	public void sendUserRequest(UserRequest userRequest) {
@@ -183,16 +179,16 @@ public class UserServiceImpl implements UserService {
 	public Long registerFacebookUser(FacebookUser facebookUser) {
 		User user = new User(facebookUser.getMybetpalsUsername());
 		user.encodeAndSetPassword(facebookUser.getMybetpalsPassword());
-		Long userId = registerUser(user);
 		UserProfile userProfile = new UserProfile();
-		userProfile.setUserId(userId);
 		userProfile.setName(facebookUser.getFirstName());
 		userProfile.setSurname(facebookUser.getLastName());
 		userProfile.setEmail(facebookUser.getEmail());
 		userProfile.setRegistrationDate(new Date());
-		updateUserProfile(userProfile);
+		userProfile.setUser(user);
 		
-		return userId;
+		user.setUserProfile(userProfile);
+		
+		return registerUser(user);
 	}
 
 	public void saveGroup(Group group) {
@@ -211,8 +207,11 @@ public class UserServiceImpl implements UserService {
 		return userRepository.loadUserGroups(userId);
 	}
 
-	public void deleteGroup(Long groupId) {
-		userRepository.deleteGroup(groupId);
+	public void deleteGroup(Long groupId, Long userId) {
+		Group group = userRepository.loadGroupById(groupId);
+		if (group.checkOwnership(userId)) {
+			userRepository.deleteGroup(group);
+		}
 	}
     
     

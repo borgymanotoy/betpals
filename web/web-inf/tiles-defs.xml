@@ -96,5 +96,17 @@
 <!-- _______________________________________________________________________________ -->
 
 
+<!-- 
+=====================================================================================
+Administrative part
+=====================================================================================
+ -->
+    <definition name="adminHomeTilesView" template="/WEB-INF/jsp/layouts/adminLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/jsp/tiles/admin/header.jsp"/>
+        <put-attribute name="leftPane" value="/WEB-INF/jsp/tiles/admin/leftPane.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/home.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/jsp/tiles/admin/footer.jsp"/>
+    </definition>
+
 
 </tiles-definitions>
