@@ -12,6 +12,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
+import se.telescopesoftware.betpals.domain.ActivityType;
 
 public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
 		implements ActivityRepository {
@@ -22,12 +23,13 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage) {
+	public Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage, ActivityType activityType) {
     	List<Activity> result = new ArrayList<Activity>();
 		Session session = getSession();
-    	Query query = session.createQuery("from Activity a where a.ownerId in (:ownerIds) order by a.created desc");
+    	Query query = session.createQuery("from Activity a where a.ownerId in (:ownerIds) and a.activityType = :activityType order by a.created desc");
     	query.setParameterList("ownerIds", ownerIds);
-
+    	query.setParameter("activityType", activityType);
+    	
     	int offset = 0;
         int resultsPerPage = itemsPerPage.intValue();
         if (pageNumber.intValue() > 0) {
@@ -40,10 +42,10 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
     	result = query.list();
     	session.close();
     	
-    	for(Activity activity : result) {
-    		activity.setComments(loadActivityComments(activity.getId()));
-    		activity.setLikes(loadActivityLikes(activity.getId()));
-    	}
+//    	for(Activity activity : result) {
+//    		activity.setComments(loadActivityComments(activity.getId()));
+//    		activity.setLikes(loadActivityLikes(activity.getId()));
+//    	}
     	
     	return result;
 	}
@@ -67,11 +69,11 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
 	}
 
 	public ActivityComment loadActivityComment(Long commentId) {
-		return getHibernateTemplate().load(ActivityComment.class, commentId);
+		return getHibernateTemplate().get(ActivityComment.class, commentId);
 	}
 
 	public ActivityLike loadActivityLike(Long likeId) {
-		return getHibernateTemplate().load(ActivityLike.class, likeId);
+		return getHibernateTemplate().get(ActivityLike.class, likeId);
 	}
 
 	public void deleteActivityComment(ActivityComment comment) {
@@ -91,6 +93,41 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
 	}
 
 	public Integer getActivitiesCountForUserProfile(Collection<Long> ownerIds) {
-    	return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from Activity a where a.ownerId in (:ownerIds)", "ownerIds", ownerIds));
+    	return DataAccessUtils.intResult(
+    			getHibernateTemplate().findByNamedParam("select count(*) from Activity a where a.ownerId in (:ownerIds) and a.activityType = :activityType",
+    					new String[] {"ownerIds", "activityType"},
+    					new Object[] { ownerIds, ActivityType.USER }) );
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Activity> loadActivitiesForExtensionIdAndType(
+			Long extensionId, Integer pageNumber, Integer itemsPerPage,
+			ActivityType activityType) {
+    	List<Activity> result = new ArrayList<Activity>();
+		Session session = getSession();
+    	Query query = session.createQuery("from Activity a where a.extensionId = :extensionId and a.activityType = :activityType order by a.created desc");
+    	query.setParameter("extensionId", extensionId);
+    	query.setParameter("activityType", activityType);
+    	
+    	int offset = 0;
+        int resultsPerPage = itemsPerPage.intValue();
+        if (pageNumber.intValue() > 0) {
+            offset = pageNumber.intValue() * resultsPerPage;
+        }
+
+        query.setFirstResult(offset);
+        query.setMaxResults(resultsPerPage);
+    	
+    	result = query.list();
+    	session.close();
+    	
+    	return result;
+	}
+
+	public Integer getActivitiesCountForExtensionIdAndType(Long extensionId, ActivityType activityType) {
+    	return DataAccessUtils.intResult(
+    			getHibernateTemplate().findByNamedParam("select count(*) from Activity a where a.extensionId = :extensionId and a.activityType = :activityType",
+    					new String[] {"extensionId", "activityType"},
+    					new Object[] { extensionId, activityType }) );
 	}
 }

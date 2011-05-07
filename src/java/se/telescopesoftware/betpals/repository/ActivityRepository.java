@@ -5,6 +5,7 @@ import java.util.Collection;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
+import se.telescopesoftware.betpals.domain.ActivityType;
 
 /**
  * Used to store and retrieve from persistent storage all Activity related information.
@@ -18,7 +19,9 @@ public interface ActivityRepository {
 	
 	void saveActivityLike(ActivityLike like);
 	
-	Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage);
+	Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage, ActivityType activityType);
+
+	Collection<Activity> loadActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType);
 	
 	Collection<ActivityComment> loadActivityComments(Long activityId);
 	
@@ -37,5 +40,7 @@ public interface ActivityRepository {
 	void deleteActivity(Activity activity);
 	
 	Integer getActivitiesCountForUserProfile(Collection<Long> ownerIds);
+
+	Integer getActivitiesCountForExtensionIdAndType(Long extensionId, ActivityType activityType);
 
 }

@@ -488,6 +488,20 @@ p {
     border-bottom: 1px solid #d4d4d4;
     margin-bottom: 4px;
 }
+#communityActivitiesList {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-bottom: 1px;
+    background: #e5e5e5;
+}
+#communityActivitiesList li {
+    padding-top: 20px;
+    padding-right: 38px;
+    background: #f6f6f6;
+    border-bottom: 1px solid #d4d4d4;
+    margin-bottom: 4px;
+}
 
 #searchButton {
     height: 28px;
@@ -713,13 +727,13 @@ p {
     margin-bottom: 18px;
 }
 
-#wallInputDiv {
+.wallInputDiv {
     padding-top: 30px;
     background: #f6f6f6;
     border-left: 1px solid #d4d4d4;
     border-right: 1px solid #d4d4d4;
 }
-#wallInputDiv h3 {
+.wallInputDiv h3 {
     font-family: "MS Trebuchet", sans-serif;
     font-weight: bold;
     font-size: 16px;
@@ -727,7 +741,22 @@ p {
     padding-left: 16px;
     margin-bottom: 6px;
 }
-#wallInputDiv input[type='text'] {
+.wallInputDiv input[type='text'] {
+    margin-left: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #88898a;
+    margin-left: 40px;
+    width: 455px;
+    height: 24px;
+    border: 1px solid #b5b6b6;
+    margin-bottom: 12px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+.wallInputActivityField {
     margin-left: 30px;
     font-family: Arial, sans-serif;
     font-size: 11px;
@@ -1072,6 +1101,16 @@ tr.odd td {background-color: #e5e5e5;}
     background-color: #f6f6f6;
     border: 1px solid #D4D4D4;
 	-moz-border-radius: 0px 0px 3px 3px;
+}
+
+.communityTitle {
+	color: #1b6d87;
+    font-weight: bold;
+}
+.communityCount {
+	color: #1b6d87;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 /* css for timepicker */

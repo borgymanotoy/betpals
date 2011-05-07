@@ -3,20 +3,20 @@ package se.telescopesoftware.betpals.services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
+import se.telescopesoftware.betpals.domain.UserRequestType;
 import se.telescopesoftware.betpals.domain.UserSearchForm;
 import se.telescopesoftware.betpals.repository.UserRepository;
 
@@ -122,20 +122,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public Collection<UserProfile> searchUserProfiles(String query, Long userId) {
-		Collection<UserProfile> result = userRepository.findUserProfiles(query);
-		Collection<UserProfile> filteredResult = new HashSet<UserProfile>();
-		
-		UserProfile userProfile = getUserProfileByUserId(userId);
-		Set<Long> idSet = userProfile.getFriendsIdSet();
-		idSet.add(userId);
-		
-		for(UserProfile friend : result) {
-			if(!idSet.contains(friend.getUserId())) {
-				filteredResult.add(friend);
-			}
-		}
-
-		return filteredResult;
+		return userRepository.findUserProfiles(query);
 	}
 
 	public Collection<UserProfile> getUserFriends(Long userId) {
@@ -149,26 +136,35 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void sendUserRequest(UserRequest userRequest) {
-		for (UserRequest request : getUserRequestByUser(userRequest.getOwnerId())) {
-			if (request.getInviteeId().compareTo(userRequest.getInviteeId()) == 0) {
+		for (UserRequest request : getAllUserRequestsByUser(userRequest.getOwnerId())) {
+			if (request.getInviteeId().compareTo(userRequest.getInviteeId()) == 0 
+					&& request.getRequestType() == userRequest.getRequestType()) {
 				return; // Do not send duplicate requests
 			}
 		}
 		userRepository.storeUserRequest(userRequest);
 	}
 
-	public Collection<UserRequest> getUserRequestForUser(Long userId) {
-		return userRepository.loadUserRequestForUser(userId);
+	public Collection<UserRequest> getAllUserRequestsForUser(Long userId) {
+		return userRepository.loadUserRequestsForUser(userId, null);
 	}
 
-	public Collection<UserRequest> getUserRequestByUser(Long userId) {
-		return userRepository.loadUserRequestByUser(userId);
+	public Collection<UserRequest> getAllUserRequestsByUser(Long userId) {
+		return userRepository.loadUserRequestsByUser(userId, null);
 	}
 
 	public Integer getUserRequestForUserCount(Long userId) {
 		return userRepository.getUserRequestForUserCount(userId);
 	}
 
+	public Collection<UserRequest> getUserRequestsForUserByType(Long userId, UserRequestType requestType) {
+		return userRepository.loadUserRequestsForUser(userId, requestType);
+	}
+
+	public Collection<UserRequest> getUserRequestsByUserByType(Long userId, UserRequestType requestType) {
+		return userRepository.loadUserRequestsByUser(userId, requestType);
+	}
+    
 	public void deleteUserRequest(Long requestId) {
 		UserRequest userRequest = userRepository.loadUserRequestById(requestId);
 		if (userRequest != null) {
@@ -213,6 +209,33 @@ public class UserServiceImpl implements UserService {
 			userRepository.deleteGroup(group);
 		}
 	}
-    
-    
+
+	public Community saveCommunity(Community community) {
+		return userRepository.storeCommunity(community);
+	}
+
+	public Community getCommunityById(Long communityId) {
+		return userRepository.loadCommunityById(communityId);
+	}
+
+	public Collection<Community> getUserCommunities(Long userId) {
+		return userRepository.loadUserCommunities(userId);
+	}
+
+	public void deleteCommunity(Long communityId, Long userId) {
+		Community community = userRepository.loadCommunityById(communityId);
+		if (community.checkOwnership(userId) && community.getMembers().size() == 1) {
+			userRepository.deleteCommunity(community);
+		}
+	}
+
+	public Collection<Community> searchCommunities(String query) {
+		return userRepository.findCommunities(query);
+	}
+
+	public UserRequest getUserRequestById(Long requestId) {
+		return userRepository.loadUserRequestById(requestId);
+	}
+
+   
 }

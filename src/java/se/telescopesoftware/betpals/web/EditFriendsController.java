@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
+import se.telescopesoftware.betpals.domain.UserRequestType;
 import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
@@ -22,15 +24,8 @@ public class EditFriendsController extends AbstractPalsController {
 
     @RequestMapping(value="/invitefriend")
     public String inviteFriend(@RequestParam("friendId") Long friendId) {
-    	UserRequest request = new UserRequest();
-    	request.setInviteeId(friendId);
-    	request.setOwnerId(getUserId());
-    	request.setOwnerName(getUserProfile().getFullName());
-
     	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
-    	request.setInviteeName(friendProfile.getFullName());
-    	
-    	userService.sendUserRequest(request);
+    	userService.sendUserRequest(new UserRequest(getUserProfile(), friendProfile));
     	return "friendsAndGroupsAction";
     }
     
@@ -38,31 +33,34 @@ public class EditFriendsController extends AbstractPalsController {
      * Accept request and add friend.
      */
     @RequestMapping(value="/acceptrequest")
-    public String acceptRequest(@RequestParam("friendId") Long friendId, @RequestParam("requestId") Long requestId) {
-    	
-//    	UserProfile userProfile = getUserProfile();
-//    	userProfile.addFriend(friendId);
-    	
-//    	userService.updateUserProfile(userProfile);
+    public String acceptRequest(@RequestParam("requestId") Long requestId) {
+    	UserRequest userRequest = userService.getUserRequestById(requestId);
+    	UserProfile friendProfile = userService.getUserProfileByUserId(userRequest.getOwnerId());
 
-    	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
-    	friendProfile.addFriend(getUserId());
-    	userService.updateUserProfile(friendProfile);
+    	if (userRequest.getRequestType() == UserRequestType.COMMUNITY) {
+    		Community community = userService.getCommunityById(userRequest.getExtensionId());
+    		community.addMember(friendProfile);
+    		userService.saveCommunity(community);
+    	} else {
+    		friendProfile.addFriend(getUserProfile());
+    		userService.updateUserProfile(friendProfile);
+    	}
+    	
     	userService.deleteUserRequest(requestId);
     	
-    	return "friendsAndGroupsAction";
+    	return "userRequestsListAction";
     }
 
     @RequestMapping(value="/rejectrequest")
     public String rejectRequest(@RequestParam("requestId") Long requestId, Model model) {
     	userService.deleteUserRequest(requestId);
-    	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
-    	return "userRequestsListView";
+    	return "userRequestsListAction";
     }
     
     @RequestMapping(value="/myrequests")
     public String viewUserRequests(Model model) {
-    	model.addAttribute("userRequestList", userService.getUserRequestForUser(getUserId()));
+    	model.addAttribute("userRequestFriendList", userService.getUserRequestsForUserByType(getUserId(), UserRequestType.FRIEND));
+    	model.addAttribute("userRequestCommunityList", userService.getUserRequestsForUserByType(getUserId(), UserRequestType.COMMUNITY));
     	return "userRequestsListView";
     }
 

@@ -49,6 +49,7 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 		getHibernateTemplate().saveOrUpdate(bet);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<Bet> loadActiveBetsByUser(Long userId) {
 		return getHibernateTemplate().findByNamedParam("from Bet b where b.ownerId = :ownerId", "ownerId", userId);
 	}

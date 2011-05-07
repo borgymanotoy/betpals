@@ -12,7 +12,7 @@
 <div class="span-3 last left" style="padding-top: 42px;">
     <select id="langSelector" style="background-color: #67b116; color: white; margin: 0; font-size: 12px;" onchange="changeLanguage();">
         <option value="en" <c:if test="${pageContext.response.locale == 'en'}">selected="selected"</c:if>>English</option>
-        <option value="sv_SE" <c:if test="${pageContext.response.locale == 'sv_SE'}">selected="selected"</c:if>>Svenska</option>
+        <option value="sv" <c:if test="${pageContext.response.locale == 'sv'}">selected="selected"</c:if>>Svenska</option>
     </select>
 </div>
 <div class="span-24 headerPane logo1" id="headerPane" onclick="goHome();">

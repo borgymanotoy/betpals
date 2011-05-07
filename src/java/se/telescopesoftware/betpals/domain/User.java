@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
@@ -37,12 +38,14 @@ public class User implements UserDetails {
     private String password;
     private boolean enabled = true;
 
-    @OneToMany(mappedBy="user", fetch=FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    @OneToMany(mappedBy="user")
+    @Cascade(CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Authority> authorities = new HashSet<Authority>();
     
-    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER,  cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
-    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
+    @OneToMany(mappedBy = "user")
+    @Cascade(CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private Set<UserProfile> userProfileSet = new HashSet<UserProfile>();
 
     

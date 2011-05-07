@@ -4,10 +4,12 @@ package se.telescopesoftware.betpals.repository;
 import java.util.Collection;
 import java.util.Date;
 
+import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
+import se.telescopesoftware.betpals.domain.UserRequestType;
 
 public interface UserRepository {
 
@@ -55,9 +57,9 @@ public interface UserRepository {
     
     UserRequest loadUserRequestById(Long id);
 
-    Collection<UserRequest> loadUserRequestForUser(Long userId);
+    Collection<UserRequest> loadUserRequestsForUser(Long userId, UserRequestType requestType);
 
-    Collection<UserRequest> loadUserRequestByUser(Long userId);
+    Collection<UserRequest> loadUserRequestsByUser(Long userId, UserRequestType requestType);
     
     Integer getUserRequestForUserCount(Long userId);
 
@@ -68,4 +70,15 @@ public interface UserRepository {
     Collection<Group> loadUserGroups(Long userId);
     
     void deleteGroup(Group group);
+
+    Community storeCommunity(Community community);
+    
+    Community loadCommunityById(Long communityId);
+    
+    Collection<Community> loadUserCommunities(Long userId);
+
+    Collection<Community> findCommunities(String query);
+    
+    void deleteCommunity(Community community);
+
 }

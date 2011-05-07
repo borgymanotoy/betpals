@@ -36,10 +36,7 @@ public class GroupsController extends AbstractPalsController {
 	
     @RequestMapping(value="/deletegroup")
     public String deleteGroup(@RequestParam(value="groupId") Long groupId, Model model) {
-		Group group = userService.getGroupById(groupId);
-		if (group.getOwnerId().compareTo(getUserId()) == 0) {
-			userService.deleteGroup(groupId, getUserId());
-		}
+		userService.deleteGroup(groupId, getUserId());
     	
     	model.addAttribute("tab", "groups");
     	return "friendsAndGroupsAction";
@@ -49,7 +46,7 @@ public class GroupsController extends AbstractPalsController {
     protected String formBackingObject(@RequestParam(value="groupId", required=false) Long groupId, ModelMap model) {
     	if (groupId != null) {
     		Group group = userService.getGroupById(groupId);
-    		if (group.getOwnerId().compareTo(getUserId()) != 0) {
+    		if (!group.checkOwnership(getUserId())) {
     			group = new Group();
     		}
     		model.addAttribute(group);

@@ -13,7 +13,12 @@ CREATE TABLE userprofile (
     email       varchar,
     registrationDate    timestamp,
     lastLoginDate       timestamp,
-    numberOfVisits      integer
+    numberOfVisits      integer,
+    address     varchar,
+    city        varchar,
+    postalCode  varchar,
+    country     varchar,
+    bio         varchar
 );
 
 CREATE TABLE authority (
@@ -118,7 +123,9 @@ CREATE TABLE competition (
     deadline            timestamp,
     settlingDeadline    timestamp,
     name                varchar,
-    description         varchar
+    description         varchar,
+    accountid           bigint,
+    status              varchar
 );
 
 CREATE TABLE event (
@@ -158,7 +165,8 @@ CREATE TABLE bet (
     profitOrLoss        decimal,
     placed              timestamp,
     settled             timestamp,
-    details             varchar
+    details             varchar,
+    ownername           varchar
 );
 
 CREATE TABLE invitation (
@@ -171,3 +179,15 @@ CREATE TABLE invitation (
     competitionName     varchar
 );
 
+CREATE TABLE join_alternative_bet (
+    alternative_id      bigint,
+    bet_id            bigint
+);
+
+CREATE TABLE userrequest (
+    id                  BIGINT NOT NULL IDENTITY PRIMARY KEY,
+    ownerId             bigint,
+    inviteeId           bigint,
+    ownerName           varchar,
+    inviteename         varchar
+);

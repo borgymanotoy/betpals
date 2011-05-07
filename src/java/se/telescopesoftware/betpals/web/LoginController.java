@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
@@ -32,5 +33,11 @@ public class LoginController extends AbstractPalsController {
 		return "userHomepageAction";
 	}
 	
-	
+	@RequestMapping("/processlogin.html")
+	public String processLogin() {
+		UserProfile userProfile = getUserProfile();
+		userProfile.registerVisit();
+		userService.updateUserProfile(userProfile);
+		return "indexAction";
+	}
 }

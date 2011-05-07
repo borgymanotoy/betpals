@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
+import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.repository.ActivityRepository;
 
@@ -45,7 +46,7 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityRepository.loadActivitiesForOwnerIds(
 				ownerIds, 
 				pageNumber != null ? pageNumber : 0, 
-				itemsPerPage != null ? itemsPerPage : defaultItemsPerPage);
+				itemsPerPage != null ? itemsPerPage : defaultItemsPerPage, ActivityType.USER);
 	}
 
 	public void addActivityComment(ActivityComment comment) {
@@ -99,6 +100,32 @@ public class ActivityServiceImpl implements ActivityService {
 		ownerIds.add(userProfile.getUserId());
 
 		Integer totalActivityCount = activityRepository.getActivitiesCountForUserProfile(ownerIds);
+		if (itemsPerPage == null) {
+			itemsPerPage = defaultItemsPerPage;
+		}
+		
+        if (totalActivityCount != null) {
+        	Integer result = new Integer(totalActivityCount.intValue() / itemsPerPage.intValue());
+        	if ((result.intValue() * itemsPerPage.intValue()) < totalActivityCount.intValue()) {
+        		result += 1;
+        	}
+            return result;
+        }
+
+        return new Integer(0);
+	}
+
+	public Collection<Activity> getActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType) {
+		return activityRepository.loadActivitiesForExtensionIdAndType(extensionId,
+				pageNumber != null ? pageNumber : 0, 
+				itemsPerPage != null ? itemsPerPage : defaultItemsPerPage, activityType);
+	}
+
+	@Override
+	public Integer getActivitiesPageCountForExtensionIdAndType(Long extensionId,
+			ActivityType activityType, Integer itemsPerPage) {
+
+		Integer totalActivityCount = activityRepository.getActivitiesCountForExtensionIdAndType(extensionId, activityType);
 		if (itemsPerPage == null) {
 			itemsPerPage = defaultItemsPerPage;
 		}

@@ -1,12 +1,8 @@
 package se.telescopesoftware.betpals.web;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +22,7 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.AlternativeType;
+import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
@@ -36,7 +33,6 @@ import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.services.FacebookService;
 import se.telescopesoftware.betpals.services.UserService;
-import se.telescopesoftware.betpals.utils.ThumbnailUtil;
 
 //TODO: Split to several controllers
 @Controller
@@ -102,6 +98,7 @@ public class CompetitionController extends AbstractPalsController {
 		invitationHelper.setCompetitionId(competitionId);
 		model.addAttribute(invitationHelper);
     	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "inviteToCompetitionView";
@@ -163,7 +160,7 @@ public class CompetitionController extends AbstractPalsController {
     	}
     	
     	competition = competitionService.saveCompetition(competition);
-    	saveImage(imageFile, competition.getId());
+    	saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	
     	if (competition.getEvents() == null || competition.getEvents().isEmpty()) {
     		logger.debug("Adding default event to competition");
@@ -206,15 +203,18 @@ public class CompetitionController extends AbstractPalsController {
     		}
     	}
     	
+    	for (Long communityId : invitationHelper.getCommunityIdSet()) {
+    		Community community = userService.getCommunityById(communityId);
+    		friendsIdSet.addAll(community.getMembersIdSet());
+    	}
+
     	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
 
-    	//TODO: Implement community invitations
-    	
     	if (invitationHelper.shouldInviteToFacebook()) {
     		facebookService.postCompetitionToUserWall(competition, getUserProfile());
     	}
     	
-    	Activity activity = new Activity(getUserProfile(), ActivityType.MESSAGE);
+    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
     	activity.setMessage("Created new competition: " + competition.getName());
     	activityService.saveActivity(activity);
 		
@@ -234,7 +234,7 @@ public class CompetitionController extends AbstractPalsController {
 		
 		alternative.setAlternativeType(AlternativeType.CUSTOM);
 		alternative = competitionService.saveAlternative(alternative);
-		saveAlternativeImage(imageFile, alternative.getId());
+		saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, "alt_" + alternative.getId());
 
 		Event event = competitionService.getEventById(eventId);
 		event.addAlternative(alternative);
@@ -269,44 +269,4 @@ public class CompetitionController extends AbstractPalsController {
     }
 	
 	
-    private void saveImage(MultipartFile imageFile, Long competitionId) {
-        if (imageFile != null && !imageFile.isEmpty()) {
-        	try {
-	        	InputStream inputStream = imageFile.getInputStream();
-	        	BufferedImage image = ImageIO.read(inputStream);
-	        	BufferedImage thumbnailImage = ThumbnailUtil.getScaledInstance(image, 50, 50);
-	
-	        	String path = getAppRoot() + "images" + File.separator + "competitions";
-	        	File outputFile = new File(path, competitionId + ".jpg");
-	        	ImageIO.write(thumbnailImage, "jpg", outputFile);
-	        	logger.debug("Writing competition picture to " + outputFile.getPath());
-
-        	} catch(Exception ex) {
-        		logger.error("Could not save image", ex);
-        	}
-        } else {
-        	logger.debug("Using default picture for competition " + competitionId);
-        }
-    }
-
-    private void saveAlternativeImage(MultipartFile imageFile, Long alternativeId) {
-    	if (imageFile != null && !imageFile.isEmpty()) {
-    		try {
-    			InputStream inputStream = imageFile.getInputStream();
-    			BufferedImage image = ImageIO.read(inputStream);
-    			BufferedImage thumbnailImage = ThumbnailUtil.getScaledInstance(image, 50, 50);
-    			
-    			String path = getAppRoot() + "images" + File.separator + "competitions";
-    			File outputFile = new File(path, "alt_" + alternativeId + ".jpg");
-    			ImageIO.write(thumbnailImage, "jpg", outputFile);
-    			logger.debug("Writing alternative picture to " + outputFile.getPath());
-    			
-    		} catch(Exception ex) {
-    			logger.error("Could not save image", ex);
-    		}
-    	} else {
-    		logger.debug("Using default picture for alternative " + alternativeId);
-    	}
-    }
-    
 }

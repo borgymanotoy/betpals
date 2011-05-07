@@ -5,6 +5,7 @@ import java.util.Collection;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
+import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.UserProfile;
 
 /**
@@ -21,6 +22,8 @@ public interface ActivityService {
 	void addActivityLike(ActivityLike like);
 	
 	Collection<Activity> getActivitiesForUserProfile(UserProfile userProfile, Integer pageNumber, Integer itemsPerPage);
+
+	Collection<Activity> getActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType);
 	
 	Collection<ActivityComment> getActivityComments(Long activityId);
 	
@@ -53,5 +56,7 @@ public interface ActivityService {
 	void deleteActivity(Long activityId, Long userId);
 	
 	Integer getActivitiesPageCountForUserProfile(UserProfile userProfile, Integer itemsPerPage);
+
+	Integer getActivitiesPageCountForExtensionIdAndType(Long extensionId, ActivityType activityType, Integer itemsPerPage);
 	
 }

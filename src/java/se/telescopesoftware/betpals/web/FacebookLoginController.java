@@ -68,6 +68,7 @@ public class FacebookLoginController extends AbstractPalsController {
 						user = userService.getUserByUserId(userId);
 					}
 					
+					logger.info("Login from facebook for user: " + user.toString());
 					Authentication auth = new UsernamePasswordAuthenticationToken(facebookUser.getMybetpalsUsername(), facebookUser.getMybetpalsPassword());
 					SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(auth));
 					

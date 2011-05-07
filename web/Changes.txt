@@ -1,3 +1,23 @@
+== Version 0.8.4 =======================================================
+
+New features and CRs
+
+    * Communities
+
+Bug fixes
+
+    * Friend invitation bug introduced in v 0.8.2
+
+
+== Version 0.8.3 =======================================================
+
+New features and CRs
+
+Bug fixes
+
+    * User could not add comment or like an activity
+
+
 
 == Version 0.8.2 =======================================================
 

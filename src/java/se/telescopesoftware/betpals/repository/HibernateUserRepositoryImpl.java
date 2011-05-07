@@ -14,10 +14,12 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import se.telescopesoftware.betpals.domain.Authority;
+import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
+import se.telescopesoftware.betpals.domain.UserRequestType;
 
 public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements UserRepository {
 
@@ -266,16 +268,15 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 
 	@SuppressWarnings("unchecked")
 	public Collection<UserProfile> findUserProfiles(String searchQuery) {
-        List<UserProfile> result = new ArrayList<UserProfile>();
-        Session session = getSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("from UserProfile up where lower(up.name) like :queryString OR lower(up.surname) like :queryString OR lower(up.email) like :queryString");
-        query.setString("queryString", "%" + searchQuery.toLowerCase() + "%");
-
-        result = query.list();
-        transaction.commit();
-        session.close();
-        return result;
+        return getHibernateTemplate().findByNamedParam(
+        		"from UserProfile up where lower(up.name) like :queryString OR " +
+        		"lower(up.surname) like :queryString OR " +
+        		"lower(up.email) like :queryString OR " + 
+        		"lower(up.country) like :queryString OR " + 
+        		"lower(up.city) like :queryString OR " + 
+        		"lower(up.bio) like :queryString", 
+        		"queryString", 
+        		"%" + searchQuery.toLowerCase() + "%");
 	}
 
 	public void storeUserRequest(UserRequest userRequest) {
@@ -283,12 +284,18 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<UserRequest> loadUserRequestForUser(Long userId) {
+	public Collection<UserRequest> loadUserRequestsForUser(Long userId, UserRequestType requestType) {
+		if (requestType != null) {
+			return getHibernateTemplate().find("from UserRequest ur where ur.inviteeId = ? and ur.requestType = ?", new Object [] {userId, requestType});
+		}
 		return getHibernateTemplate().findByNamedParam("from UserRequest ur where ur.inviteeId = :userId", "userId", userId);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<UserRequest> loadUserRequestByUser(Long userId) {
+	public Collection<UserRequest> loadUserRequestsByUser(Long userId, UserRequestType requestType) {
+		if (requestType != null) {
+			return getHibernateTemplate().find("from UserRequest ur where ur.ownerId = ? and ur.requestType = ?", new Object [] {userId, requestType});
+		}
 		return getHibernateTemplate().findByNamedParam("from UserRequest ur where ur.ownerId = :userId", "userId", userId);
 	}
 
@@ -319,6 +326,30 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 
 	public void deleteGroup(Group group) {
 		getHibernateTemplate().delete(group);
+	}
+
+	public Community storeCommunity(Community community) {
+		return getHibernateTemplate().merge(community);
+	}
+
+	public Community loadCommunityById(Long communityId) {
+		return getHibernateTemplate().get(Community.class, communityId);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Community> loadUserCommunities(Long userId) {
+//		return getHibernateTemplate().findByNamedParam("from Community g where g.ownerId = :userId", "userId", userId);
+		UserProfile userProfile = loadUserProfile(userId);
+		return getHibernateTemplate().findByNamedParam("from Community g where :user in elements(g.members)", "user", userProfile);
+	}
+
+	public void deleteCommunity(Community community) {
+		getHibernateTemplate().delete(community);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Community> findCommunities(String searchQuery) {
+        return getHibernateTemplate().findByNamedParam("from Community c where lower(c.name) like :queryString OR lower(c.description) like :queryString", "queryString", "%" + searchQuery.toLowerCase() + "%");
 	}
     
 }

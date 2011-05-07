@@ -3,11 +3,9 @@ package se.telescopesoftware.betpals.domain;
 import java.util.Collection;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,8 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
@@ -35,30 +34,43 @@ public class Activity {
 	private ActivityType activityType;
 	private String message;
 	private Date created;
+	private Long extensionId;
+	private String extensionName;
 	
-    @OneToMany(mappedBy="activity", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy="activity")
+    @Cascade(CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<ActivityComment> comments;
-    @OneToMany(mappedBy="activity", fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @Cascade(org.hibernate.annotations.CascadeType.REPLICATE)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy="activity")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @Cascade(CascadeType.ALL)
 	private Collection<ActivityLike> likes;
 	
 	
 	public Activity() {
+		this.setCreated(new Date());
+	}
+	
+	public Activity(Long ownerId, String ownerName, String message, ActivityType activityType) {
+		this();
+		this.ownerId = ownerId;
+		this.ownerName = ownerName;
+		this.message = message;
+		this.activityType = activityType;
 	}
 	
 	public Activity(UserProfile userProfile, ActivityType type) {
-    	this.setCreated(new Date());
-    	this.setOwnerId(userProfile.getUserId());
-    	this.setOwnerName(userProfile.getFullName());
-    	this.setActivityType(type);
+    	this(userProfile.getUserId(), userProfile.getFullName(), null, type);
 	}
 	
 	public Activity(UserProfile userProfile, String message, ActivityType type) {
-		this(userProfile, type);
-		this.message = message;
+		this(userProfile.getUserId(), userProfile.getFullName(), message, type);
+	}
+	
+	public Activity(UserProfile userProfile, Long extensionId, String extensionName, String message, ActivityType type) {
+		this(userProfile.getUserId(), userProfile.getFullName(), message, type);
+		this.extensionId = extensionId;
+		this.extensionName = extensionName;
 	}
 	
 	public Long getId() {
@@ -168,6 +180,22 @@ public class Activity {
 	
 	public boolean hasLikes() {
 		return !this.likes.isEmpty();
+	}
+
+	public Long getExtensionId() {
+		return extensionId;
+	}
+
+	public void setExtensionId(Long extensionId) {
+		this.extensionId = extensionId;
+	}
+
+	public String getExtensionName() {
+		return extensionName;
+	}
+
+	public void setExtensionName(String extensionName) {
+		this.extensionName = extensionName;
 	}
 	
 }

@@ -5,9 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -52,16 +52,17 @@ public class UserProfile implements Serializable {
     @Transient
     private String oldPassword;
 
-    @ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @ManyToOne()
     @JoinColumn(name="userId")
     private User user;
 
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany()
     @JoinTable(
         name="user_friends",
         joinColumns = @JoinColumn(name="user_id"),
         inverseJoinColumns = @JoinColumn(name="friend_id")
     )
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private Set<UserProfile> friends = new HashSet<UserProfile>();
 
 	@Transient
@@ -233,10 +234,6 @@ public class UserProfile implements Serializable {
 		this.friendsIdSet = friendsIdSet;
 	}
 	
-	public void addFriend(Long id) {
-		this.friendsIdSet.add(id);
-	}
-
 	public MultipartFile getUserImageFile() {
 		return userImageFile;
 	}
@@ -299,6 +296,16 @@ public class UserProfile implements Serializable {
 
 	public void setFacebookAccessToken(String facebookAccessToken) {
 		this.facebookAccessToken = facebookAccessToken;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return id.compareTo(((UserProfile)obj).getId()) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 
 }

@@ -1,15 +1,9 @@
 package se.telescopesoftware.betpals.web;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -20,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.Activity;
@@ -34,7 +27,6 @@ import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.services.FacebookService;
 import se.telescopesoftware.betpals.services.UserService;
-import se.telescopesoftware.betpals.utils.ThumbnailUtil;
 
 @Controller
 public class CompetitionQuickController extends AbstractPalsController {
@@ -79,6 +71,7 @@ public class CompetitionQuickController extends AbstractPalsController {
 		competition.setAccountId(accountId);
     	model.addAttribute("quickCompetition", competition);
     	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "quickCompetitionView";
@@ -94,7 +87,8 @@ public class CompetitionQuickController extends AbstractPalsController {
     	Account account = accountService.getAccount(quickCompetition.getAccountId());
     	Competition competition = quickCompetition.createCompetition(getUserId(), account.getCurrency());
     	competition = competitionService.saveCompetition(competition);
-    	saveImage(quickCompetition.getImageFile(), competition.getId());
+    	
+    	saveImage(quickCompetition.getImageFile(), IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	
     	Bet bet = quickCompetition.createBet(getUserProfile());
     	bet.setSelectionId(competition.getOwnerAlternativeId());
@@ -115,7 +109,7 @@ public class CompetitionQuickController extends AbstractPalsController {
     	
     	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
 
-    	Activity activity = new Activity(getUserProfile(), ActivityType.MESSAGE);
+    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
     	activity.setMessage("Created new competition: " + competition.getName());
     	activityService.saveActivity(activity);
 
@@ -127,42 +121,9 @@ public class CompetitionQuickController extends AbstractPalsController {
 	}
 
 	@RequestMapping(value="/competition/images/{competitionId}")	
-	public void getImage(@PathVariable String competitionId, HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("Get image for competition: " + competitionId);
-
-    	String path = getAppRoot() + "images" + File.separator + "competitions";
-    	File imageFile = new File(path, competitionId + ".jpg");
-    	if (!imageFile.exists()) {
-    		imageFile = new File(path, "empty.jpg");
-    	} 
-    	
-    	BufferedImage image;
-		try {
-			image = ImageIO.read(imageFile);
-			response.setContentType("image/jpeg");
-			ImageIO.write(image, "jpg", response.getOutputStream());
-		} catch (IOException ex) {
-    		logger.error("Could not get image", ex);
-		}
+	public void getImage(@PathVariable String competitionId, HttpServletResponse response) {
+    	sendJPEGImage(IMAGE_FOLDER_COMPETITIONS, competitionId, response);
 	}
 	
-    private void saveImage(MultipartFile imageFile, Long competitionId) {
-        if (imageFile != null && !imageFile.isEmpty()) {
-        	try {
-	        	InputStream inputStream = imageFile.getInputStream();
-	        	BufferedImage image = ImageIO.read(inputStream);
-	        	BufferedImage thumbnailImage = ThumbnailUtil.getScaledInstance(image, 50, 50);
-	
-	        	String path = getAppRoot() + "images" + File.separator + "competitions";
-	        	File outputFile = new File(path, competitionId + ".jpg");
-	        	ImageIO.write(thumbnailImage, "jpg", outputFile);
-	        	logger.debug("Writing competition picture to " + outputFile.getPath());
-
-        	} catch(Exception ex) {
-        		logger.error("Could not save image", ex);
-        	}
-        }
-    }
-
 	
 }

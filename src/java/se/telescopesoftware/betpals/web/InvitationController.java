@@ -85,7 +85,7 @@ public class InvitationController extends AbstractPalsController {
     	activity.setCreated(new Date());
     	activity.setOwnerId(getUserId());
     	activity.setOwnerName(getUserProfile().getFullName());
-    	activity.setActivityType(ActivityType.MESSAGE);
+    	activity.setActivityType(ActivityType.USER);
     	activity.setMessage("Joined the competition: " + competition.getName());
     	
     	activityService.saveActivity(activity);
