@@ -1,12 +1,11 @@
 package se.telescopesoftware.betpals.web;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,16 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Account;
-import se.telescopesoftware.betpals.domain.Activity;
-import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
-import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.InvitationHelper;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
-import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
-import se.telescopesoftware.betpals.services.FacebookService;
 import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
@@ -33,14 +28,8 @@ public class CompetitionQuickController extends AbstractPalsController {
 	
 	private CompetitionService competitionService;
 	private AccountService accountService;
-	private ActivityService activityService;
-	private FacebookService facebookService;
 	private UserService userService;
     
-    @Autowired
-    public void setActivityService(ActivityService activityService) {
-        this.activityService = activityService;
-    }
 
 	@Autowired
 	public void setCompetitionService(CompetitionService competitionService) {
@@ -53,11 +42,6 @@ public class CompetitionQuickController extends AbstractPalsController {
 	}
 
 	@Autowired
-	public void setFacebookService(FacebookService facebookService) {
-		this.facebookService = facebookService;
-	}
-	
-	@Autowired
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
@@ -69,10 +53,12 @@ public class CompetitionQuickController extends AbstractPalsController {
 		competition.setName(alternative);
 		competition.setStake(stake);
 		competition.setAccountId(accountId);
+		
+		DateTime now = new DateTime();
+		competition.setDeadline(now.plusDays(competitionService.getDefaultDeadlineInterval()).toDate());
+		competition.setSettlingDeadline(now.plusDays(competitionService.getDefaultSettlingInterval()).toDate());
+		
     	model.addAttribute("quickCompetition", competition);
-    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
-    	model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "quickCompetitionView";
 	}
@@ -94,30 +80,15 @@ public class CompetitionQuickController extends AbstractPalsController {
     	bet.setSelectionId(competition.getOwnerAlternativeId());
     	competitionService.placeBet(bet);
     	
-    	Set<Long> friendsIdSet = new HashSet<Long>();
-   	
-    	if (quickCompetition.isAllFriends()) {
-    		friendsIdSet.addAll(getUserProfile().getFriendsIdSet());
-    	} else {
-    		friendsIdSet.addAll(quickCompetition.getFriendsIdSet());
-    		Set<Long> groupIdSet = quickCompetition.getGroupIdSet();
-    		for (Long groupId : groupIdSet) {
-    			Group group = userService.getGroupById(groupId);
-    			friendsIdSet.addAll(group.getMembersIdSet());
-    		}
-    	}
-    	
-    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
-
-    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
-    	activity.setMessage("Created new competition: " + competition.getName());
-    	activityService.saveActivity(activity);
-
-    	if (quickCompetition.isFacebookPublish()) {
-    		facebookService.postCompetitionToUserWall(competition, getUserProfile());
-    	}
-    	
-		return "userHomepageAction";
+		model.addAttribute(competition);
+		InvitationHelper invitationHelper = new InvitationHelper();
+		invitationHelper.setCompetitionId(competition.getId());
+		model.addAttribute(invitationHelper);
+    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+    	model.addAttribute("friendList", getUserProfile().getFriends());
+		
+		return "inviteToCompetitionView";
 	}
 
 	@RequestMapping(value="/competition/images/{competitionId}")	

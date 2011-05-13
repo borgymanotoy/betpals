@@ -28,17 +28,17 @@
 	}
 </script>
 <div id="searchFriendsDiv">
-    <h2>Friends, communities and groups</h2>
+    <h2><spring:message code="friends.title"/></h2>
     <form action='<c:url value="/searchfriends.html"/>' name="search_form" method="post">
-        <input id="searchFriendsField" type="text" name="query" value="" title="Search new friends and communities"/>
+        <input id="searchFriendsField" type="text" name="query" value="" title="<spring:message code="friends.search.placeholder"/>"/>
         <button id="searchButton" onclick="searchFriends(); return false;">&nbsp;</button>
     </form>
 </div>
 <div id="tabs">
     <ul class="palsTabs">
-        <li><a href="#friends">My friends</a></li>
-        <li><a href="#groups">My groups</a></li>
-        <li><a href="#communities">My communities</a></li>
+        <li><a href="#friends"><spring:message code="friends.tab.friends"/></a></li>
+        <li><a href="#groups"><spring:message code="friends.tab.groups"/></a></li>
+        <li><a href="#communities"><spring:message code="friends.tab.communities"/></a></li>
     </ul>
     <div id="friends" class="contentDiv">
 	    <ul id="friendList">
@@ -67,7 +67,7 @@
 	    </ul>
 	    <p>&nbsp;</p>
         <c:if test="${not empty userRequestFriendList}">
-        <h4>Awaiting confirmation</h4>
+        <h4><spring:message code="friends.awaiting.confirmation"/></h4>
         <ul id="friendList">
         <c:forEach items="${userRequestFriendList}" var="userRequest">
             <li>
@@ -93,7 +93,7 @@
         </c:if>
     </div>
     <div id="groups" class="contentDiv">
-        <div class="right"><a class="blueDotLink" href='<c:url value="/editgroup.html"/>'>Create new group</a></div>
+        <div class="right"><a class="blueDotLink" href='<c:url value="/editgroup.html"/>'><spring:message code="friends.create.group"/></a></div>
         <ul id="friendList">
         <c:forEach items="${groupList}" var="group">
             <li>
@@ -114,7 +114,7 @@
         <p>&nbsp;</p>
     </div>
     <div id="communities" class="contentDiv">
-        <div class="right"><a class="blueDotLink" href='<c:url value="/editcommunity.html"/>'>Create new community</a></div>
+        <div class="right"><a class="blueDotLink" href='<c:url value="/editcommunity.html"/>'><spring:message code="friends.create.community"/></a></div>
         <br/>
         <ul id="friendList">
         <c:forEach items="${communityList}" var="community">
@@ -134,7 +134,7 @@
         </ul>
         <p>&nbsp;</p>
         <c:if test="${not empty userRequestCommunityList}">
-        <h4>Awaiting confirmation</h4>
+        <h4><spring:message code="friends.awaiting.confirmation"/></h4>
         <ul id="friendList">
         <c:forEach items="${userRequestCommunityList}" var="userRequest">
             <li>

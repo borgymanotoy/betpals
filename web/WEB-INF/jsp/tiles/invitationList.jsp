@@ -6,10 +6,10 @@
     } 
 </script>
 <div>
-    <h2 class="dark">Active invites</h2>
+    <h2 class="dark"><spring:message code="invitation.list.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
-    <h4>Active invites</h4>
+    <h4><spring:message code="invitation.list.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${invitationList}" var="invitation">
         <li>
@@ -19,8 +19,8 @@
 	            </div>
 	            <div class="span-10 last invitationDiv">
                     <h5 onclick="getInvitationDetails(${invitation.id});">${invitation.competitionName}</h5>
-                    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${invitation.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
-                    <span class="detailTitle">Owner: </span><a href='<c:url value="/viewprofile/${invitation.ownerId}.html"/>'>${invitation.ownerName}</a>
+                    <span class="detailTitle"><spring:message code="invitation.deadline"/>: </span><fmt:formatDate value="${invitation.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
+                    <span class="detailTitle"><spring:message code="invitation.owner"/>: </span><a href='<c:url value="/viewprofile/${invitation.ownerId}.html"/>'>${invitation.ownerName}</a>
 	            </div>
 	        </div>
         </li>

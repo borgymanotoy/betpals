@@ -132,4 +132,24 @@ public class MessageResourceServiceImpl implements MessageResourceService {
         }
     }
 
+	public Collection<MessageResource> findMessageResources(String language, String query) {
+        List<MessageResource> messageResourceList = new ArrayList<MessageResource>();
+        Properties propertiesForLanguage = getPropertiesForLanguage(language, false);
+
+        if (propertiesForLanguage != null) {
+            Set<Object> set = propertiesForLanguage.keySet();
+            for (Iterator<Object> iterator = set.iterator(); iterator.hasNext();) {
+                String key = (String) iterator.next();
+                MessageResource messageResource = new MessageResource(language, key);
+                messageResource.setValue(propertiesForLanguage.getProperty(key));
+                if (messageResource.getValue().toLowerCase().contains(query.toLowerCase())) {
+                	messageResourceList.add(messageResource);
+                }
+            }
+        }
+
+        Collections.sort(messageResourceList, new MessageResourceComparator());
+        return messageResourceList;
+	}
+
 }

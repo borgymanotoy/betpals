@@ -7,10 +7,10 @@
    
 </script>
 <div>
-    <h2 class="dark">Ongoing competitions</h2>
+    <h2 class="dark"><spring:message code="competition.ongoing.list.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
-    <h4>Competitions</h4>
+    <h4><spring:message code="competition.ongoing.list.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${competitionList}" var="competition">
         <li>
@@ -20,8 +20,8 @@
 	            </div>
 	            <div class="span-10 last competitionDiv">
                     <h5 class="clickable" onclick="viewCompetition(${competition.id});">${competition.name}</h5>
-                    <span class="detailTitle">Creator: </span><a href='<c:url value="/viewprofile/${competition.ownerId}.html"/>'>${competition.owner.fullName}</a><br/>
-                    <span class="detailTitle">Status: ${competition.status} (deadline <fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/>)</span><br/>
+                    <span class="detailTitle"><spring:message code="competition.creator"/>: </span><a href='<c:url value="/viewprofile/${competition.ownerId}.html"/>'>${competition.owner.fullName}</a><br/>
+                    <span class="detailTitle"><spring:message code="competition.status"/>: ${competition.status} (<spring:message code="competition.deadline"/> <fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/>)</span><br/>
 	            </div>
 	        </div>
         </li>

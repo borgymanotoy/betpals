@@ -930,8 +930,6 @@ tr.odd td {background-color: #e5e5e5;}
     color: #ffffff !important;
     padding-left: 15px !important;
     padding-right: 15px !important;
-    padding-top: 4px;
-    padding-bottom: 4px;
 }
 #quickCompetitionDiv select {
     -moz-border-radius: 3px 3px 3px 3px;
@@ -939,19 +937,16 @@ tr.odd td {background-color: #e5e5e5;}
     color: #242B21;
     font-family: Arial, sans-serif;
     font-size: 12px;
-    padding-top: 4px;
-    padding-bottom: 3px;
+    padding-top: 3px;
+    padding-bottom: 1px;
 }
 #quickCompetitionDiv a { color: #ffffff !important; }
 #quickCompetitionStake {
     width: 40px;
-    padding-top: 4px;
-    padding-bottom: 4px;
 }
 
 #quickCompetitionAlternative {
     width: 248px;
-    height: 44px;
 }
 
 #quickCompetitionDiv2 {

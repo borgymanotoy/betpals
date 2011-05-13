@@ -1,7 +1,6 @@
 <%@include file="includes.jsp"%>
-<!-- TODO: All strings to message resources -->
 <div>
-    <h2 class="dark">Settled competition</h2>
+    <h2 class="dark"><spring:message code="competition.settled.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
     <div class="span-12">
@@ -14,13 +13,13 @@
         </div>
     </div>
     <div>
-        Deadline for competition: <span class="bold"><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/></span>
+        <spring:message code="competition.competition.deadline"/>: <span class="bold"><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/></span>
     </div>
     <div>
-        Deadline for settling: <span class="bold"><fmt:formatDate value="${competition.settlingDeadline}" pattern="yyyy-MM-dd HH:mm"/></span>
+        <spring:message code="competition.settling.deadline"/>: <span class="bold"><fmt:formatDate value="${competition.settlingDeadline}" pattern="yyyy-MM-dd HH:mm"/></span>
     </div>
     <p>&nbsp;</p>
-    <h4>Alternatives</h4>
+    <h4><spring:message code="competition.alternatives.header"/></h4>
     <div class="formSectionDiv">
         <ul id="friendList">
         <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
@@ -39,11 +38,11 @@
                 </c:choose>
                 <div class="span-10 last">
                     ${altFromList.name}<br/>
-                    <c:if test="${empty altFromList.bets}"><span class="detailTitle">No bets<br/></span></c:if>
+                    <c:if test="${empty altFromList.bets}"><span class="detailTitle"><spring:message code="competition.no.bets"/><br/></span></c:if>
                     <c:forEach items="${altFromList.bets}" var="bet">
-                        <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}">You</c:when><c:otherwise><a href='<c:url value="/viewprofile/${bet.ownerId}.html"/>'>${bet.ownerName}</a></c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
+                        <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}"><spring:message code="competition.you"/></c:when><c:otherwise><a href='<c:url value="/viewprofile/${bet.ownerId}.html"/>'>${bet.ownerName}</a></c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
                     </c:forEach>
-                    <span class="detailTitle">${altFromList.turnover} ${competition.currency} on this alternative.</span>
+                    <span class="detailTitle">${altFromList.turnover} ${competition.currency} <spring:message code="competition.on.this.alternative"/></span>
                 </div>
                 </div>
             </div>

@@ -62,4 +62,7 @@ public interface CompetitionService {
 
 	Integer getTotalUserBetsCount(Long userId);
 
+	int getDefaultDeadlineInterval();
+
+	int getDefaultSettlingInterval();
 }

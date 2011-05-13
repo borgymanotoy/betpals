@@ -5,7 +5,7 @@
     
 </script>
 <div>
-    <h2 class="dark_long">Administration homepage</h2>
+    <h2 class="dark_long"><spring:message code="admin.home.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
 &nbsp;

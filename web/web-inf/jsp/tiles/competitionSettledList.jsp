@@ -7,10 +7,10 @@
    
 </script>
 <div>
-    <h2 class="dark">Settled competitions</h2>
+    <h2 class="dark"><spring:message code="competition.settled.list.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
-    <h4>Competitions</h4>
+    <h4><spring:message code="competition.settled.list.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${competitionList}" var="competition">
         <li>
@@ -20,9 +20,9 @@
 	            </div>
 	            <div class="span-10 last competitionDiv">
                     <h5 class="clickable" onclick="viewCompetition(${competition.id});">${competition.name}</h5>
-                    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
-                    <span class="detailTitle">Participants: </span>${competition.numberOfParticipants}<br/>
-                    <span class="detailTitle">Turnover: </span><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${competition.turnover}"/>  ${competition.currency} <br/>
+                    <span class="detailTitle"><spring:message code="competition.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
+                    <span class="detailTitle"><spring:message code="competition.participants"/>: </span>${competition.numberOfParticipants}<br/>
+                    <span class="detailTitle"><spring:message code="competition.turnover"/>: </span><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${competition.turnover}"/>  ${competition.currency} <br/>
 	            </div>
 	        </div>
         </li>

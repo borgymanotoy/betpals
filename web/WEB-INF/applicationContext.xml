@@ -84,8 +84,9 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/facebooklogin.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/favicon.ico" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/robots.txt" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		<security:intercept-url pattern="/admin**" access="ROLE_SUPERVISOR" />
+		<security:intercept-url pattern="/admin/**" access="ROLE_SUPERVISOR" />
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		
 		<security:form-login login-page='/login.html' default-target-url='/processlogin.html' authentication-failure-url="/login.html" />
 		<security:logout logout-success-url="/login.html"/>

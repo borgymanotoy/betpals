@@ -11,6 +11,10 @@ public class MessageResource {
     public MessageResource() {
     }
     
+    public MessageResource(String locale) {
+    	this.locale = locale;
+    }
+    
     public MessageResource(String locale, String key) {
     	this.locale = locale;
     	this.key = key;

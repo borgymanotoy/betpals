@@ -48,11 +48,11 @@
             height:160,
             modal: true,
             buttons: {
-                "Delete": function() {
+                "<spring:message code='button.delete'/>": function() {
                     jQuery('#deleteCompetitionForm').submit();
                     $( this ).dialog( "close" );
                 },
-                Cancel: function() {
+                "<spring:message code='button.cancel'/>": function() {
                     $( this ).dialog( "close" );
                 }
             }
@@ -64,11 +64,11 @@
             height:160,
             modal: true,
             buttons: {
-                "Void": function() {
+            	"<spring:message code='button.void'/>": function() {
                     jQuery('#voidAlternativeForm').submit();
                     $( this ).dialog( "close" );
                 },
-                Cancel: function() {
+                "<spring:message code='button.cancel'/>": function() {
                     $( this ).dialog( "close" );
                 }
             }
@@ -80,7 +80,7 @@
             height:140,
             modal: true,
             buttons: {
-                Ok: function() {
+            	"<spring:message code='button.ok'/>": function() {
                     $( this ).dialog( "close" );
                 }
             }
@@ -90,9 +90,8 @@
 
    
 </script>
-<!-- TODO: All strings to message resources -->
 <div>
-    <h2 class="dark">Manage competition</h2>
+    <h2 class="dark"><spring:message code="competition.manage.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
 <c:url value="/updatecompetition.html" var="actionURL"/>
@@ -109,7 +108,7 @@
     </div>
     <div class="span-12">
         <div class="span-2 labelDiv">
-            Deadline for competition
+            <spring:message code="competition.competition.deadline"/>
         </div>
         <div class="span-10 last">
             <form:input path="deadline" id="competitionDeadline"/>
@@ -117,14 +116,14 @@
     </div>
     <div class="span-12">
         <div class="span-2 labelDiv">
-            Deadline for settling
+            <spring:message code="competition.settling.deadline"/>
         </div>
         <div class="span-10 last">
             <form:input path="settlingDeadline" id="settlingDeadline"/>
         </div>
     </div>
     <p>&nbsp;</p>
-    <h4>Alternatives</h4>
+    <h4><spring:message code="competition.alternatives.header"/></h4>
     <div class="formSectionDiv">
         <ul id="friendList">
         <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
@@ -138,30 +137,30 @@
                     <div class="span-10 last altListDetails noborder">
                         <div class="span-5 altListName">
                         ${altFromList.name}<br/>
-                        <c:if test="${empty altFromList.bets}"><span class="detailTitle">No bets</span></c:if>
+                        <c:if test="${empty altFromList.bets}"><span class="detailTitle"><spring:message code="competition.no.bets"/></span></c:if>
                         <c:forEach items="${altFromList.bets}" var="bet">
-                            <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}">You</c:when><c:otherwise>${bet.ownerName}</c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
+                            <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}"><spring:message code="competition.you"/></c:when><c:otherwise>${bet.ownerName}</c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
                         </c:forEach>
                         </div>
                         <div class="span-2 altListPriority right">
-                            <input type="radio" value="${altFromList.id}" name="correctAlternative"/> Correct
+                            <input type="radio" value="${altFromList.id}" name="correctAlternative"/> <spring:message code="alternative.correct"/>
                         </div>
-                        <div class="span-3 last altListPriority right"><button class="whiteButton90" onclick="voidAlternative(${altFromList.id});return false">Void</button></div>
+                        <div class="span-3 last altListPriority right"><button class="whiteButton90" onclick="voidAlternative(${altFromList.id});return false"><spring:message code="alternative.void"/></button></div>
                     </div>
                 </c:when>
                 <c:otherwise>
                     <div class="span-10 last altListDetails">
                         <div class="span-5 altListName">
                         ${altFromList.name}<br/>
-                        <c:if test="${empty altFromList.bets}"><span class="detailTitle">No bets</span></c:if>
+                        <c:if test="${empty altFromList.bets}"><span class="detailTitle"><spring:message code="competition.no.bets"/></span></c:if>
                         <c:forEach items="${altFromList.bets}" var="bet">
-                            <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}">You</c:when><c:otherwise>${bet.ownerName}</c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
+                            <span class="detailTitle"><c:choose><c:when test="${bet.ownerId == competition.ownerId}"><spring:message code="competition.you"/></c:when><c:otherwise>${bet.ownerName}</c:otherwise></c:choose> (${bet.stake} ${competition.currency})</span><br/>
                         </c:forEach>
                         </div>
                         <div class="span-2 altListPriority right">
-                            <input type="radio" value="${altFromList.id}" name="correctAlternative"/> Correct
+                            <input type="radio" value="${altFromList.id}" name="correctAlternative"/> <spring:message code="alternative.correct"/>
                         </div>
-                        <div class="span-3 last altListPriority right"><button class="whiteButton90" onclick="voidAlternative(${altFromList.id});return false;">Void</button></div>
+                        <div class="span-3 last altListPriority right"><button class="whiteButton90" onclick="voidAlternative(${altFromList.id});return false;"><spring:message code="alternative.void"/></button></div>
                     </div>
                 </c:otherwise>
                 </c:choose>
@@ -172,18 +171,18 @@
         &nbsp;
     </div>
 </form:form>
-    <button class="whiteButton140" onclick="deleteCompetition();">Delete competition</button>
-    <button class="greenButton140" onclick="settleCompetition();">Settle competition</button>
+    <button class="whiteButton140" onclick="deleteCompetition();"><spring:message code="competition.delete"/></button>
+    <button class="greenButton140" onclick="settleCompetition();"><spring:message code="competition.settle"/></button>
     <p>&nbsp;</p>
 </div>
-<div id="confirmDelete" title="Delete competition?">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This competition will be deleted.<br/> Are you sure?</p>
+<div id="confirmDelete" title="<spring:message code='confirmation.delete.competition.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.delete.competition"/></p>
 </div>
-<div id="confirmVoid" title="Void alternative?">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This alternative will be void. <br/>Are you sure?</p>
+<div id="confirmVoid" title="<spring:message code='confirmation.void.alternative.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.void.alternative"/></p>
 </div>
-<div id="selectDialog" title="Select alternative">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please select correct alternative.</p>
+<div id="selectDialog" title="<spring:message code='confirmation.select.alternative.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.select.alternative"/></p>
 </div>
 
 <form action='<c:url value="/deletecompetition.html"/>' method="post" id="deleteCompetitionForm">

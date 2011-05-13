@@ -9,7 +9,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%@ taglib prefix='security' uri='http://www.springframework.org/security/tags' %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>myBetpals</title>
+    <title><spring:message code="page.title"/></title>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/screen.css"/>' type="text/css" media="screen, projection"/>
     <link rel="stylesheet" href='<c:url value="/css/blueprint/print.css"/>' type="text/css" media="print"/>
     <!--[if IE]><link rel="stylesheet" href='<c:url value="/css/blueprint/ie.css"/>' type="text/css" media="screen, projection"/><![endif]-->
@@ -74,18 +74,18 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <form action="<c:url value='j_spring_security_check'/>" method="post"">
         <div class="span-12">&nbsp;</div>
         <div id="loginInput1" class="span-4">
-            E-mail
+            <spring:message code="login.email"/>
             <input id="usernameField" type="text" name="j_username" tabindex="1" />
-            <input type="checkbox" name="_spring_security_remember_me" tabindex="3"/> <span>Remember me</span>
+            <input type="checkbox" name="_spring_security_remember_me" tabindex="3"/> <span><spring:message code="login.remember.me"/></span>
         </div>
         <div id="loginInput2" class="span-4">
-            Password
+            <spring:message code="login.password"/>
             <input type="password" name="j_password" tabindex="2"/>
-            <a href="">Forgot your password?</a>
+            <a href=""><spring:message code="login.forgot.password"/></a>
         </div>
         <div id="loginButtonPane" class="span-4 last">
             <input type="submit" id="loginButton" value="Login"/><br/>
-            <button id="facebookLink" onclick="facebookLogin(); return false;">Facebook login</button>
+            <button id="facebookLink" onclick="facebookLogin(); return false;"><spring:message code="login.facebook.login"/></button>
         </div>
         </form>
     </div>
@@ -106,16 +106,16 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         </div>
         <div id="signupArea" class="span-13 last">
             <form action='<c:url value="/register.html"/>' method="post">
-            <div class="span-4 right label">E-mail</div>
+            <div class="span-4 right label"><spring:message code="registration.email"/></div>
             <div class="span-9 last"><input type="text" name="email"/></div>
-            <div class="span-4 right label">First name</div>
+            <div class="span-4 right label"><spring:message code="registration.first.name"/></div>
             <div class="span-9 last"><input type="text" name="name"/></div>
-            <div class="span-4 right label">Last name</div>
+            <div class="span-4 right label"><spring:message code="registration.last.name"/></div>
             <div class="span-9 last"><input type="text" name="surname"/></div>
-            <div class="span-4 right label">Password</div>
+            <div class="span-4 right label"><spring:message code="registration.password"/></div>
             <div class="span-9 last"><input type="password" name="password"/></div>
             <div class="span-4">&nbsp;</div>
-            <div class="span-9 last"><input type="submit" id="registerButton" value="Register and login"/></div>
+            <div class="span-9 last"><input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/></div>
             <div class="span-4">&nbsp;</div>
             </form>
             <div class="span-9 last">&nbsp;</div>

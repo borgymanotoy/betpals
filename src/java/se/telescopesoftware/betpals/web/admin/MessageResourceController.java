@@ -36,10 +36,17 @@ public class MessageResourceController extends AbstractPalsController {
         return "listMessageResourcesView";
     }
     
+    @RequestMapping(value="/admin/searchmessageresources")
+    public String searchMessageResources(@RequestParam("lang") String language, @RequestParam(value="query") String query, ModelMap model) {
+    	model.addAttribute(messageResourceService.findMessageResources(language, query));
+    	model.addAttribute("listLanguage", language);
+    	return "listMessageResourcesView";
+    }
+    
     @RequestMapping(value="/admin/editmessageresource", method=RequestMethod.GET)
-    public String formBackingObject(@RequestParam("lang") String language, @RequestParam("key") String key, Model model) {
+    public String formBackingObject(@RequestParam("lang") String language, @RequestParam(value="key", required=false) String key, Model model) {
         if (key == null) {
-            model.addAttribute(new MessageResource());
+            model.addAttribute(new MessageResource(language));
         } else {
         	model.addAttribute(messageResourceService.getMessageResource(language, key));
         }
@@ -76,7 +83,9 @@ public class MessageResourceController extends AbstractPalsController {
         MessageResource messageResource = new MessageResource(language, key);
         messageResourceService.deleteMessageResource(messageResource);
 
-        model.addAttribute("letter", key.substring(0, 1));
+        if (key != null && !key.isEmpty()) {
+        	model.addAttribute("letter", key.substring(0, 1));
+        } 
         model.addAttribute("lang", language);
 
         return "listMessageResourcesAction";

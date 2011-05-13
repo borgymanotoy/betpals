@@ -13,6 +13,8 @@ public interface MessageResourceService  {
 
     Collection<MessageResource> getMessageResourcesByLanguage(String aLocale);
 
+    Collection<MessageResource> findMessageResources(String aLocale, String query);
+
     Collection<MessageResource> getMessageResourcesByLanguageAndFirstLetter(String language, String firstLetter);
 
     MessageResource getMessageResource(String language, String key);

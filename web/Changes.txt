@@ -1,3 +1,17 @@
+== Version 0.8.5 =======================================================
+
+New features and CRs
+
+    * Localization support
+    * Quick bet, version 2
+    * Changed headers "Invites and competitions" and "Friends and groups" to "MyBets" and "MyPals"
+    * All labels changed to "Bets" instead of "Competition"
+
+Bug fixes
+
+    * Possible to submit empty activity on user wall
+
+
 == Version 0.8.4 =======================================================
 
 New features and CRs

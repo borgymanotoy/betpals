@@ -15,7 +15,7 @@
     <div class="span-3 last">
         <h5><security:authentication property="principal.userProfile.name"/>&nbsp;</h5>
         <h5><security:authentication property="principal.userProfile.surname"/>&nbsp;</h5>
-        <button id="editProfileButton" onclick="window.location = '<c:url value=""/>'">Edit profile</button>
+        <button id="editProfileButton" onclick="window.location = '<c:url value=""/>'"><spring:message code="button.edit.profile"/></button>
     </div>
     <div id="leftBlock" class="span-5">
         <div class="leftPaneInside"><img src='<c:url value="/i/separator.jpg"/>'/></div>
@@ -44,7 +44,6 @@
 	    <div class="panelNoPadding">
 	       <ul id="invitesAndCompetitions">
 	           <li><a href='<c:url value=""/>'>User list</a></li>
-	           <li><a href='<c:url value=""/>'>Communities</a></li>
 	       </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

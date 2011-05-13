@@ -6,12 +6,12 @@
 
 </script>
 <div id="rightPane">
-    <div class="blueTitle">Create competitions</div>
+    <div class="blueTitle"><spring:message code="create.competitions.pane.title"/></div>
     <div class="panel nopadding">
         <button id="competitionButton" onclick="createCompetition();">&nbsp;</button>
     </div>
     <div class="panelFooter">&nbsp;</div>
-    <div class="greyTitle">Promotions</div>
+    <div class="greyTitle"><spring:message code="promotions.pane.title"/></div>
     <div class="panel">
         &nbsp;<br/>
         <img src='<c:url value="/images/promotion/banner2.jpg"/>'/>

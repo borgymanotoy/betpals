@@ -15,7 +15,7 @@
     <div class="span-3 last">
         <h5><security:authentication property="principal.userProfile.name"/>&nbsp;</h5>
         <h5><security:authentication property="principal.userProfile.surname"/>&nbsp;</h5>
-        <button id="editProfileButton" onclick="window.location = '<c:url value="/editprofile.html"/>'">Edit profile</button>
+        <button id="editProfileButton" onclick="window.location = '<c:url value="/editprofile.html"/>'"><spring:message code="button.edit.profile"/></button>
     </div>
     <div id="leftBlock" class="span-5">
         <div class="leftPaneInside"><img src='<c:url value="/i/separator.jpg"/>'/></div>
@@ -25,8 +25,8 @@
 	    <table id="accountInfoTable" class="palsTable altRows">
 	        <tr>
 	            <th></th>
-	            <th>Balance</th>
-	            <th>Available</th>
+	            <th><spring:message code="account.balance"/></th>
+	            <th><spring:message code="account.available"/></th>
 	        </tr>
 	    <c:forEach items="${accounts}" var="account">
 	        <tr onclick="getAccountDetails(${account.id});">
@@ -36,23 +36,23 @@
 	        </tr>
 	    </c:forEach>    
 	    </table>
-	    <div class="leftPaneInside"><a class="greenDotLink" href='<c:url value="/addaccount.html"/>'>Add account</a></div>
+	    <div class="leftPaneInside"><a class="greenDotLink" href='<c:url value="/addaccount.html"/>'><spring:message code="button.add.account"/></a></div>
 	    <br/>
-	    <div class="orangeTitle">Invites and competitions</div>
+	    <div class="orangeTitle"><spring:message code="competitions.pane.title"/></div>
 	    <div class="panelNoPadding">
 	        <ul id="invitesAndCompetitions">
-	           <li><a href='<c:url value="/invitations.html"/>'>Active invites</a> (${myInvitationsCount})</li>
-               <li><a href='<c:url value="/ongoingcompetitions.html"/>'>Ongoing competitions</a> (${myOngoingCompetitionsCount})</li>
-               <li><a href='<c:url value="/managecompetitions.html"/>'>Manage competitions</a> (${myCompetitionsCount})</li>
-               <li><a href='<c:url value="/home.html"/>'>Search public competitions</a></li>
+	           <li><a href='<c:url value="/invitations.html"/>'><spring:message code="link.invitations"/></a> (${myInvitationsCount})</li>
+               <li><a href='<c:url value="/ongoingcompetitions.html"/>'><spring:message code="link.ongoing.competitions"/></a> (${myOngoingCompetitionsCount})</li>
+               <li><a href='<c:url value="/managecompetitions.html"/>'><spring:message code="link.manage.competitions"/></a> (${myCompetitionsCount})</li>
+               <li><a href='<c:url value="/home.html"/>'><spring:message code="link.search.competitions"/></a></li>
 	        </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>
-	    <div class="greenTitle">Friends and groups</div>
+	    <div class="greenTitle"><spring:message code="friends.pane.title"/></div>
 	    <div class="panel">
 	        &nbsp;<br/>
-	        <a class="greenDotLink" href='<c:url value="/allfriends.html"/>'>All friends</a><br/>
-	        <a class="greenDotLink" href='<c:url value="/myrequests.html"/>'>New requests (${myRequestsCount})</a><br/>
+	        <a class="greenDotLink" href='<c:url value="/allfriends.html"/>'><spring:message code="link.all.friends"/></a><br/>
+	        <a class="greenDotLink" href='<c:url value="/myrequests.html"/>'><spring:message code="link.new.requests"/> (${myRequestsCount})</a><br/>
 	        <ul id="friendsSideList">
 	        <c:forEach items="${friendsSideList}" var="friend">
 	           <li>
@@ -64,12 +64,16 @@
 		                      </a> 
 		                   </td>
 		                   <td class="bottom">
+		                      <a class="noline" style="color: #88898A !important;" href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
 	    	                   ${friend.name}&nbsp;
+	    	                  </a>
 	    	               </td>
 	                   </tr>
 	                   <tr>
 	                       <td class="top">
+                              <a class="noline" style="color: #88898A !important;" href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
 	                          ${friend.surname}&nbsp;
+	                          </a>
 	                       </td>
                        </tr>
 	               </table>

@@ -9,7 +9,7 @@
 	} 
 </script>
 <div>
-    <h2 class="dark">Edit community</h2>
+    <h2 class="dark"><spring:message code="community.edit.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
 <c:url var="editCommunityURL" value="/editcommunity.html"/>
@@ -19,34 +19,34 @@
     <div class="span-12">
         <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/communities/images/${community.id}.jpg"/>'/></div>
         <div style="padding-top: 15px; margin-bottom: 10px;" class="span-10 last formSectionDiv">
-            Add picture<br/> 
+            <spring:message code="community.edit.add.picture"/><br/> 
             <input type="file" name="imageFile"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
-        <div class="span-2 labelDiv" style="padding-top: 8px;">Name</div>
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="community.edit.name"/></div>
         <div class="span-10 last">
             <form:input path="name" size="45"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
-        <div class="span-2 labelDiv" style="padding-top: 8px;">Description</div>
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="community.edit.description"/></div>
         <div class="span-10 last">
             <form:textarea path="description" style="width: 374px;"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="formSectionDiv">
-            <form:radiobutton path="accessType" value="PUBLIC" label="Open to public"/><br/>
-            <form:radiobutton path="accessType" value="PRIVATE" label="Private"/>
+            <input type="radio" name="accessType" value="PUBLIC"><spring:message code="access.type.public"/></input><br/>
+            <input type="radio" name="accessType" value="PRIVATE"><spring:message code="access.type.private"/></input>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv">&nbsp;</div>
         <div class="span-10 last">
-           <input type="submit" class="greenButton110" value="Save"/>&nbsp;
-           <button class="blueButton110" onclick="backToCommunityList(); return false;">Cancel</button>&nbsp;
-           <button class="whiteButton110" onclick="deleteCommunity(); return false;">Delete</button>
+           <input type="submit" class="greenButton110" value='<spring:message code="button.save"/>'/>&nbsp;
+           <button class="blueButton110" onclick="backToCommunityList(); return false;"><spring:message code="button.cancel"/></button>&nbsp;
+           <button class="whiteButton110" onclick="deleteCommunity(); return false;"><spring:message code="button.delete"/></button>
         </div>
     </div>
 </form:form>

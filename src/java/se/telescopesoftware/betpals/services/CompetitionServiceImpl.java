@@ -29,6 +29,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 	private ActivityService activityService;
 	
 	private BigDecimal SYSTEM_COMMISION = new BigDecimal("0.04");
+	private int DEFAULT_DEADLINE_INTERVAL = 7;
+	private int DEFAULT_SETTLING_INTERVAL = 8;
 	
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
@@ -290,6 +292,14 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	public Integer getSettledCompetitionsByUserCount(Long userId) {
 		return competitionRepository.getSettledCompetitionsByUserCount(userId);
+	}
+
+	public int getDefaultDeadlineInterval() {
+		return DEFAULT_DEADLINE_INTERVAL;
+	}
+
+	public int getDefaultSettlingInterval() {
+		return DEFAULT_SETTLING_INTERVAL;
 	}
 
 

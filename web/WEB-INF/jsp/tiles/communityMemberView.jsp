@@ -4,6 +4,25 @@
 	    window.location.href = '<c:url value="/mycommunities.html"/>';
 	} 
     jQuery(document).ready(function() {
+        jQuery(".activityField").each(function() {
+            jQuery(this).val(jQuery(this).attr('title'));
+            jQuery(this).focus( function() {
+                jQuery(this).val("");
+            });
+            jQuery(this).blur( function() {
+                if (jQuery.trim(jQuery(this).val()) == "") {
+                    jQuery(this).val(jQuery(this).attr('title'));
+                }
+            });
+        }); 
+        jQuery("#activityForm").submit(function() {
+            var field = jQuery(this).find('.activityField');
+            var queryValue = jQuery.trim(field.val());
+            if ( queryValue == "" || queryValue == field.attr('title')) {
+                return false;
+            }
+        }); 
+    	
         jQuery(".commentField").each(function() {
             jQuery(this).val(jQuery(this).attr('title'));
             jQuery(this).focus( function() {
@@ -30,7 +49,7 @@
 
 </script>
 <div>
-    <h2 class="dark">View community</h2>
+    <h2 class="dark"><spring:message code="community.view.title"/></h2>
 </div>
 <div id="tabs" class="rbDiv">
     <div class="contentDiv">
@@ -38,9 +57,9 @@
 	        <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/communities/images/${community.id}.jpg"/>'/></div>
 	        <div style="padding-top: 4px; padding-bottom: 5px; margin-bottom: 5px;" class="span-10 last formSectionDiv">
 	            <div class="span-7 communityTitle">${community.name}</div>
-	            <div class="span-3 last right">Members: <span class="communityCount">${community.membersCount}</span></div>
+	            <div class="span-3 last right"><spring:message code="community.members"/>: <span class="communityCount">${community.membersCount}</span></div>
 	        </div>
-	        <span>Creator: <a class="noline" href='<c:url value="/viewprofile/${community.ownerId}.html"/>'>${community.owner.fullName}</a></span>
+	        <span><spring:message code="community.creator"/>: <a class="noline" href='<c:url value="/viewprofile/${community.ownerId}.html"/>'>${community.owner.fullName}</a></span>
 	    </div>
 	    <div class="span-12 formSectionSlimDiv" style="padding-top: 10px;">
 	        <div class="span-2 labelDiv">&nbsp;</div>
@@ -55,13 +74,13 @@
             <c:when test="${user.userId == community.ownerId}">
                 <form action='<c:url value="/editcommunity.html"/>'>
                     <input type="hidden" name="communityId" value="${community.id}"/>
-                    <button class="greenButton90" onclick="submit();">Edit</button>
+                    <button class="greenButton90" onclick="submit();"><spring:message code="button.edit"/></button>
                 </form>
 	        </c:when>
 	        <c:otherwise>
 	            <form action='<c:url value="/unjoincommunity.html"/>' method="post">
 	                <input type="hidden" name="communityId" value="${community.id}"/>
-	                <button class="greenButton90" onclick="submit();">Unjoin</button>
+	                <button class="greenButton90" onclick="submit();"><spring:message code="button.unjoin"/></button>
 	            </form>
 	        </c:otherwise>
 	        </c:choose>
@@ -70,14 +89,14 @@
 	    <p>&nbsp;</p>
     </div>
 	<ul class="palsTabs">
-	    <li><a href="#activities">Activities</a></li>
-	    <li><a href="#members">Members</a></li>
-	    <li><a href="#competitions">Competitions</a></li>
+	    <li><a href="#activities"><spring:message code="community.tab.activities"/></a></li>
+	    <li><a href="#members"><spring:message code="community.tab.members"/></a></li>
+	    <li><a href="#competitions"><spring:message code="community.tab.competitions"/></a></li>
 	</ul>
 	<div id="activities" class="contentDiv">
-	    <form action='<c:url value="/activities.html"/>' method="post">
+	    <form id="activityForm" action='<c:url value="/activities.html"/>' method="post">
 	        <input type="hidden" name="communityId" value="${community.id}"/>
-	        <input class="wallInputActivityField" type="text" name="message" value="What's on your mind?" onfocus="this.value=''"/>
+	        <input class="wallInputActivityField activityField" type="text" name="message" value="" title='<spring:message code="wall.activity.placeholder"/>'/>
 	    </form>
 	    <ul id="communityActivitiesList">
 	    <c:forEach items="${activityList}" var="activity">
@@ -104,8 +123,8 @@
 	                        <td class="nowrap">&nbsp;-&nbsp;</td>
 	                        <td>
 	                        <c:choose>
-	                            <c:when test="${user.userId == activity.ownerId}"><a href="" onclick="document.activityForm_${activity.id}.submit();">Delete</a></c:when>
-	                            <c:otherwise><a href="" onclick="document.likeForm_${activity.id}.submit();">Like</a></c:otherwise>
+	                            <c:when test="${user.userId == activity.ownerId}"><a href="" onclick="document.activityForm_${activity.id}.submit();"><spring:message code="button.delete"/></a></c:when>
+	                            <c:otherwise><a href="" onclick="document.likeForm_${activity.id}.submit();"><spring:message code="button.like"/></a></c:otherwise>
 	                        </c:choose>
 	                        </td>
 	                        <td width="100%">&nbsp;</td>
@@ -119,7 +138,7 @@
 	                               <h5><a class="noline" href='<c:url value="/viewprofile/${like.ownerId}.html"/>'>${like.ownerName}</a>:</h5>
 	                           </td>
 	                           <td width="100%">
-	                               likes this.
+	                               <spring:message code="wall.likes.this"/>
 	                           </td>
 	                           <td class="right">
 	                           <c:if test="${user.userId == like.ownerId}">
@@ -165,7 +184,7 @@
 	                       <tr class="topTr"><td colspan="2"></td></tr>
 	                       <tr>
 	                        <td>
-	                          <input type="text" class="commentField" name="message" value="" title="Write a comment"/>
+	                          <input type="text" class="commentField" name="message" value="" title="<spring:message code='wall.comment.placeholder'/>"/>
 	                        </td>         
 	                        <td class="nopadding"><button class="commentButton">&nbsp;</button></td>  
 	                       </tr>
@@ -185,7 +204,7 @@
 	                <form name="prevPageForm" action='<c:url value="/home.html"/>' method="post">
 	                    <input type="hidden" name="pageId" value="${currentPage + 1}"/>
 	                </form>
-	                <button class="blueButton90" onclick="prevPageForm.submit();">Previous</button>
+	                <button class="blueButton90" onclick="prevPageForm.submit();"><spring:message code="button.previous"/></button>
 	            </c:if>
 	        </div>
 	        <div class="span-6 append-1 last right">
@@ -193,7 +212,7 @@
 	                <form name="nextPageForm" action='<c:url value="/home.html"/>' method="post">
 	                    <input type="hidden" name="pageId" value="${currentPage - 1}"/>
 	                </form>
-	                <button class="greenButton90" onclick="nextPageForm.submit();">Next</button>
+	                <button class="greenButton90" onclick="nextPageForm.submit();"><spring:message code="button.next"/></button>
 	            </c:if>
 	        </div>
 	    </div>

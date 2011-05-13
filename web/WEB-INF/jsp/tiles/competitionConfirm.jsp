@@ -13,9 +13,8 @@
    } 
    
 </script>
-<!-- TODO: All strings to message resources -->
 <div>
-    <h2 class="dark">Create competition</h2>
+    <h2 class="dark"><spring:message code="competition.create.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
     <div class="span-12">
@@ -28,7 +27,7 @@
         </div>
     </div>
     <p>&nbsp;</p>
-    <h4>Alternatives</h4>
+    <h4><spring:message code="competition.alternatives.header"/></h4>
     <div class="formSectionDiv">
         <ul id="friendList">
         <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
@@ -58,18 +57,18 @@
         &nbsp;
     </div>
     <div class="span-12">
-        <div class="span-5 formSectionDiv">Deadline: <span class="bold"><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/></span></div>
+        <div class="span-5 formSectionDiv"><spring:message code="competition.deadline"/>: <span class="bold"><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/></span></div>
         <div class="span-7 last">&nbsp;</div>
     </div>
     <div class="span-12">
-        <div class="span-5 formSectionDiv">Stake: <span class="bold">${competition.fixedStake} ${competition.currency}</span></div>
+        <div class="span-5 formSectionDiv"><spring:message code="competition.stake"/>: <span class="bold">${competition.fixedStake} ${competition.currency}</span></div>
         <div class="span-7 last">&nbsp;</div>
     </div>
-    <p>This competition is private. Just the people you choose in the next step will be possible participants.</p>
-    <button class="blueButton110" onclick="goBack();">Back</button>
-    <button class="whiteButton90" onclick="goHome();">Cancel</button>
-    <button class="greenButton110" onclick="saveAndExit();">Save and exit</button>
-    <button class="blueButton110" onclick="goToNextStep();">Confirm</button>
+    <p><spring:message code="competition.private"/></p>
+    <button class="blueButton110" onclick="goBack();"><spring:message code="button.back"/></button>
+    <button class="whiteButton90" onclick="goHome();"><spring:message code="button.cancel"/></button>
+    <button class="greenButton110" onclick="saveAndExit();"><spring:message code="button.save.and.exit"/></button>
+    <button class="blueButton110" onclick="goToNextStep();"><spring:message code="button.confirm"/></button>
     <p>&nbsp;</p>
 </div>
 <form action='<c:url value="/competitionalternatives.html"/>' method="post" id="createCompetitionForm">

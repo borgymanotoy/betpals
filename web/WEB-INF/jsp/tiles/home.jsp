@@ -1,6 +1,24 @@
 <%@include file="includes.jsp"%>
 <script type="text/javascript">
     jQuery(document).ready(function() {
+        jQuery(".activityField").each(function() {
+            jQuery(this).val(jQuery(this).attr('title'));
+            jQuery(this).focus( function() {
+                jQuery(this).val("");
+            });
+            jQuery(this).blur( function() {
+                if (jQuery.trim(jQuery(this).val()) == "") {
+                    jQuery(this).val(jQuery(this).attr('title'));
+                }
+            });
+        }); 
+        jQuery("#activityForm").submit(function() {
+            var field = jQuery(this).find('.activityField');
+            var queryValue = jQuery.trim(field.val());
+            if ( queryValue == "" || queryValue == field.attr('title')) {
+                return false;
+            }
+        }); 
         jQuery(".commentField").each(function() {
             jQuery(this).val(jQuery(this).attr('title'));
             jQuery(this).focus( function() {
@@ -23,35 +41,66 @@
                 return false;
             });
         }); 
+        
+        jQuery("#quickCompetitionStake").each(function() {
+            jQuery(this).val(jQuery(this).attr('title'));
+            jQuery(this).focus( function() {
+                jQuery(this).val("");
+            });
+            jQuery(this).blur( function() {
+                if (jQuery.trim(jQuery(this).val()) == "") {
+                    jQuery(this).val(jQuery(this).attr('title'));
+                }
+            });
+        }); 
+        jQuery("#quickCompetitionAlternative").each(function() {
+            jQuery(this).val(jQuery(this).attr('title'));
+            jQuery(this).focus( function() {
+                jQuery(this).val("");
+            });
+            jQuery(this).blur( function() {
+                if (jQuery.trim(jQuery(this).val()) == "") {
+                    jQuery(this).val(jQuery(this).attr('title'));
+                }
+            });
+        }); 
+        jQuery("#quickCompetitionForm").submit(function() {
+            var field = jQuery(this).find('#quickCompetitionAlternative');
+            var queryValue = jQuery.trim(field.val());
+            if ( queryValue == "" || queryValue == field.attr('title')) {
+                return false;
+            }
+        }); 
+
     });
     
 </script>
 <div id="quickCompetitionDiv">
-    <h2>Quick competition</h2>
+    <h2><spring:message code="competition.quick.title"/></h2>
     <c:choose>
     <c:when test="${not empty accounts}">
-        <form action='<c:url value="/quickcompetitionview.html"/>' method="post">
-	    <span style="padding-left: 16px;">I bet </span>
+        <form action='<c:url value="/quickcompetitionview.html"/>' method="post" id="quickCompetitionForm">
+	    <span style="padding-left: 16px;"><spring:message code="competition.i.bet"/> </span>
 	    <div class="formInlineDiv">
-	    <input id="quickCompetitionStake" type="text" name="stake"/>
+	    <input id="quickCompetitionStake" type="text" name="stake" title="<spring:message code='competition.quick.default.amount'/>"/>
 	    <select name="accountId">
 	    <c:forEach items="${accounts}" var="account">
 	        <option value="${account.id}">${account.currency}</option>
 	    </c:forEach>
 	    </select> 
 	    </div>
-	    <span>that </span> 
-	    <input id="quickCompetitionAlternative" type="text" name="alternative"/>
-	    <input type="submit" value="Next" id="quickCompetitionButton"/>
+	    <span><spring:message code="competition.bet.that"/> </span> 
+	    <input id="quickCompetitionAlternative" type="text" name="alternative" title="<spring:message code='competition.quick.placeholder'/>"/>
+	    <input type="submit" class="clickable" value="<spring:message code='button.next'/>" id="quickCompetitionButton"/>
         </form>
     </c:when>
-    <c:otherwise><span style="padding-left: 16px;">You need a valid <a href='<c:url value="/addaccount.html"/>'>account</a> to create competition. </span></c:otherwise>
+    <c:otherwise><span style="padding-left: 16px;"><spring:message code="competition.account.required"/></span></c:otherwise>
     </c:choose>
 </div>
 <div class="wallInputDiv">
-    <h3>Activities</h3>
-    <form action='<c:url value="/activities.html"/>' method="post">
-        <input type="text" name="message" value="What's on your mind?" onfocus="this.value=''"/>
+    <h3><spring:message code="activities.title"/></h3>
+    <form id="activityForm" action='<c:url value="/activities.html"/>' method="post">
+        <input type="text" class="activityField" name="message" value="" title="<spring:message code='wall.activity.placeholder'/>"/>
     </form>
 </div>
 <div class="rbDiv">
@@ -80,8 +129,8 @@
                         <td class="nowrap">&nbsp;-&nbsp;</td>
                         <td>
                         <c:choose>
-	                        <c:when test="${user.userId == activity.ownerId}"><a href="" onclick="document.activityForm_${activity.id}.submit();">Delete</a></c:when>
-	                        <c:otherwise><a href="" onclick="document.likeForm_${activity.id}.submit();">Like</a></c:otherwise>
+	                        <c:when test="${user.userId == activity.ownerId}"><a href="" onclick="document.activityForm_${activity.id}.submit();"><spring:message code="button.delete"/></a></c:when>
+	                        <c:otherwise><a href="" onclick="document.likeForm_${activity.id}.submit();"><spring:message code="button.like"/></a></c:otherwise>
                         </c:choose>
                         </td>
                         <td width="100%">&nbsp;</td>
@@ -95,7 +144,7 @@
 			                   <h5><a class="noline" href='<c:url value="/viewprofile/${like.ownerId}.html"/>'>${like.ownerName}</a>:</h5>
 		                   </td>
 		                   <td width="100%">
-			                   likes this.
+			                   <spring:message code="wall.likes.this"/>
 		                   </td>
 		                   <td class="right">
 		                   <c:if test="${user.userId == like.ownerId}">
@@ -141,7 +190,7 @@
                        <tr class="topTr"><td colspan="2"></td></tr>
                        <tr>
                         <td>
-		                  <input type="text" class="commentField" name="message" value="" title="Write a comment"/>
+		                  <input type="text" class="commentField" name="message" value="" title='<spring:message code="wall.comment.placeholder"/>'/>
 		                </td>         
 		                <td class="nopadding"><button class="commentButton">&nbsp;</button></td>  
                        </tr>
@@ -161,7 +210,7 @@
                 <form name="prevPageForm" action='<c:url value="/home.html"/>' method="post">
                     <input type="hidden" name="pageId" value="${currentPage + 1}"/>
                 </form>
-                <button class="blueButton90" onclick="prevPageForm.submit();">Previous</button>
+                <button class="blueButton90" onclick="prevPageForm.submit();"><spring:message code="button.previous"/></button>
             </c:if>
         </div>
         <div class="span-6 append-1 last right">
@@ -169,7 +218,7 @@
                 <form name="nextPageForm" action='<c:url value="/home.html"/>' method="post">
                     <input type="hidden" name="pageId" value="${currentPage - 1}"/>
                 </form>
-                <button class="greenButton90" onclick="nextPageForm.submit();">Next</button>
+                <button class="greenButton90" onclick="nextPageForm.submit();"><spring:message code="button.next"/></button>
             </c:if>
         </div>
     </div>

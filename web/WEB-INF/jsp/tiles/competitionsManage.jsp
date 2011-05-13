@@ -7,10 +7,10 @@
    
 </script>
 <div>
-    <h2 class="dark">Manage competitions</h2>
+    <h2 class="dark"><spring:message code="competition.manage.list.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
-    <h4>Competitions</h4>
+    <h4><spring:message code="competition.manage.list.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${competitionList}" var="competition">
         <li>
@@ -20,16 +20,16 @@
 	            </div>
 	            <div class="span-10 last competitionDiv">
                     <h5 class="clickable" onclick="manageCompetition(${competition.id});">${competition.name}</h5>
-                    <span class="detailTitle">Deadline: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
-                    <span class="detailTitle">Participants: </span>${competition.numberOfParticipants}<br/>
-                    <span class="detailTitle">Turnover: </span><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${competition.turnover}"/>  ${competition.currency} <br/>
+                    <span class="detailTitle"><spring:message code="competition.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
+                    <span class="detailTitle"><spring:message code="competition.participants"/>: </span>${competition.numberOfParticipants}<br/>
+                    <span class="detailTitle"><spring:message code="competition.turnover"/>: </span><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${competition.turnover}"/>  ${competition.currency} <br/>
 	            </div>
 	        </div>
         </li>
     </c:forEach>
     </ul>
     <p>&nbsp;</p>
-    <a class="greenDotLink" href='<c:url value="/settledcompetitions.html"/>'>Settled competitions (${settledCompetitionCount})</a><br/>
+    <a class="greenDotLink" href='<c:url value="/settledcompetitions.html"/>'><spring:message code="link.settled.competitions"/> (${settledCompetitionCount})</a><br/>
     <p>&nbsp;</p>
 </div>
 <form action='<c:url value="/managecompetition.html"/>' method="post" id="manageCompetitionForm">

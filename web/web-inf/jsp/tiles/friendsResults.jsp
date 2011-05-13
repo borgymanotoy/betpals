@@ -22,15 +22,15 @@
 </script>
 
 <div id="searchFriendsDiv">
-    <h2>Search result</h2>
+    <h2><spring:message code="friends.search.result.title"/></h2>
     <form action='<c:url value="/searchfriends.html"/>' name="search_form" method="post">
-        <input id="searchFriendsField" type="text" name="query" value="" title="Search again"/>
+        <input id="searchFriendsField" type="text" name="query" value="" title='<spring:message code="friends.search.again.placeholder"/>'/>
         <button id="searchButton" onclick="searchFriends(); return false;">&nbsp;</button>
     </form>
 </div>
 <div class="rbDiv contentDiv">
     <c:if test="${not empty friendsList}">
-    <h4>Friends</h4>
+    <h4><spring:message code="friends.search.results.friends.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${friendsList}" var="friend">
         <li>
@@ -47,7 +47,7 @@
 	                <div class="span-2 last right userControlDiv">
 				        <form action='<c:url value="/invitefriend.html"/>' method="post">
 				            <input type="hidden" name="friendId" value="${friend.userId}"/>
-				            <button class="addFriendButton" onclick="submit();">Add</button>
+				            <button class="addFriendButton" onclick="submit();"><spring:message code="button.add"/></button>
 				        </form>
 	                </div>
 	            </div>
@@ -58,7 +58,7 @@
     <p>&nbsp;</p>
     </c:if>
     <c:if test="${not empty communityList}">
-    <h4>Communities</h4>
+    <h4><spring:message code="friends.search.results.communities.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${communityList}" var="community">
         <li>
@@ -75,7 +75,7 @@
 	                <div class="span-2 last right userControlDiv">
 				        <form action='<c:url value="/joincommunity.html"/>' method="post">
 				            <input type="hidden" name="communityId" value="${community.id}"/>
-				            <button class="addFriendButton" onclick="submit();">Join</button>
+				            <button class="addFriendButton" onclick="submit();"><spring:message code="button.join"/></button>
 				        </form>
 	                </div>
 	            </div>

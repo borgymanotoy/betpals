@@ -35,8 +35,16 @@
 	    <a href='<c:url value="/admin/listmessageresources.html?lang=${listLanguage}&letter=x"/>'>X</a>&nbsp;
 	    <a href='<c:url value="/admin/listmessageresources.html?lang=${listLanguage}&letter=y"/>'>Y</a>&nbsp;
 	    <a href='<c:url value="/admin/listmessageresources.html?lang=${listLanguage}&letter=z"/>'>Z</a>&nbsp;
+	    <a href='<c:url value="/admin/listmessageresources.html?lang=${listLanguage}"/>'>View all</a>&nbsp;
+	    <a href='<c:url value="/admin/editmessageresource.html?lang=${listLanguage}"/>'>Create new</a>&nbsp;
 	</span>
-	<h4>&nbsp;</h4>
+	<div style="border-bottom: 1px solid #d0d0d0; padding-top: 5px; padding-bottom: 5px; margin-bottom: 10px;">
+       <form action='<c:url value="/admin/searchmessageresources.html"/>' name="search_form" method="post">
+        <input type="hidden" name="lang" value="${listLanguage}"/>
+        <input id="searchmessageResourceField" type="text" name="query"/>
+        <button id="searchButton" type="submit">&nbsp;</button>
+       </form>	   
+	</div>
 	<ul id="priority_list">
 	    <c:forEach items="${messageResourceList}" var="item">
 	        <c:url var="editURL" value="/admin/editmessageresource.html">
