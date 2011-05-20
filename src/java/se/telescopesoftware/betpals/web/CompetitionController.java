@@ -157,8 +157,9 @@ public class CompetitionController extends AbstractPalsController {
     	if (competitionId != null) {
     		Competition storedCompetition = competitionService.getCompetitionById(competition.getId());
     		competition.setEvents(storedCompetition.getEvents()); //TODO: Refactor this
-    	}
-    	
+    	} 
+
+    	competition.setStatus(CompetitionStatus.NEW);
     	competition = competitionService.saveCompetition(competition);
     	saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	
@@ -189,30 +190,30 @@ public class CompetitionController extends AbstractPalsController {
 		}
 		
 		Competition competition = competitionService.getCompetitionById(invitationHelper.getCompetitionId());
-		
-    	Set<Long> friendsIdSet = new HashSet<Long>();
-       	friendsIdSet.add(getUserId());
-    	if (invitationHelper.isAllFriends()) {
-    		friendsIdSet.addAll(getUserProfile().getFriendsIdSet());
-    	} else {
-    		friendsIdSet.addAll(invitationHelper.getFriendsIdSet());
-    		Set<Long> groupIdSet = invitationHelper.getGroupIdSet();
-    		for (Long groupId : groupIdSet) {
-    			Group group = userService.getGroupById(groupId);
-    			friendsIdSet.addAll(group.getMembersIdSet());
-    		}
-    	}
-    	
-    	for (Long communityId : invitationHelper.getCommunityIdSet()) {
-    		Community community = userService.getCommunityById(communityId);
-    		friendsIdSet.addAll(community.getMembersIdSet());
-    	}
 
-    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
-
-    	if (invitationHelper.shouldInviteToFacebook()) {
-    		facebookService.postCompetitionToUserWall(competition, getUserProfile());
-    	}
+		if (invitationHelper.shouldInviteToFacebook()) {
+			facebookService.postCompetitionToUserWall(competition, getUserProfile());
+		} else {
+	    	Set<Long> friendsIdSet = new HashSet<Long>();
+	       	friendsIdSet.add(getUserId());
+	    	if (invitationHelper.isAllFriends()) {
+	    		friendsIdSet.addAll(getUserProfile().getFriendsIdSet());
+	    	} else {
+	    		friendsIdSet.addAll(invitationHelper.getFriendsIdSet());
+	    		Set<Long> groupIdSet = invitationHelper.getGroupIdSet();
+	    		for (Long groupId : groupIdSet) {
+	    			Group group = userService.getGroupById(groupId);
+	    			friendsIdSet.addAll(group.getMembersIdSet());
+	    		}
+	    	}
+	    	
+	    	for (Long communityId : invitationHelper.getCommunityIdSet()) {
+	    		Community community = userService.getCommunityById(communityId);
+	    		friendsIdSet.addAll(community.getMembersIdSet());
+	    	}
+	
+	    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
+		}
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
     	activity.setMessage("Created new competition: " + competition.getName());

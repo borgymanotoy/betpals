@@ -21,6 +21,10 @@ public interface ActivityService {
 	
 	void addActivityLike(ActivityLike like);
 	
+	ActivityLike getActivityLike(Long activityLikeId);
+	
+	ActivityComment getActivityComment(Long activityCommentId);
+	
 	Collection<Activity> getActivitiesForUserProfile(UserProfile userProfile, Integer pageNumber, Integer itemsPerPage);
 
 	Collection<Activity> getActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType);

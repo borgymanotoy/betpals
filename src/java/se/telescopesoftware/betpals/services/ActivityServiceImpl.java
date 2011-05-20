@@ -141,4 +141,12 @@ public class ActivityServiceImpl implements ActivityService {
         return new Integer(0);
 	}
 
+	public ActivityLike getActivityLike(Long activityLikeId) {
+		return activityRepository.loadActivityLike(activityLikeId);
+	}
+
+	public ActivityComment getActivityComment(Long activityCommentId) {
+		return activityRepository.loadActivityComment(activityCommentId);
+	}
+
 }

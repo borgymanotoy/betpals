@@ -39,6 +39,8 @@ public class InvitationController extends AbstractPalsController {
 	public String showActiveInvitations(Model model) {
 		
 		model.addAttribute("invitationList", competitionService.getInvitationsForUser(getUserId()));
+		model.addAttribute("competitionList", competitionService.getOngoingCompetitionsByUser(getUserId()));
+
 		return "activeInvitationsView";
 	}
 	

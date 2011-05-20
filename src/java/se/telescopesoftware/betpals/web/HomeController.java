@@ -63,8 +63,12 @@ public class HomeController extends AbstractPalsController {
     	session.setAttribute("accounts", accounts);
     	session.setAttribute("myRequestsCount", userService.getUserRequestForUserCount(getUserId()));
     	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
-    	session.setAttribute("myOngoingCompetitionsCount", competitionService.getOngoingCompetitionsByUserCount(getUserId()));
-    	session.setAttribute("myInvitationsCount", competitionService.getInvitationsForUserCount(getUserId()));
+    	session.setAttribute("mySettledCompetitionCount", competitionService.getSettledCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("myNewCompetitionCount", competitionService.getNewCompetitionsByUserCount(getUserId()));
+    	Integer ongoingCompetitionCount = competitionService.getOngoingCompetitionsByUserCount(getUserId());
+    	session.setAttribute("myOngoingCompetitionsCount", ongoingCompetitionCount);
+    	Integer invitationsCount = competitionService.getInvitationsForUserCount(getUserId());
+    	session.setAttribute("myInvitationsCount", new Integer(ongoingCompetitionCount.intValue() + invitationsCount.intValue()));
     	model.addAttribute("activitiesList", activities);    	
     	model.addAttribute("currentPage", pageId);
     	model.addAttribute("numberOfPages", activityService.getActivitiesPageCountForUserProfile(getUserProfile(), null));

@@ -18,18 +18,24 @@ public class HibernateAccountRepositoryImpl extends HibernateDaoSupport implemen
 		return getHibernateTemplate().get(Account.class, accountId);
 	}
 
-	public void storeAccount(Account account) {
-		getHibernateTemplate().saveOrUpdate(account);
+	public Account storeAccount(Account account) {
+		return getHibernateTemplate().merge(account);
 	}
 
 	public Account loadUserAccountForCurrency(Long userId, String currency) {
-		List result = getHibernateTemplate().findByNamedParam("from Account a where a.ownerId = :userId and a.currency = :currency",
+		@SuppressWarnings("unchecked")
+		List<Account> result = getHibernateTemplate().findByNamedParam("from Account a where a.ownerId = :userId and a.currency = :currency",
 				new String [] {"userId", "currency"},
 				new Object [] {userId, currency});
 		if (result != null) {
 			return (Account) result.get(0);
 		}
 		return null;
+	}
+
+	public void setAsDefault(Account account) {
+		getHibernateTemplate().bulkUpdate("update Account set defaultAccount = false where ownerId = ?", account.getOwnerId());
+		getHibernateTemplate().saveOrUpdate(account);
 	}
 
 }

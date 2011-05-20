@@ -300,12 +300,12 @@ public class UserProfile implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		return id.compareTo(((UserProfile)obj).getId()) == 0;
+		return id != null ? id.compareTo(((UserProfile)obj).getId()) == 0 : super.equals(obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return id.hashCode();
+		return id != null ? id.hashCode() : super.hashCode();
 	}
 
 }

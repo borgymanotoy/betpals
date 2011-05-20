@@ -1,3 +1,20 @@
+== Version 0.8.6 =======================================================
+
+New features and CRs
+
+    * Ongoing competition wall
+    * Default account created on user registration
+    * Default account functionality (currency selectors set to default account currency)
+    * Settled bets, various tweaks & fixes
+    * Invites & competitions, version 2
+    * Invite to Competition, version 2
+
+Bug fixes
+
+    * Incorrect returns after add/delete comments and likes on community wall
+    * Exception on user registration
+
+
 == Version 0.8.5 =======================================================
 
 New features and CRs

@@ -85,7 +85,7 @@
 	    <input id="quickCompetitionStake" type="text" name="stake" title="<spring:message code='competition.quick.default.amount'/>"/>
 	    <select name="accountId">
 	    <c:forEach items="${accounts}" var="account">
-	        <option value="${account.id}">${account.currency}</option>
+	        <option value="${account.id}" <c:if test="${account.defaultAccount}">selected="selected"</c:if>>${account.currency}</option>
 	    </c:forEach>
 	    </select> 
 	    </div>

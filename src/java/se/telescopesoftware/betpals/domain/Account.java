@@ -37,6 +37,7 @@ public class Account implements Serializable {
 	private BigDecimal available = new BigDecimal("0.00");
 	private Date created;
 	private boolean active = true;
+	private boolean defaultAccount = false;
 	
 	//TODO: Check cascade type for possible side effects
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
@@ -47,12 +48,21 @@ public class Account implements Serializable {
     )
 	private List<AccountTransaction> transactions = new ArrayList<AccountTransaction>();
 
+	
+	public Account() {
+	}
+	
+	public Account(String currency, Long ownerId) {
+		this.created = new Date();
+		this.currency = currency;
+		this.ownerId = ownerId;
+	}
+	
 	public Long getId() {
 		return id;
 	}
 
-	@SuppressWarnings("unused")
-	private void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -131,6 +141,18 @@ public class Account implements Serializable {
 			this.available = available.add(transaction.getAmount());
 		}
 		this.transactions.add(transaction);
+	}
+
+	public void setDefaultAccount(boolean defaultAccount) {
+		this.defaultAccount = defaultAccount;
+	}
+
+	public boolean isDefaultAccount() {
+		return defaultAccount;
+	}
+	
+	public boolean getDefaultAccount() {
+		return defaultAccount;
 	}
 	
 }

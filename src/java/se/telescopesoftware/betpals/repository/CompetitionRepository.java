@@ -5,6 +5,7 @@ import java.util.Collection;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 
@@ -14,17 +15,21 @@ public interface CompetitionRepository {
 	
 	Collection<Competition> loadActiveCompetitionsByUser(Long userId);
 
-	Collection<Competition> loadSettledCompetitionsByUser(Long userId);
+	Collection<Competition> loadCompetitions(Long userId, CompetitionStatus competitionStatus);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
 	Integer getSettledCompetitionsByUserCount(Long userId);
+
+	Integer getCompetitionsCount(Long userId, CompetitionStatus competitionStatus);
 	
 	void storeBet(Bet bet);
 	
 	Collection<Bet> loadActiveBetsByUser(Long userId);
 
 	Collection<Bet> loadActiveBetsByUserAndAccount(Long userId, Long accountId);
+
+	Collection<Bet> loadSettledBetsByUserAndAccount(Long userId, Long accountId);
 	
 	Collection<Bet> loadActiveBetsBySelectionId(Long selectionId);
 	

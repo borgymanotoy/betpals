@@ -96,7 +96,7 @@
 	<div id="activities" class="contentDiv">
 	    <form id="activityForm" action='<c:url value="/activities.html"/>' method="post">
 	        <input type="hidden" name="communityId" value="${community.id}"/>
-	        <input class="wallInputActivityField activityField" type="text" name="message" value="" title='<spring:message code="wall.activity.placeholder"/>'/>
+	        <input class="wallInputActivityField activityField" type="text" name="message" value="" title="<spring:message code='wall.activity.placeholder'/>"/>
 	    </form>
 	    <ul id="communityActivitiesList">
 	    <c:forEach items="${activityList}" var="activity">

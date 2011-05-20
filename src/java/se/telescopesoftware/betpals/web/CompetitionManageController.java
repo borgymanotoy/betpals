@@ -1,5 +1,7 @@
 package se.telescopesoftware.betpals.web;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +12,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.telescopesoftware.betpals.domain.Activity;
+import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 
 @Controller
 public class CompetitionManageController extends AbstractPalsController {
 	
 	private CompetitionService competitionService;
+    private ActivityService activityService;
 	
     
 	@Autowired
 	public void setCompetitionService(CompetitionService competitionService) {
 		this.competitionService = competitionService;
 	}
-	
+
+    @Autowired
+    public void setActivityService(ActivityService activityService) {
+        this.activityService = activityService;
+    }
+
+
 	@RequestMapping(value="/managecompetitions")	
 	public String getCompetitionsListView(Model model, HttpSession session) {
 
@@ -41,10 +53,19 @@ public class CompetitionManageController extends AbstractPalsController {
 		return "settledCompetitionsView";
 	}
 
+	@RequestMapping(value="/newcompetitions")	
+	public String getNewCompetitionsListView(Model model, HttpSession session) {
+		model.addAttribute("competitionList", competitionService.getNewCompetitionsByUser(getUserId()));
+		return "newCompetitionListView";
+	}
+	
 	@RequestMapping(value="/settledcompetition")	
-	public String getSettledCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
+	public String getSettledCompetitionView(@RequestParam("competitionId") Long competitionId, @RequestParam(value="pageId", defaultValue="0", required=false) Integer pageId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
+		Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(competitionId, pageId, null, ActivityType.COMPETITION);
+		model.addAttribute(activities);
+    	model.addAttribute("numberOfPages", activityService.getActivitiesPageCountForExtensionIdAndType(competitionId, ActivityType.COMPETITION, null));
 
 		return "settledCompetitionView";
 	}
@@ -58,9 +79,13 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/ongoingcompetition")	
-	public String getOngoingCompetitionView(@RequestParam("competitionId") Long competitionId, Model model) {
+	public String getOngoingCompetitionView(@RequestParam("competitionId") Long competitionId, @RequestParam(value="pageId", defaultValue="0", required=false) Integer pageId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
+
+		Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(competitionId, pageId, null, ActivityType.COMPETITION);
+		model.addAttribute(activities);
+    	model.addAttribute("numberOfPages", activityService.getActivitiesPageCountForExtensionIdAndType(competitionId, ActivityType.COMPETITION, null));
 
 		return "ongoingCompetitionView";
 	}

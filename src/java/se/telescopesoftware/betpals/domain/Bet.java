@@ -106,7 +106,7 @@ public class Bet {
 	}
 
 	public BigDecimal getProfitOrLoss() {
-		return profitOrLoss;
+		return profitOrLoss != null ? profitOrLoss : BigDecimal.ZERO;
 	}
 
 	public void setProfitOrLoss(BigDecimal profitOrLoss) {
@@ -145,5 +145,11 @@ public class Bet {
 		this.alternative = alternative;
 	}
 
+	public BigDecimal getWonOrLostAmount() {
+		return getProfitOrLoss().abs();
+	}
 	
+	public boolean getWon() {
+		return getProfitOrLoss().compareTo(BigDecimal.ZERO) > 0;
+	}
 }

@@ -8,16 +8,23 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import se.telescopesoftware.betpals.domain.Account;
+import se.telescopesoftware.betpals.domain.AccountTransaction;
+import se.telescopesoftware.betpals.domain.AccountTransactionType;
 import se.telescopesoftware.betpals.repository.AccountRepository;
 
 public class AccountServiceImpl implements AccountService {
 
 	private Map<String, String> supportedCurrencies = new HashMap<String, String>();
 	private AccountRepository accountRepository;
+	private SiteConfigurationService siteConfigurationService;
 	
     private static Logger logger = Logger.getLogger(AccountServiceImpl.class);
 	
 	
+    public void setSiteConfigurationService(SiteConfigurationService siteConfigurationService) {
+    	this.siteConfigurationService = siteConfigurationService;
+    }
+    
 	public void setAccountRepository(AccountRepository accountRepository) {
 		this.accountRepository = accountRepository;
 	}
@@ -38,8 +45,8 @@ public class AccountServiceImpl implements AccountService {
 		return accountRepository.loadAccount(accountId);
 	}
 
-	public void saveAccount(Account account) {
-		accountRepository.storeAccount(account);
+	public Account saveAccount(Account account) {
+		return accountRepository.storeAccount(account);
 	}
 
 	public void depositToAccount(Long accountId, BigDecimal amount) {
@@ -54,6 +61,27 @@ public class AccountServiceImpl implements AccountService {
 
 	public Account getUserAccountForCurrency(Long userId, String currency) {
 		return accountRepository.loadUserAccountForCurrency(userId, currency);
+		//TODO: Add pagination to account transaction list
+	}
+
+	public String getDefaultCurrency() {
+		return supportedCurrencies.get("default");
+	}
+
+	public Account createDefaultAccountForUser(Long userId) {
+		logger.info("Creating default account for user " + userId);
+		Account account = saveAccount(new Account(getDefaultCurrency(), userId));
+		account.setDefaultAccount(true);
+		String defaultAmount = siteConfigurationService.getParameterValue("defaultAccountAmount");
+		AccountTransaction transaction = new AccountTransaction(account, new BigDecimal(defaultAmount), AccountTransactionType.DEPOSIT);
+		account.addTransaction(transaction);
+		
+		return saveAccount(account);
+	}
+
+	public void setAsDefault(Account account) {
+		account.setDefaultAccount(true);
+		accountRepository.setAsDefault(account);
 	}
 
 }

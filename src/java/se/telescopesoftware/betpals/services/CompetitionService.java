@@ -19,6 +19,8 @@ public interface CompetitionService {
 	Collection<Competition> getSettledCompetitionsByUser(Long userId);
 
 	Collection<Competition> getOngoingCompetitionsByUser(Long userId);
+
+	Collection<Competition> getNewCompetitionsByUser(Long userId);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
@@ -26,11 +28,15 @@ public interface CompetitionService {
 
 	Integer getOngoingCompetitionsByUserCount(Long userId);
 
+	Integer getNewCompetitionsByUserCount(Long userId);
+
 	void placeBet(Bet bet);
 	
 	Collection<Bet> getActiveBetsByUser(Long userId);
 
 	Collection<Bet> getActiveBetsByUserAndAccount(Long userId, Long accountId);
+
+	Collection<Bet> getSettledBetsByUserAndAccount(Long userId, Long accountId);
 	
 	Collection<Bet> getActiveBetsBySelectionId(Long selectionId);
 	

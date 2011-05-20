@@ -53,11 +53,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Collection<Competition> getActiveCompetitionsByUser(Long userId) {
-		return competitionRepository.loadActiveCompetitionsByUser(userId);
+		return competitionRepository.loadCompetitions(userId, CompetitionStatus.OPEN);
 	}
 
 	public Integer getActiveCompetitionsByUserCount(Long userId) {
-		return competitionRepository.getActiveCompetitionsByUserCount(userId);
+		return competitionRepository.getCompetitionsCount(userId, CompetitionStatus.OPEN);
 	}
 
 	public void placeBet(Bet bet) {
@@ -95,6 +95,10 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadActiveBetsByUserAndAccount(userId, accountId);
 	}
 
+	public Collection<Bet> getSettledBetsByUserAndAccount(Long userId, Long accountId) {
+		return competitionRepository.loadSettledBetsByUserAndAccount(userId, accountId);
+	}
+	
 	public void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner) {
 		for (Long friendId : friendIds) {
 			Invitation invitation = new Invitation(competition, owner, friendId);
@@ -189,6 +193,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			
 			accountService.saveAccount(account);
 			bet.setSettled(new Date());
+			bet.setProfitOrLoss(amountWon);
 			saveAlternative(alternative);
 		}
 	}
@@ -201,6 +206,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			
 			accountService.saveAccount(account);
 			bet.setSettled(new Date());
+			bet.setProfitOrLoss(bet.getStake().negate());
 			saveAlternative(alternative);
 		}
 	}
@@ -287,7 +293,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Collection<Competition> getSettledCompetitionsByUser(Long userId) {
-		return competitionRepository.loadSettledCompetitionsByUser(userId);
+		return competitionRepository.loadCompetitions(userId, CompetitionStatus.SETTLED);
 	}
 
 	public Integer getSettledCompetitionsByUserCount(Long userId) {
@@ -300,6 +306,14 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	public int getDefaultSettlingInterval() {
 		return DEFAULT_SETTLING_INTERVAL;
+	}
+
+	public Collection<Competition> getNewCompetitionsByUser(Long userId) {
+		return competitionRepository.loadCompetitions(userId, CompetitionStatus.NEW);
+	}
+
+	public Integer getNewCompetitionsByUserCount(Long userId) {
+		return competitionRepository.getCompetitionsCount(userId, CompetitionStatus.NEW);
 	}
 
 

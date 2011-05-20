@@ -101,6 +101,10 @@
     <!-- ================================================================= -->
 
     <!-- Services =========================================================== -->
+    <bean id="siteConfigurationService" class="se.telescopesoftware.betpals.services.SiteConfigurationServiceImpl">
+        <property name="appRoot" ref="appRoot"/>
+        <property name="configurationFilename" value="/WEB-INF/app.properties"/>
+    </bean>
     <bean id="messageResourceService" class="se.telescopesoftware.betpals.services.MessageResourceServiceImpl">
         <property name="messageSource" ref="messageSource"/>
         <property name="appRoot" ref="appRoot"/>
@@ -114,6 +118,7 @@
     <bean id="accountService" class="se.telescopesoftware.betpals.services.AccountServiceImpl">
         <property name="accountRepository" ref="accountRepository"/>
         <property name="supportedCurrenciesMap" ref="supportedCurrencies"/>
+        <property name="siteConfigurationService" ref="siteConfigurationService"/>
     </bean>
     <bean id="competitionService" class="se.telescopesoftware.betpals.services.CompetitionServiceImpl">
         <property name="competitionRepository" ref="competitionRepository"/>

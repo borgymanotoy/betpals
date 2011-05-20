@@ -45,7 +45,7 @@ public class AccountWithdrawController extends AbstractPalsController {
 			
 			//TODO: Add check for correct currency
 			//TODO: Add check for available funds
-			accountService.saveAccount(account);
+			account = accountService.saveAccount(account);
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
 

@@ -15,10 +15,17 @@ public interface AccountService {
 	Account getAccount(Long accountId);
 	
 	Account getUserAccountForCurrency(Long userId, String currency);
+
+	Account createDefaultAccountForUser(Long userId);
 	
-	void saveAccount(Account account);
+	Account saveAccount(Account account);
 	
 	void depositToAccount(Long accountId, BigDecimal amount);
 	
 	void withdrawFromAccount(Long accountId, BigDecimal amount);
+	
+	String getDefaultCurrency();
+
+	void setAsDefault(Account account);
+
 }

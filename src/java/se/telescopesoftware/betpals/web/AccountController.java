@@ -71,6 +71,21 @@ public class AccountController extends AbstractPalsController {
     	if (account.getOwnerId().equals(getUserId()) ) {
     		model.addAttribute("account", account);
     		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(getUserId(), accountId));
+    		model.addAttribute("settledBets", competitionService.getSettledBetsByUserAndAccount(getUserId(), accountId));
+    	}
+    	
+		return "accountDetailsView";
+	}
+	
+	@RequestMapping(value="/accountsetdefault")	
+	public String makeDefault(@RequestParam("accountId") Long accountId, Model model, HttpSession session) {
+		Account account = accountService.getAccount(accountId);
+    	if (account.getOwnerId().equals(getUserId()) ) {
+			accountService.setAsDefault(account);
+			model.addAttribute("account", account);
+    		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(getUserId(), accountId));
+    		model.addAttribute("settledBets", competitionService.getSettledBetsByUserAndAccount(getUserId(), accountId));
+	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
     	}
     	
 		return "accountDetailsView";

@@ -43,7 +43,7 @@
         &nbsp;
     </div>    
     <div class="formSectionDiv">
-        <img class="userPic" src='<c:url value="/images/competitions/empty.jpg"/>'/>
+        <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
         <div style="display: inline-block;">
             <spring:message code="competition.add.picture"/><br/> 
             <input type="file" name="imageFile"/>
@@ -72,14 +72,13 @@
         <spring:message code="competition.select.currency"/>
         <form:select path="accountId">
         <c:forEach items="${accounts}" var="account">
-            <!-- TODO: mark selected element! -->
-            <form:option label="${account.currency}" value="${account.id}"/>
+            <option value="${account.id}" <c:if test="${account.defaultAccount}">selected="selected"</c:if>>${account.currency}</option>
         </c:forEach>
         </form:select> 
     </div>    
     <div class="formSectionDiv">
-        <input type="radio" name="competitionType" value="POOL_BETTING"><spring:message code="competition.type.pool.betting"/></input><br/>
-        <input type="radio" name="competitionType" value="FIXED_STAKE"><spring:message code="competition.type.fixed.stake"/></input>
+        <input type="radio" name="competitionType" value="POOL_BETTING" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>><spring:message code="competition.type.pool.betting"/></input><br/>
+        <input type="radio" name="competitionType" value="FIXED_STAKE" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>><spring:message code="competition.type.fixed.stake"/></input>
         <form:input path="fixedStake" size="4"/>
     </div>
     <div class="formSectionDiv">

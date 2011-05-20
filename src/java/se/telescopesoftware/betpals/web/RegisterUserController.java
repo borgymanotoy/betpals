@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,18 +26,22 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.UserService;
 
 
 @Controller
-public class RegisterUserController {
+public class RegisterUserController extends AbstractPalsController {
 
     private UserService userService;
     private AuthenticationManager authenticationManager;
-    private String appRoot;
+	private AccountService accountService;
 
-    private static Logger logger = Logger.getLogger(RegisterUserController.class);
-
+	@Autowired
+	public void setAccountService(AccountService accountService) {
+		this.accountService = accountService;
+	}
+	
     @Autowired
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
@@ -49,11 +52,7 @@ public class RegisterUserController {
         this.userService = userService;
     }
 
-    @Autowired
-    public void setAppRoot(String appRoot) {
-    	this.appRoot = appRoot;
-    }
-
+    
     @RequestMapping(value="/register", method = RequestMethod.GET)
     protected UserProfile formBackingObject() {
         return new UserProfile();
@@ -80,7 +79,8 @@ public class RegisterUserController {
         Long userId = userService.registerUser(user);
         model.addAttribute(user);
 
-        String path = appRoot + "images" + File.separator + "users";
+        // TODO: Remove file copy, use dynamic image loading
+        String path = getAppRoot() + "images" + File.separator + "users";
         File defaultUserImage = new File(path, "userPic.jpg");
         File userImageFile = new File(path, userId + ".jpg");
         try {
@@ -88,7 +88,9 @@ public class RegisterUserController {
 		} catch (IOException ex) {
 			logger.error("Could not copy user picture", ex);
 		}
-        
+
+    	accountService.createDefaultAccountForUser(userId);
+		
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
 

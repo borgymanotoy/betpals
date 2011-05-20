@@ -41,10 +41,12 @@
 	    <div class="orangeTitle"><spring:message code="competitions.pane.title"/></div>
 	    <div class="panelNoPadding">
 	        <ul id="invitesAndCompetitions">
+	           <li><a href='<c:url value="/newcompetitions.html"/>'><spring:message code="link.create.competitions"/></a> (${myNewCompetitionCount})</li>
+               <li><a href='<c:url value="/managecompetitions.html"/>'><spring:message code="link.manage.competitions"/></a> (${myCompetitionsCount})</li>
 	           <li><a href='<c:url value="/invitations.html"/>'><spring:message code="link.invitations"/></a> (${myInvitationsCount})</li>
                <li><a href='<c:url value="/ongoingcompetitions.html"/>'><spring:message code="link.ongoing.competitions"/></a> (${myOngoingCompetitionsCount})</li>
-               <li><a href='<c:url value="/managecompetitions.html"/>'><spring:message code="link.manage.competitions"/></a> (${myCompetitionsCount})</li>
-               <li><a href='<c:url value="/home.html"/>'><spring:message code="link.search.competitions"/></a></li>
+               <li><a href='<c:url value="/settledcompetitions.html"/>'><spring:message code="link.settled.competitions"/></a> (${mySettledCompetitionCount})</li>
+               <!-- <li><a href='<c:url value="/home.html"/>'><spring:message code="link.search.competitions"/></a></li> -->
 	        </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

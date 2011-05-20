@@ -44,7 +44,7 @@ public class AccountDepositController extends AbstractPalsController {
 			account.addTransaction(transaction);
 			
 			//TODO: Add check for correct currency
-			accountService.saveAccount(account);
+			account = accountService.saveAccount(account);
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
 

@@ -14,6 +14,7 @@
 	    <form:select path="accountId">
 	    <c:forEach items="${accounts}" var="account">
 	        <!-- TODO: mark selected element! -->
+	        <option value="${account.id}" <c:if test="${account.id == quickCompetition.accountId}">selected="selected"</c:if>>${account.currency}</option>
 	        <form:option label="${account.currency}" value="${account.id}"/>
 	    </c:forEach>
 	    </form:select> 

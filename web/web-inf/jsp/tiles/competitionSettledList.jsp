@@ -20,7 +20,7 @@
 	            </div>
 	            <div class="span-10 last competitionDiv">
                     <h5 class="clickable" onclick="viewCompetition(${competition.id});">${competition.name}</h5>
-                    <span class="detailTitle"><spring:message code="competition.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
+                    <span class="detailTitle"><spring:message code="competition.competition.settled.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>
                     <span class="detailTitle"><spring:message code="competition.participants"/>: </span>${competition.numberOfParticipants}<br/>
                     <span class="detailTitle"><spring:message code="competition.turnover"/>: </span><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2" value="${competition.turnover}"/>  ${competition.currency} <br/>
 	            </div>
