@@ -129,13 +129,6 @@ public class HibernateCompetitionRepositoryImpl extends HibernateDaoSupport
 		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam("select count(*) from Bet b where b.ownerId = :userId", "userId", userId));
 	}
 
-	public Integer getSettledCompetitionsByUserCount(Long userId) {
-		return DataAccessUtils.intResult(getHibernateTemplate().findByNamedParam(
-				"select count(*) from Competition c where c.ownerId = :userId and c.status = :status", 
-				new String [] {"userId", "status"}, 
-				new Object [] {userId, CompetitionStatus.SETTLED }));
-	}
-
 	@SuppressWarnings("unchecked")
 	public Collection<Bet> loadSettledBetsByUserAndAccount(Long userId, Long accountId) {
 		return getHibernateTemplate().findByNamedParam("from Bet b where b.ownerId = :ownerId and accountId = :accountId and settled is not null", 

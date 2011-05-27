@@ -105,7 +105,7 @@
 	               <tr>
 	                <td class="userPicCell">
 	                    <a href='<c:url value="/viewprofile/${activity.ownerId}.html"/>'>
-	                       <img class="userPic" src='<c:url value="/images/users/${activity.ownerId}.jpg"/>'/>
+	                       <img class="userPic" src='<c:url value="/users/images/${activity.ownerId}.jpeg"/>'/>
 	                    </a>
 	                </td>
 	                <td class="">
@@ -158,7 +158,7 @@
 	                       <tr>
 	                           <td class="userPicCellComment">
 	                             <a href='<c:url value="/viewprofile/${comment.ownerId}.html"/>'>
-	                               <img class="userPic" src='<c:url value="/images/users/${comment.ownerId}.jpg"/>'/>
+	                               <img class="userPic" src='<c:url value="/users/images/${comment.ownerId}.jpeg"/>'/>
 	                             </a>  
 	                           </td>
 	                           <td class="">
@@ -227,7 +227,7 @@
                 <div class="span-12">
                     <div class="span-2 userPicDiv">
                      <a href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
-                        <img class="userPic" src='<c:url value="/images/users/${friend.userId}.jpg"/>'/>
+                        <img class="userPic" src='<c:url value="/users/images/${friend.userId}.jpeg"/>'/>
                      </a>
                     </div>
                     <div class="span-10 last userNameDiv">

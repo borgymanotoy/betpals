@@ -15,6 +15,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-1.8.8.custom.min.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/jquery-ui-timepicker-addon.js"/>'></script>
     <script type="text/javascript" src='<c:url value="/js/jquery.Storage.js"/>'></script>
+    <script type="text/javascript" src='<c:url value="/js/ajaxupload.js"/>'></script>
     <script type="text/javascript">
        function changeBgColor(color, logo) {
 	        jQuery("html").css("backgroundColor", color);

@@ -41,6 +41,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            jQuery('#languageForm').submit();
        } 
        
+       function forgotPassword() {
+           var email = jQuery("#usernameField").val();
+           jQuery('input', '#forgotPasswordForm').val(email);
+           jQuery('#forgotPasswordForm').submit();
+           return false;
+       } 
+       
        jQuery(document).ready(function() {
            jQuery("#usernameField").focus();
            jQuery("#gallery").gallery();
@@ -81,9 +88,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <div id="loginInput2" class="span-4">
             <spring:message code="login.password"/>
             <input type="password" name="j_password" tabindex="2"/>
-            <a href=""><spring:message code="login.forgot.password"/></a>
+            <a href="" onclick="forgotPassword(); return false;"><spring:message code="login.forgot.password"/></a>
         </div>
-        <div id="loginButtonPane" class="span-4 last">
+        <div id="loginButtonPane" class="span-3 append-1 last right">
             <input type="submit" id="loginButton" value="Login"/><br/>
             <button id="facebookLink" onclick="facebookLogin(); return false;"><spring:message code="login.facebook.login"/></button>
         </div>
@@ -125,6 +132,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 </div>
 <form action="" method="post" id="languageForm">
     <input type="hidden" name="lang" value=""/>
+</form>
+<form action='<c:url value="/forgotpasswordview.html"/>' method="post" id="forgotPasswordForm">
+    <input type="hidden" name="email" value=""/>
 </form>
 
 </body>

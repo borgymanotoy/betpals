@@ -83,11 +83,7 @@ public class InvitationController extends AbstractPalsController {
     	competitionService.placeBet(bet);
     	competitionService.deleteInvitation(invitationId);
     	
-    	Activity activity = new Activity();
-    	activity.setCreated(new Date());
-    	activity.setOwnerId(getUserId());
-    	activity.setOwnerName(getUserProfile().getFullName());
-    	activity.setActivityType(ActivityType.USER);
+    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
     	activity.setMessage("Joined the competition: " + competition.getName());
     	
     	activityService.saveActivity(activity);

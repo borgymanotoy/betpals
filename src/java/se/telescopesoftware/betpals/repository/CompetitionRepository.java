@@ -19,8 +19,6 @@ public interface CompetitionRepository {
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
-	Integer getSettledCompetitionsByUserCount(Long userId);
-
 	Integer getCompetitionsCount(Long userId, CompetitionStatus competitionStatus);
 	
 	void storeBet(Bet bet);

@@ -5,9 +5,14 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+
 import org.apache.log4j.Logger;
+import org.springframework.context.MessageSource;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.AccountTransaction;
@@ -26,7 +31,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	private CompetitionRepository competitionRepository;
 	private AccountService accountService;
-	private ActivityService activityService;
+	private EmailService emailService;
+	private MessageSource messageSource;
 	
 	private BigDecimal SYSTEM_COMMISION = new BigDecimal("0.04");
 	private int DEFAULT_DEADLINE_INTERVAL = 7;
@@ -43,8 +49,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 		this.accountService = accountService;
 	}
 
-    public void setActivityService(ActivityService activityService) {
-        this.activityService = activityService;
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+    	this.messageSource = messageSource;
     }
 
     
@@ -53,11 +63,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Collection<Competition> getActiveCompetitionsByUser(Long userId) {
-		return competitionRepository.loadCompetitions(userId, CompetitionStatus.OPEN);
+		return competitionRepository.loadActiveCompetitionsByUser(userId);
 	}
 
 	public Integer getActiveCompetitionsByUserCount(Long userId) {
-		return competitionRepository.getCompetitionsCount(userId, CompetitionStatus.OPEN);
+		return competitionRepository.getActiveCompetitionsByUserCount(userId);
 	}
 
 	public void placeBet(Bet bet) {
@@ -145,7 +155,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		Competition competition = getCompetitionById(id);
 		logger.info("Delete " + competition.toString());
 		for (Alternative alternative : competition.getAllAlternatives()) {
-			voidAlternative(alternative, competition);
+			voidAlternative(alternative, competition, null);
 		}
 		competitionRepository.deleteCompetition(competition);
 		competitionRepository.deleteInvitationsByCompetitionId(competition.getId());
@@ -216,13 +226,15 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return amount.subtract(percentage);
 	}
 	
-	public void voidAlternative(Long competitionId, Long alternativeId) {
+	public void voidAlternative(Long competitionId, Long alternativeId, Locale locale) {
 		Competition competition = getCompetitionById(competitionId);
-		voidAlternative(competition.getAlternativeById(alternativeId), competition);
+		voidAlternative(competition.getAlternativeById(alternativeId), competition, locale);
 	}
 
-	private void voidAlternative(Alternative alternative, Competition competition) {
+	private void voidAlternative(Alternative alternative, Competition competition, Locale locale) {
 		logger.info("Void " + alternative.toString());
+		notifyPunters(alternative, competition, locale);
+	
 		for(Bet bet : alternative.getBets()) {
 			removeBet(bet);
 		}
@@ -236,7 +248,21 @@ public class CompetitionServiceImpl implements CompetitionService {
 		}
 		competition.getDefaultEvent().setAlternatives(filteredAlternatives);
 		saveCompetition(competition);
-
+	}
+	
+	private void notifyPunters(Alternative alternative, Competition competition, Locale locale) {
+		for (Long participantId : alternative.getParticipantsIdSet()) {
+			String subject = messageSource.getMessage("email.void.alternative.subject", new Object[] {alternative.getName()}, locale);
+			String text = messageSource.getMessage("email.void.alternative.text", new Object[] {alternative.getName(), competition.getName()}, locale);
+			try {
+				logger.info("Notify punter: " + participantId);
+				emailService.sendEmail(competition.getOwnerId(), participantId, subject, text);
+			} catch (AddressException ex) {
+				logger.error("Incorrect email address", ex);
+			} catch (MessagingException ex) {
+				logger.error("Could not send email", ex);
+			}
+		}
 	}
 	
 	public Collection<Bet> getActiveBetsBySelectionId(Long selectionId) {
@@ -297,7 +323,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Integer getSettledCompetitionsByUserCount(Long userId) {
-		return competitionRepository.getSettledCompetitionsByUserCount(userId);
+		return competitionRepository.getCompetitionsCount(userId, CompetitionStatus.SETTLED);
 	}
 
 	public int getDefaultDeadlineInterval() {

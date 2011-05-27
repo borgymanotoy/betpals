@@ -53,6 +53,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 				<value>se.telescopesoftware.betpals.domain.Activity</value>
 				<value>se.telescopesoftware.betpals.domain.ActivityComment</value>
 				<value>se.telescopesoftware.betpals.domain.ActivityLike</value>
+				<value>se.telescopesoftware.betpals.domain.PasswordRecoveryRequest</value>
 			</list>
 		</property>
 		<property name="eventListeners">
@@ -82,6 +83,10 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/login.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/facebooklogin.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/forgotpasswordview.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/forgotpassword.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/forgotpassword/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/changeforgottenpassword.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/favicon.ico" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/robots.txt" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/admin**" access="ROLE_SUPERVISOR" />

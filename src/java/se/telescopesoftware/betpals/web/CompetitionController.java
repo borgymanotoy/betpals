@@ -1,10 +1,13 @@
 package se.telescopesoftware.betpals.web;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.codec.Base64;
 import org.springframework.stereotype.Controller;
@@ -22,12 +25,14 @@ import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.AlternativeType;
+import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.InvitationHelper;
+import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
@@ -104,6 +109,20 @@ public class CompetitionController extends AbstractPalsController {
 		return "inviteToCompetitionView";
 	}
 	
+	@RequestMapping(value="/competitioninviteview")	
+	public String getCompetitionInviteView(@RequestParam("competitionId") Long competitionId, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		model.addAttribute(competition);
+		InvitationHelper invitationHelper = new InvitationHelper();
+		invitationHelper.setCompetitionId(competitionId);
+		model.addAttribute(invitationHelper);
+		model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+		model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+		model.addAttribute("friendList", getUserProfile().getFriends());
+		
+		return "inviteToCompetitionView";
+	}
+	
 	@RequestMapping(value="/competitionalternatives")	
 	public String getCompetitionAlternativesView(@RequestParam("competitionId") Long competitionId, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
@@ -111,7 +130,7 @@ public class CompetitionController extends AbstractPalsController {
 		alternative.setEventId(competition.getDefaultEvent().getId());
 		alternative.setCompetitionId(competition.getId());
 		model.addAttribute(alternative);
-		model.addAttribute("alternativesList", competition.getDefaultEvent().getAlternatives());
+		model.addAttribute("alternativesList", competition.getSortedAlternatives());
 
 		return "createAlternativeView";
 	}
@@ -128,13 +147,40 @@ public class CompetitionController extends AbstractPalsController {
 			}
 		}
 		competition.getDefaultEvent().setAlternatives(filteredAlternatives);
+		competition.getDefaultEvent().normalizeAlternativesPriorities();
 		competition = competitionService.saveCompetition(competition);
 		
 		Alternative alternative = new Alternative();
 		alternative.setEventId(competition.getDefaultEvent().getId());
 		alternative.setCompetitionId(competition.getId());
 		model.addAttribute(alternative);
-		model.addAttribute("alternativesList", competition.getDefaultEvent().getAlternatives());
+		model.addAttribute("alternativesList", competition.getSortedAlternatives());
+		
+		return "createAlternativeView";
+	}
+	
+	@RequestMapping(value="/movealternative")	
+	public String moveAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, @RequestParam("direction") String direction, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		Alternative currentAlternative = competition.getAlternativeById(alternativeId);
+		Alternative previousAlternative = competition.getDefaultEvent().getPreviousAlternativeInList(currentAlternative);
+		Alternative nextAlternative = competition.getDefaultEvent().getNextAlternativeInList(currentAlternative);
+		
+        if (direction.equalsIgnoreCase("up") && previousAlternative != null) {
+        	currentAlternative.decreasePriority();
+            previousAlternative.increasePriority();
+        } else if (direction.equalsIgnoreCase("down") && nextAlternative != null) {
+        	currentAlternative.increasePriority();
+            nextAlternative.decreasePriority();
+        }
+		
+		competition = competitionService.saveCompetition(competition);
+		
+		Alternative alternative = new Alternative();
+		alternative.setEventId(competition.getDefaultEvent().getId());
+		alternative.setCompetitionId(competition.getId());
+		model.addAttribute(alternative);
+		model.addAttribute("alternativesList", competition.getDefaultEvent().getSortedAlternatives());
 		
 		return "createAlternativeView";
 	}
@@ -175,13 +221,26 @@ public class CompetitionController extends AbstractPalsController {
     		alternative.setEventId(competition.getDefaultEvent().getId());
     		alternative.setCompetitionId(competition.getId());
     		model.addAttribute(alternative);
-    		model.addAttribute("alternativesList", competition.getDefaultEvent().getAlternatives());
+    		model.addAttribute("alternativesList", competition.getSortedAlternatives());
 
     		return "createAlternativeView";
     	}
 		return "userHomepageAction";
 	}
 
+	@RequestMapping(value="/savetempcompetitionimage")	
+	public void saveTempImage(@RequestParam("imageFile") MultipartFile imageFile, HttpServletResponse response) {
+		String filename = "tmp" + getUserId();
+		boolean success = saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, filename);
+		if (success) {
+			String message = "{\"success\":\"true\", \"filename\":\"" + filename + "\"}";
+			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
+		} else {
+			String message = "{\"success\":\"false\", \"filename\":\"" + filename + "\"}";
+			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
+		}
+	}
+	
 	@RequestMapping(value="/invitetocompetition")	
 	public String inviteToCompetition(@ModelAttribute("invitationHelper") InvitationHelper invitationHelper, BindingResult result, Model model) {
 		if (result.hasErrors()) {
@@ -195,7 +254,6 @@ public class CompetitionController extends AbstractPalsController {
 			facebookService.postCompetitionToUserWall(competition, getUserProfile());
 		} else {
 	    	Set<Long> friendsIdSet = new HashSet<Long>();
-	       	friendsIdSet.add(getUserId());
 	    	if (invitationHelper.isAllFriends()) {
 	    		friendsIdSet.addAll(getUserProfile().getFriendsIdSet());
 	    	} else {
@@ -245,7 +303,7 @@ public class CompetitionController extends AbstractPalsController {
 		alternative.setEventId(eventId);
 		alternative.setCompetitionId(competitionId);
 		model.addAttribute(alternative);
-		model.addAttribute("alternativesList", event.getAlternatives());
+		model.addAttribute("alternativesList", event.getSortedAlternatives());
 		return "createAlternativeView";
 	}
 	
@@ -269,5 +327,54 @@ public class CompetitionController extends AbstractPalsController {
         return "joinCompetitionView";
     }
 	
+	@RequestMapping(value="/quickcompetitionview")	
+	public String getView(@RequestParam("accountId") Long accountId, @RequestParam("stake") BigDecimal stake, @RequestParam("alternative") String alternative, Model model) {
+		QuickCompetition competition = new QuickCompetition();
+		competition.setName(alternative);
+		competition.setStake(stake);
+		competition.setAccountId(accountId);
+		
+		DateTime now = new DateTime();
+		competition.setDeadline(now.plusDays(competitionService.getDefaultDeadlineInterval()).toDate());
+		competition.setSettlingDeadline(now.plusDays(competitionService.getDefaultSettlingInterval()).toDate());
+		
+    	model.addAttribute("quickCompetition", competition);
+		
+		return "quickCompetitionView";
+	}
 	
+	@RequestMapping(value="/quickcompetition")	
+	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, Model model) {
+    	if (result.hasErrors()) {
+    		logger.debug("Error found: " + result.getFieldErrorCount());
+    		return "quickCompetitionView";
+    	}
+    	
+    	Account account = accountService.getAccount(quickCompetition.getAccountId());
+    	Competition competition = quickCompetition.createCompetition(getUserId(), account.getCurrency());
+    	competition = competitionService.saveCompetition(competition);
+    	
+    	saveImage(quickCompetition.getImageFile(), IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
+    	
+    	Bet bet = quickCompetition.createBet(getUserProfile());
+    	bet.setSelectionId(competition.getOwnerAlternativeId());
+    	competitionService.placeBet(bet);
+    	
+		model.addAttribute(competition);
+		InvitationHelper invitationHelper = new InvitationHelper();
+		invitationHelper.setCompetitionId(competition.getId());
+		model.addAttribute(invitationHelper);
+    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
+    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+    	model.addAttribute("friendList", getUserProfile().getFriends());
+		
+		return "inviteToCompetitionView";
+	}
+
+	@RequestMapping(value="/competition/images/{competitionId}")	
+	public void getImage(@PathVariable String competitionId, HttpServletResponse response) {
+    	sendJPEGImage(IMAGE_FOLDER_COMPETITIONS, competitionId, response);
+	}
+	
+    
 }

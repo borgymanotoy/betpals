@@ -1,15 +1,16 @@
 package se.telescopesoftware.betpals.web;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
+import java.util.Locale;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.AccountService;
+import se.telescopesoftware.betpals.services.EmailService;
 import se.telescopesoftware.betpals.services.UserService;
 
 
@@ -36,6 +38,9 @@ public class RegisterUserController extends AbstractPalsController {
     private UserService userService;
     private AuthenticationManager authenticationManager;
 	private AccountService accountService;
+    private EmailService emailService;
+	private MessageSource messageSource;
+
 
 	@Autowired
 	public void setAccountService(AccountService accountService) {
@@ -52,6 +57,16 @@ public class RegisterUserController extends AbstractPalsController {
         this.userService = userService;
     }
 
+    @Autowired
+    public void setEmailService(EmailService emailService) {
+    	this.emailService = emailService;
+    }
+    
+    @Autowired
+    public void setMessageSource(MessageSource messageSource) {
+    	this.messageSource = messageSource;
+    }
+    
     
     @RequestMapping(value="/register", method = RequestMethod.GET)
     protected UserProfile formBackingObject() {
@@ -59,7 +74,7 @@ public class RegisterUserController extends AbstractPalsController {
     }
 
     @RequestMapping(value="/register", method = RequestMethod.POST)
-    protected ModelAndView onSubmit(@Valid UserProfile userProfile, BindingResult result, HttpServletRequest request, Model model) {
+    protected ModelAndView onSubmit(@Valid UserProfile userProfile, BindingResult result, HttpServletRequest request, Locale locale, Model model) {
     	
     	if (result.hasErrors()) {
     		logger.debug("Error found: " + result.getErrorCount());
@@ -79,18 +94,19 @@ public class RegisterUserController extends AbstractPalsController {
         Long userId = userService.registerUser(user);
         model.addAttribute(user);
 
-        // TODO: Remove file copy, use dynamic image loading
-        String path = getAppRoot() + "images" + File.separator + "users";
-        File defaultUserImage = new File(path, "userPic.jpg");
-        File userImageFile = new File(path, userId + ".jpg");
-        try {
-			FileUtils.copyFile(defaultUserImage, userImageFile);
-		} catch (IOException ex) {
-			logger.error("Could not copy user picture", ex);
-		}
-
     	accountService.createDefaultAccountForUser(userId);
-		
+
+		String subject = messageSource.getMessage("email.register.subject", new Object[] {}, locale);
+		String text = messageSource.getMessage("email.register.text", new Object[] {}, locale);
+
+		try {
+			emailService.sendEmail(userId, subject, text);
+		} catch (AddressException ex) {
+			logger.error("Incorrect email address", ex);
+		} catch (MessagingException ex) {
+			logger.error("Could not send email", ex);
+		}
+    	
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
 

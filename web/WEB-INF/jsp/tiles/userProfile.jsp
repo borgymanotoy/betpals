@@ -5,7 +5,7 @@
 <div class="rbDiv contentDiv">
     <h4><spring:message code="profile.view.header"/></h4>
     <div class="span-12">
-        <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/images/users/${userProfile.userId}.jpg"/>'/></div>
+        <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/users/images/${userProfile.userId}.jpeg"/>'/></div>
         <div style="padding-top: 5px; margin-bottom: 10px;" class="span-10 last">
             <h5>${userProfile.fullName}</h5>
             <spring:message code="${userProfile.country}"/>

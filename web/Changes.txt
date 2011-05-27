@@ -1,3 +1,24 @@
+== Version 0.8.7 =======================================================
+
+New features and CRs
+
+    * Create Competition, various tweaks & fixes
+    * Thumb preview, uploaded images
+    * Manage competition, close bet function
+    * Manage competition, Add an icon showing if the bet is open (open for bets) or closed (no more bets)
+      (icon added for closed bets)
+    * Manage competition, notify punters OnVoid() function (by email)
+    * Manage competition, various tweaks & fixes
+    * Edit profile page, change pwd function
+    * ”Forgot your password” function
+    * Emails to user on registration
+    * Automatically add friend to your friends, when accepting request for friendship   
+
+Bug fixes
+
+    * Community disappear from list after edit
+
+    
 == Version 0.8.6 =======================================================
 
 New features and CRs

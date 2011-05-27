@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -235,6 +236,18 @@ public class UserServiceImpl implements UserService {
 
 	public UserRequest getUserRequestById(Long requestId) {
 		return userRepository.loadUserRequestById(requestId);
+	}
+
+	public void registerPasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		userRepository.storePasswordRecoveryRequest(passwordRecoveryRequest);
+	}
+
+	public PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash) {
+		return userRepository.findPasswordRecoveryRequest(requestHash);
+	}
+
+	public void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		userRepository.deletePasswordRecoveryRequest(passwordRecoveryRequest);
 	}
 
    

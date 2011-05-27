@@ -47,7 +47,7 @@
 		        <div class="span-12">
 			        <div class="span-2 userPicDiv">
 			         <a href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
-    			        <img class="userPic" src='<c:url value="/images/users/${friend.userId}.jpg"/>'/>
+    			        <img class="userPic" src='<c:url value="/users/images/${friend.userId}.jpeg"/>'/>
     			     </a>
 			        </div>
 			        <div class="span-10 last userNameDiv">
@@ -74,7 +74,7 @@
                 <div class="span-12">
                     <div class="span-2 userPicDiv">
                         <a href='<c:url value="/viewprofile/${userRequest.inviteeId}.html"/>'>
-                            <img class="userPic" src='<c:url value="/images/users/${userRequest.inviteeId}.jpg"/>'/>
+                            <img class="userPic" src='<c:url value="/users/images/${userRequest.inviteeId}.jpeg"/>'/>
                         </a>
                     </div>
                     <div class="span-10 last userNameDiv">

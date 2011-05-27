@@ -12,6 +12,37 @@
     jQuery(document).ready(function() {
         jQuery("#competitionDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
         jQuery("#settlingDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
+        
+        var thumb = $('img#thumb'); 
+
+        new AjaxUpload('#imageUpload', {
+            action: '<c:url value="/savetempcompetitionimage.html"/>',
+            name: 'imageFile',
+            onSubmit: function(file, extension) {
+                $('div.preview').addClass('loading');
+                jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
+            },
+            onComplete: function(file, response) {
+                thumb.load(function(){
+                    $('div.preview').removeClass('loading');
+                    thumb.unbind();
+                });
+
+                try {
+                    var responseJson = jQuery.parseJSON(response);
+	                if (responseJson.success == 'true') {
+	                  var newSrc = '<c:url value="/competition/images/"/>';
+	                  var date = new Date();
+	                  thumb.attr('src', newSrc + responseJson.filename + ".jpg?v=" + date.getTime());
+	                  jQuery('#filenameDiv').text(file);
+	                } else {
+	                    jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+	                }
+                } catch (exception) {
+                    jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                }
+            }
+        });
     });
 
    
@@ -23,6 +54,7 @@
 <c:url value="/savecompetition.html" var="actionURL"/>
 <form:form commandName="competition" action="${actionURL}" method="post" enctype="multipart/form-data" id="competitionForm">
     <form:hidden path="id"/>
+    <form:hidden path="goToNextStep" id="nextStep"/>
     <div class="formSectionDiv">
         <div class="span-12">
             <div class="span-2 labelDiv">
@@ -43,11 +75,18 @@
         &nbsp;
     </div>    
     <div class="formSectionDiv">
-        <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
-        <div style="display: inline-block;">
-            <spring:message code="competition.add.picture"/><br/> 
-            <input type="file" name="imageFile"/>
+        <div class="span-12">
+            <div class="span-2 labelDiv">
+                <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>' id="thumb"/>
+            </div>  
+            <div class="span-10 last">
+                <div id="filenameDiv" style="padding-top: 8px; padding-bottom: 10px;">&nbsp;</div>
+		        <button class="whiteButton110" id="imageUpload">
+		            <spring:message code="button.add.picture"/> 
+		        </button>
+            </div>
         </div>
+        &nbsp;
     </div>    
     <div class="formSectionDiv" style="padding-top: 5px; padding-bottom: 15px;">
         <div class="span-12">
@@ -77,14 +116,15 @@
         </form:select> 
     </div>    
     <div class="formSectionDiv">
-        <input type="radio" name="competitionType" value="POOL_BETTING" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>><spring:message code="competition.type.pool.betting"/></input><br/>
-        <input type="radio" name="competitionType" value="FIXED_STAKE" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>><spring:message code="competition.type.fixed.stake"/></input>
+        <input type="radio" name="competitionType" value="POOL_BETTING" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>/><spring:message code="competition.type.pool.betting"/><br/>
+        <input type="radio" name="competitionType" value="FIXED_STAKE" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>/><spring:message code="competition.type.fixed.stake"/>
         <form:input path="fixedStake" size="4"/>
     </div>
+<!--
     <div class="formSectionDiv">
         <input type="checkbox" name="public"><spring:message code="competition.public"/></input>
-        <form:hidden path="goToNextStep" id="nextStep"/>
     </div>
+  -->    
 </form:form>
     <button class="whiteButton90" onclick="goHome();"><spring:message code="button.cancel"/></button>
     <button class="greenButton110" onclick="saveAndExit();"><spring:message code="button.save.and.exit"/></button>

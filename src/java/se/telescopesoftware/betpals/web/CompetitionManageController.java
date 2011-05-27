@@ -1,6 +1,8 @@
 package se.telescopesoftware.betpals.web;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 
@@ -106,8 +109,8 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/voidalternative")	
-	public String voidAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
-		competitionService.voidAlternative(competitionId, alternativeId);
+	public String voidAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Locale locale, Model model) {
+		competitionService.voidAlternative(competitionId, alternativeId, locale);
 		
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
@@ -118,6 +121,16 @@ public class CompetitionManageController extends AbstractPalsController {
 	@RequestMapping(value="/settlecompetition")	
 	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
 		competitionService.settleCompetition(competitionId, alternativeId);
+		
+		return "manageCompetitionsAction";
+	}
+	
+	@RequestMapping(value="/closecompetition")	
+	public String closeCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		competition.setStatus(CompetitionStatus.CLOSE);
+		competition.setDeadline(new Date());
+		competitionService.saveCompetition(competition);
 		
 		return "manageCompetitionsAction";
 	}

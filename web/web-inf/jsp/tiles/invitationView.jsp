@@ -25,7 +25,7 @@
             <li>
             <div class="span-12">
                 <div class="span-2 userPicDiv">
-                    <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
+                    <img class="userPic" src='<c:url value="/competition/images/alt_${alternative.id}.jpeg"/>'/>
                 </div>
                 <div class="span-5 invViewDiv">
                     ${alternative.name}<br/>

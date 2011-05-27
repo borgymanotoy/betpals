@@ -1,6 +1,9 @@
 package se.telescopesoftware.betpals.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -53,6 +56,12 @@ public class Event {
 		return alternatives;
 	}
 
+	public List<Alternative> getSortedAlternatives() {
+		List<Alternative> alternativesList = new ArrayList<Alternative>(getAlternatives());
+		Collections.sort(alternativesList, new AlternativePriorityComparator());
+		return alternativesList;
+	}
+
 	public void setAlternatives(Set<Alternative> alternatives) {
 		this.alternatives = alternatives;
 	}
@@ -102,5 +111,33 @@ public class Event {
 		this.competition = competition;
 	}
 	
-	
+    public void normalizeAlternativesPriorities() {
+        int i = 1;
+        for (Alternative alternative : getSortedAlternatives()) {
+        	alternative.setPriority(i);
+        	i++;
+        }
+    }
+    
+    public Alternative getPreviousAlternativeInList(Alternative currentAlternative) {
+    	List<Alternative> alternativeList = getSortedAlternatives();
+    	int currentIndex = alternativeList.indexOf(currentAlternative);
+    	try {
+    		return alternativeList.get(currentIndex - 1);
+    	} catch (ArrayIndexOutOfBoundsException ex) {
+    		return null;
+    	}
+    }
+
+    public Alternative getNextAlternativeInList(Alternative currentAlternative) {
+    	List<Alternative> alternativeList = getSortedAlternatives();
+    	int currentIndex = alternativeList.indexOf(currentAlternative);
+    	try {
+    		return alternativeList.get(currentIndex + 1);
+    	} catch (IndexOutOfBoundsException ex) {
+    		return null;
+    	}
+    }
+    
+
 }

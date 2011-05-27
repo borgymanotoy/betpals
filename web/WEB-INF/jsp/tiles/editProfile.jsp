@@ -1,4 +1,42 @@
 <%@include file="includes.jsp"%>
+<script type="text/javascript">
+    
+   jQuery(document).ready(function() {
+        var thumb = $('img#thumb'); 
+
+        new AjaxUpload('#imageUpload', {
+            action: '<c:url value="/savetempuserimage.html"/>',
+            name: 'imageFile',
+            onSubmit: function(file, extension) {
+                $('div.preview').addClass('loading');
+                jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
+            },
+            onComplete: function(file, response) {
+                thumb.load(function(){
+                    $('div.preview').removeClass('loading');
+                    thumb.unbind();
+                });
+
+                try {
+                    var responseJson = jQuery.parseJSON(response);
+                    if (responseJson.success == 'true') {
+                      var newSrc = '<c:url value="/users/images/"/>';
+                      var date = new Date();
+                      thumb.attr('src', newSrc + responseJson.filename + ".jpg?v=" + date.getTime());
+                      jQuery('#filenameDiv').text(file);
+                    } else {
+                        jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                    }
+                } catch (exception) {
+                    jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                }
+            }
+        });
+        
+   });
+    
+</script>
+
 <div>
     <h2 class="dark"><spring:message code="profile.edit.title"/></h2>
 </div>
@@ -8,10 +46,14 @@
 <form:hidden path="userId"/>
     <h4><spring:message code="profile.edit.header"/></h4>
     <div class="span-12">
-        <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/images/users/${userProfile.userId}.jpg"/>'/></div>
-        <div style="padding-top: 15px; margin-bottom: 10px;" class="span-10 last formSectionDiv">
-            <spring:message code="profile.edit.add.picture"/><br/> 
-            <input type="file" name="userImageFile"/>
+        <div class="span-2 labelDiv">
+            <img class="userPic" src='<c:url value="/users/images/${userProfile.userId}.jpeg"/>' id="thumb"/>
+        </div>  
+        <div class="span-10 last">
+            <div id="filenameDiv" style="padding-top: 8px; padding-bottom: 10px;">&nbsp;</div>
+            <button class="whiteButton110" id="imageUpload">
+                <spring:message code="button.add.picture"/> 
+            </button>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
@@ -69,5 +111,37 @@
         </div>
     </div>
 </form:form>
-             <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <h4><spring:message code="profile.change.password.header"/></h4>
+    <form action='<c:url value="/changepassword.html"/>' method="post">
+    <c:if test="${wrongOldPassword}">
+    <p class="error"><spring:message code="error.wrong.old.password"/></p>
+    </c:if>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.old"/></div>
+        <div class="span-10 last">
+            <input type="password" name="oldPassword"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new"/></div>
+        <div class="span-10 last">
+            <input type="password" name="newPassword"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new.repeat"/></div>
+        <div class="span-10 last">
+            <input type="password" name="newPasswordRepeat"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv">&nbsp;</div>
+        <div class="span-10 last">
+           <input type="submit" class="blueButton110" value="<spring:message code='button.change'/>"/>
+        </div>
+    </div>
+    </form>
+    <p>&nbsp;</p>
 </div>

@@ -78,14 +78,21 @@ public class CommunityController extends AbstractPalsController {
     		logger.debug("Error found: " + result.getErrorCount());
     		return "editCommunityView";
     	}
+    	
+    	MultipartFile imageFile = community.getImageFile();
+
     	if (community.getId() == null) {
     		community.setCreated(new Date());
     		community.setOwnerId(getUserId());
     		community.addMember(getUserProfile());
+    	} else {
+    		Community originalCommunity = userService.getCommunityById(community.getId());
+    		originalCommunity.setName(community.getName());
+    		originalCommunity.setDescription(community.getDescription());
+    		community = originalCommunity;
     	}
-    	MultipartFile imageFile = community.getImageFile();
-        community = userService.saveCommunity(community);
         
+    	community = userService.saveCommunity(community);
         saveImage(imageFile, IMAGE_FOLDER_COMMUNITIES, community.getId().toString());
         
     	model.addAttribute("tab", "communities");
@@ -146,5 +153,18 @@ public class CommunityController extends AbstractPalsController {
 		sendJPEGImage(IMAGE_FOLDER_COMMUNITIES, communityId, response);
 	}
 	
+	@RequestMapping(value="/savetempcommunityimage")	
+	public void saveTempImage(@RequestParam("imageFile") MultipartFile imageFile, HttpServletResponse response) {
+		String filename = "tmp" + getUserId();
+		boolean success = saveImage(imageFile, IMAGE_FOLDER_COMMUNITIES, filename);
+		if (success) {
+			String message = "{\"success\":\"true\", \"filename\":\"" + filename + "\"}";
+			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
+		} else {
+			String message = "{\"success\":\"false\", \"filename\":\"" + filename + "\"}";
+			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
+		}
+	}
+
     
 }

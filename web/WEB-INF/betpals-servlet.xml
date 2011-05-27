@@ -105,6 +105,13 @@
         <property name="appRoot" ref="appRoot"/>
         <property name="configurationFilename" value="/WEB-INF/app.properties"/>
     </bean>
+    <bean id="emailService" class="se.telescopesoftware.betpals.services.EmailServiceImpl">
+        <property name="smtphost" value="localhost"/>
+        <property name="encoding" value="UTF-8"/>
+        <property name="adminEmail" value="noreply@mybetpals.com"/>
+        <property name="adminName" value="MyBetPals"/>
+        <property name="userService" ref="userDetailsService"/>
+    </bean>
     <bean id="messageResourceService" class="se.telescopesoftware.betpals.services.MessageResourceServiceImpl">
         <property name="messageSource" ref="messageSource"/>
         <property name="appRoot" ref="appRoot"/>
@@ -123,7 +130,8 @@
     <bean id="competitionService" class="se.telescopesoftware.betpals.services.CompetitionServiceImpl">
         <property name="competitionRepository" ref="competitionRepository"/>
         <property name="accountService" ref="accountService"/>
-        <property name="activityService" ref="activityService"/>
+        <property name="emailService" ref="emailService"/>
+        <property name="messageSource" ref="messageSource"/>
     </bean>
     <bean id="facebookService" class="se.telescopesoftware.betpals.services.FacebookServiceImpl">
         <property name="facebookClientId" value="119321918127784"/>

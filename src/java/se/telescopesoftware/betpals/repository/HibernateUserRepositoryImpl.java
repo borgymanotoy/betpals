@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import se.telescopesoftware.betpals.domain.Authority;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -43,7 +44,7 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
     }
 
     public User loadUserByUserId(Long id) {
-        return getHibernateTemplate().load(User.class, id);
+        return getHibernateTemplate().get(User.class, id);
     }
 
     public boolean isUsernameExists(String username) {
@@ -350,6 +351,22 @@ public class HibernateUserRepositoryImpl extends HibernateDaoSupport implements 
 	@SuppressWarnings("unchecked")
 	public Collection<Community> findCommunities(String searchQuery) {
         return getHibernateTemplate().findByNamedParam("from Community c where lower(c.name) like :queryString OR lower(c.description) like :queryString", "queryString", "%" + searchQuery.toLowerCase() + "%");
+	}
+
+	public void storePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		getHibernateTemplate().saveOrUpdate(passwordRecoveryRequest);
+	}
+
+	public PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash) {
+		List<?> result = getHibernateTemplate().find("from PasswordRecoveryRequest pr where pr.requestHash = ?", requestHash);
+		if (result != null && !result.isEmpty()) {
+			return (PasswordRecoveryRequest) result.get(0);
+		}
+		return null;
+	}
+
+	public void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		getHibernateTemplate().delete(passwordRecoveryRequest);
 	}
     
 }

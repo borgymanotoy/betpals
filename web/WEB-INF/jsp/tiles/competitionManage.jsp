@@ -5,6 +5,14 @@
 		jQuery("#confirmDelete").dialog('open');
 	} 
 	
+	function closeCompetition() {
+        jQuery('#closeCompetitionForm').submit();;
+	} 
+	
+	function inviteToCompetition() {
+		jQuery('#inviteToCompetitionForm').submit();;
+	} 
+	
 	function voidAlternative(alternativeId) {
 		jQuery("#alternativeToVoid").val(alternativeId);
 		jQuery("#confirmVoid").dialog('open');
@@ -20,7 +28,7 @@
 		});
 		if (alternativeId) {
 		    jQuery("#winningAlternative").val(alternativeId);
-		    jQuery('#settleCompetitionForm').submit();
+	        jQuery("#confirmSettle").dialog('open');
         } else {
         	jQuery("#selectDialog").dialog('open');
         }
@@ -50,6 +58,22 @@
             buttons: {
                 "<spring:message code='button.delete'/>": function() {
                     jQuery('#deleteCompetitionForm').submit();
+                    $( this ).dialog( "close" );
+                },
+                "<spring:message code='button.cancel'/>": function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+
+        jQuery("#confirmSettle").dialog({
+            resizable: false,
+            autoOpen: false,
+            height:160,
+            modal: true,
+            buttons: {
+                "<spring:message code='button.settle'/>": function() {
+                    jQuery('#settleCompetitionForm').submit();
                     $( this ).dialog( "close" );
                 },
                 "<spring:message code='button.cancel'/>": function() {
@@ -111,7 +135,13 @@
             <spring:message code="competition.competition.deadline"/>
         </div>
         <div class="span-10 last">
-            <form:input path="deadline" id="competitionDeadline"/>
+            <c:choose>
+            <c:when test="${competition.status == 'OPEN'}">
+            <form:input path="deadline" id="competitionDeadline"/>&nbsp;&nbsp;
+            <button class="whiteButton90" onclick="closeCompetition();return false;"><spring:message code="button.close.bet"/></button>
+            </c:when>
+            <c:otherwise><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/>&nbsp;<img src='<c:url value="/i/lock.gif"/>'/></c:otherwise>
+            </c:choose>
         </div>
     </div>
     <div class="span-12">
@@ -171,12 +201,18 @@
         &nbsp;
     </div>
 </form:form>
-    <button class="whiteButton140" onclick="deleteCompetition();"><spring:message code="competition.delete"/></button>
-    <button class="greenButton140" onclick="settleCompetition();"><spring:message code="competition.settle"/></button>
+    <button class="whiteButton140" onclick="deleteCompetition();"><spring:message code="button.delete"/></button>
+    <button class="greenButton140" onclick="settleCompetition();"><spring:message code="button.settle"/></button>
+    <c:if test="${competition.status == 'OPEN'}">
+    <button class="blueButton140" onclick="inviteToCompetition();"><spring:message code="button.invite"/></button>
+    </c:if>
     <p>&nbsp;</p>
 </div>
 <div id="confirmDelete" title="<spring:message code='confirmation.delete.competition.title'/>">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.delete.competition"/></p>
+</div>
+<div id="confirmSettle" title="<spring:message code='confirmation.settle.competition.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.settle.competition"/></p>
 </div>
 <div id="confirmVoid" title="<spring:message code='confirmation.void.alternative.title'/>">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.void.alternative"/></p>
@@ -188,6 +224,9 @@
 <form action='<c:url value="/deletecompetition.html"/>' method="post" id="deleteCompetitionForm">
     <input type="hidden" name="competitionId" value="${competition.id}"/>
 </form>
+<form action='<c:url value="/closecompetition.html"/>' method="post" id="closeCompetitionForm">
+    <input type="hidden" name="competitionId" value="${competition.id}"/>
+</form>
 <form action='<c:url value="/voidalternative.html"/>' method="post" id="voidAlternativeForm">
     <input type="hidden" name="competitionId" value="${competition.id}"/>
     <input type="hidden" name="alternativeId" value="" id="alternativeToVoid"/>
@@ -196,3 +235,7 @@
     <input type="hidden" name="competitionId" value="${competition.id}"/>
     <input type="hidden" name="alternativeId" value="" id="winningAlternative"/>
 </form>
+<form action='<c:url value="/competitioninviteview.html"/>' method="post" id="inviteToCompetitionForm">
+    <input type="hidden" name="competitionId" value="${competition.id}"/>
+</form>
+

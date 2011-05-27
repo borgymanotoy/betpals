@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
                    <tr>
                     <td class="userPicCell">
                         <a href='<c:url value="/viewprofile/${activity.ownerId}.html"/>'>
-                           <img class="userPic" src='<c:url value="/images/users/${activity.ownerId}.jpg"/>'/>
+                           <img class="userPic" src='<c:url value="/users/images/${activity.ownerId}.jpeg"/>'/>
                         </a>
                     </td>
                     <td class="">
@@ -186,7 +186,7 @@ jQuery(document).ready(function() {
                            <tr>
                                <td class="userPicCellComment">
                                  <a href='<c:url value="/viewprofile/${comment.ownerId}.html"/>'>
-                                   <img class="userPic" src='<c:url value="/images/users/${comment.ownerId}.jpg"/>'/>
+                                   <img class="userPic" src='<c:url value="/users/images/${comment.ownerId}.jpeg"/>'/>
                                  </a>  
                                </td>
                                <td class="">

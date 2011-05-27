@@ -16,7 +16,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     <link rel="stylesheet" href='<c:url value="/css/site.css"/>' type="text/css" media="screen, projection"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src='<c:url value="/js/jquery-1.4.4.min.js"/>'></script>
-    <script type="text/javascript" src='<c:url value="/js/fadegallery.jquery.js"/>'></script>
     <script type="text/javascript">
        function changeBgColor(color, logo) {
     	    jQuery("html").css("backgroundColor", color);
@@ -49,7 +48,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     </div>
     <div id="contentArea" class="span-24">
         <div class="span-9" style="padding-top: 40px; padding-bottom: 80px;">
-	        <div class="prepend-2 span-2 labelDiv"><img class="userPic" src='<c:url value="/images/users/${competition.ownerId}.jpg"/>'/></div>
+	        <div class="prepend-2 span-2 labelDiv"><img class="userPic" src='<c:url value="/users/images/${competition.ownerId}.jpeg"/>'/></div>
 	        <div style="padding-top: 5px; margin-bottom: 2px;" class="span-5 last">
 	            <h5 style="color: #297085; margin-bottom: 2px;">${competition.owner.fullName}</h5>
 	           <p style="color: #88898a; font-size: 11px; font-family: 'MS Trebuchet', sans-serif; margin: 0px;">

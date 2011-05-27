@@ -6,6 +6,7 @@ import java.util.Date;
 
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -80,5 +81,11 @@ public interface UserRepository {
     Collection<Community> findCommunities(String query);
     
     void deleteCommunity(Community community);
+
+    void storePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
+    
+    PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash);
+
+    void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
 
 }

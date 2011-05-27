@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
@@ -82,4 +83,9 @@ public interface UserService extends UserDetailsService {
     
     void deleteCommunity(Long communityId, Long userId);
     
+    void registerPasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
+    
+    PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash);
+
+    void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
 }

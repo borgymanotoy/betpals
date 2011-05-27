@@ -42,8 +42,12 @@ public class EditFriendsController extends AbstractPalsController {
     		community.addMember(friendProfile);
     		userService.saveCommunity(community);
     	} else {
-    		friendProfile.addFriend(getUserProfile());
+    		UserProfile currentUserProfile = getUserProfile();
+    		friendProfile.addFriend(currentUserProfile);
+    		currentUserProfile.addFriend(friendProfile);
+    		
     		userService.updateUserProfile(friendProfile);
+    		userService.updateUserProfile(currentUserProfile);
     	}
     	
     	userService.deleteUserRequest(requestId);

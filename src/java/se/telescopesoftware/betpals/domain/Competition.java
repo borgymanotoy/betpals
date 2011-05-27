@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.domain;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -212,8 +213,14 @@ public class Competition {
 			result.addAll(event.getAlternatives());
 		}
 		
+		Collections.sort(result, new AlternativePriorityComparator());
 		return result;
 	}
+	
+	public List<Alternative> getSortedAlternatives() {
+		return getDefaultEvent().getSortedAlternatives();
+	}
+	
 	
 	public int getNumberOfParticipants() {
 		int result = 0;
@@ -310,4 +317,5 @@ public class Competition {
 		return new String(Base64.encode(sb.toString().getBytes())); 
 	}
 	
+    
 }

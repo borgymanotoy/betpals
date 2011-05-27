@@ -10,7 +10,7 @@
 	        <div class="span-12">
 	            <div class="span-2 userPicDiv">
 	               <a href='<c:url value="/viewprofile/${userRequest.ownerId}.html"/>'>
-	                <img class="userPic" src='<c:url value="/images/users/${userRequest.ownerId}.jpg"/>'/>
+	                <img class="userPic" src='<c:url value="/users/images/${userRequest.ownerId}.jpeg"/>'/>
 	               </a>
 	            </div>
 	            <div class="span-10 last userNameDiv">
@@ -46,7 +46,7 @@
 	        <div class="span-12">
 	            <div class="span-2 userPicDiv">
 	               <a href='<c:url value="/viewprofile/${userRequest.ownerId}.html"/>'>
-	                <img class="userPic" src='<c:url value="/images/users/${userRequest.ownerId}.jpg"/>'/>
+	                <img class="userPic" src='<c:url value="/users/images/${userRequest.ownerId}.jpeg"/>'/>
 	               </a>
 	            </div>
 	            <div class="span-10 last userNameDiv">

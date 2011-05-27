@@ -17,6 +17,46 @@
        jQuery('#deleteAlternativeForm').submit();
    } 
    
+   function moveAlternative(alternativeId, direction) {
+       jQuery('#alternativeToMove').val(alternativeId);
+       jQuery('#directionToMove').val(direction);
+       jQuery('#moveAlternativeForm').submit();
+   } 
+   
+   jQuery(document).ready(function() {
+       var thumb = $('img#thumb'); 
+
+       new AjaxUpload('#imageUpload', {
+           action: '<c:url value="/savetempcompetitionimage.html"/>',
+           name: 'imageFile',
+           onSubmit: function(file, extension) {
+               $('div.preview').addClass('loading');
+               jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
+           },
+           onComplete: function(file, response) {
+               thumb.load(function(){
+                   $('div.preview').removeClass('loading');
+                   thumb.unbind();
+               });
+
+               try {
+                   var responseJson = jQuery.parseJSON(response);
+                   if (responseJson.success == 'true') {
+                     var newSrc = '<c:url value="/competition/images/"/>';
+                     var date = new Date();
+                     thumb.attr('src', newSrc + responseJson.filename + ".jpg?v=" + date.getTime());
+                     jQuery('#filenameDiv').text(file);
+                   } else {
+                       jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                   }
+               } catch (exception) {
+                   jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+               }
+           }
+       });
+   });
+   
+   
 </script>
 <div>
     <h2 class="dark"><spring:message code="competition.create.title"/></h2>
@@ -36,11 +76,15 @@
         <div class="span-12">
             <div class="span-2 labelDiv">&nbsp;</div>
             <div class="span-10 last formSectionDiv">
-		        <img class="userPic" src='<c:url value="/images/competitions/question.jpg"/>'/>
-		        <div style="display: inline-block;">
-		            <spring:message code="alternative.add.picture"/><br/> 
-		            <input type="file" name="imageFile"/>
-		        </div>
+                <div class="span-2">
+    		        <img class="userPic" src='<c:url value="/images/competitions/question.jpg"/>' id="thumb"/>
+                </div>
+                <div class="span-8 last">
+	                <div id="filenameDiv" style="padding-top: 5px; padding-bottom: 8px;">&nbsp;</div>
+	                <button class="whiteButton110" id="imageUpload">
+	                    <spring:message code="button.add.picture"/> 
+	                </button>
+                </div>
             </div>
         </div>
         <div class="span-12">
@@ -69,8 +113,8 @@
                     <div class="span-10 last altListDetails noborder">
                         <div class="span-5 altListName">${altFromList.name}</div>
                         <div class="span-2 altListPriority right">
-                           <img src='<c:url value="/i/up.png"/>'/>
-                           <img src='<c:url value="/i/down.png"/>'/>
+                           <img src='<c:url value="/i/up.png"/>' class="clickable" onclick="moveAlternative(${altFromList.id}, 'up');"/>
+                           <img src='<c:url value="/i/down.png"/>' class="clickable" onclick="moveAlternative(${altFromList.id}, 'down');"/>
                         </div>
                         <div class="span-3 last altListButton right"><button class="whiteButton90" onclick="deleteAlternative(${altFromList.id});"><spring:message code="button.delete"/></button></div>
                     </div>		        
@@ -79,8 +123,8 @@
 			        <div class="span-10 last altListDetails">
 	    		        <div class="span-5 altListName">${altFromList.name}</div>
 		   	            <div class="span-2 altListPriority right">
-		   	               <img src='<c:url value="/i/up.png"/>'/>
-		   	               <img src='<c:url value="/i/down.png"/>'/>
+		   	               <img src='<c:url value="/i/up.png"/>' class="clickable" onclick="moveAlternative(${altFromList.id}, 'up');"/>
+		   	               <img src='<c:url value="/i/down.png"/>' class="clickable" onclick="moveAlternative(${altFromList.id}, 'down');"/>
 		   	            </div>
 			            <div class="span-3 last altListButton right"><button class="whiteButton90" onclick="deleteAlternative(${altFromList.id});"><spring:message code="button.delete"/></button></div>
 			        </div>
@@ -104,11 +148,16 @@
 <form action='<c:url value="/competitionconfirmview.html"/>' method="post" id="confirmCompetitionForm">
     <input type="hidden" name="competitionId" value="${alternative.competitionId}"/>
 </form>
-<form action='<c:url value="/managecompetitions.html"/>' method="post" id="manageCompetitionForm">
+<form action='<c:url value="/newcompetitions.html"/>' method="post" id="manageCompetitionForm">
     <input type="hidden" name="competitionId" value="${alternative.competitionId}"/>
 </form>
 <form action='<c:url value="/deletealternative.html"/>' method="post" id="deleteAlternativeForm">
     <input type="hidden" name="alternativeId" value="" id="alternativeToDelete"/>
+    <input type="hidden" name="competitionId" value="${alternative.competitionId}"/>
+</form>
+<form action='<c:url value="/movealternative.html"/>' method="post" id="moveAlternativeForm">
+    <input type="hidden" name="alternativeId" value="" id="alternativeToMove"/>
+    <input type="hidden" name="direction" value="" id="directionToMove"/>
     <input type="hidden" name="competitionId" value="${alternative.competitionId}"/>
 </form>
 

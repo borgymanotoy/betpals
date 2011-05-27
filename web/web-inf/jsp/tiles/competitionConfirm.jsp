@@ -64,7 +64,7 @@
         <div class="span-5 formSectionDiv"><spring:message code="competition.stake"/>: <span class="bold">${competition.fixedStake} ${competition.currency}</span></div>
         <div class="span-7 last">&nbsp;</div>
     </div>
-    <p><spring:message code="competition.private"/></p>
+    <!-- <p><spring:message code="competition.private"/></p> -->
     <button class="blueButton110" onclick="goBack();"><spring:message code="button.back"/></button>
     <button class="whiteButton90" onclick="goHome();"><spring:message code="button.cancel"/></button>
     <button class="greenButton110" onclick="saveAndExit();"><spring:message code="button.save.and.exit"/></button>

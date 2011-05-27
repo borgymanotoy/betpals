@@ -20,6 +20,7 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.codec.Base64;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -137,6 +138,15 @@ public class User implements UserDetails {
         setPassword(passwordEncoder.encodePassword(password, saltSource.getSalt(this)));
     }
     
+    public boolean checkPassword(String password) {
+    	PasswordEncoder passwordEncoder = new ShaPasswordEncoder();
+    	ReflectionSaltSource saltSource = new ReflectionSaltSource();
+    	saltSource.setUserPropertyToUse("username");
+    	String encodedPassword = passwordEncoder.encodePassword(password, saltSource.getSalt(this));
+    	
+    	return encodedPassword.equals(this.password);
+    }
+    
     public boolean isSupervisor() {
     	for (GrantedAuthority authority : authorities) {
     		if (authority.getAuthority().equalsIgnoreCase(ROLE_SUPERVISOR)) {
@@ -157,5 +167,14 @@ public class User implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return isEnabled();
 	}
+	
+	public String getEncodedLink() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(System.currentTimeMillis());
+		sb.append("/");
+		sb.append(getId());
+		return new String(Base64.encode(sb.toString().getBytes())); 
+	}
+
 
 }

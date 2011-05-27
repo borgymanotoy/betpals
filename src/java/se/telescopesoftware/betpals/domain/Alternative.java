@@ -34,6 +34,7 @@ public class Alternative {
 	private String name;
 	private String description;
 	private boolean taken;
+	private Integer priority;
 	
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
@@ -183,6 +184,15 @@ public class Alternative {
 		return null;
 	}
 	
+	public Set<Long> getParticipantsIdSet() {
+		Set<Long> result = new HashSet<Long>();
+		for (Bet bet : getBets()) {
+			result.add(bet.getOwnerId());
+		}
+		
+		return result;
+	}
+	
 	public BigDecimal getTurnover() {
 		BigDecimal result = BigDecimal.ZERO;
 		for ( Bet bet : getBets() ) {
@@ -191,5 +201,24 @@ public class Alternative {
 		return result; 
 	}
 
+	public Integer getPriority() {
+		return priority != null ? priority : new Integer(1);
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+    public void increasePriority() {
+        this.priority = new Integer( getPriority().intValue() +1);
+     }
+
+     public void decreasePriority() {
+         int priorityValue = getPriority().intValue() - 1;
+         if (priorityValue < 1) {
+             priorityValue = 1;
+         }
+         this.priority = new Integer( priorityValue);
+     }
 
 }

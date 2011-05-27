@@ -49,8 +49,8 @@ https://www.mybetpals.com/join/${competition.encodedLink}
     <h4><spring:message code="competition.send.to.pals.header"/></h4>
     <p><spring:message code="competition.send.to.pals.header.text"/></p>
     <div>
-        <input type="radio" name="allFriends" value="true"><spring:message code="competition.all.friends"/></input><br/>
-        <input type="radio" name="allFriends" value="false"><spring:message code="competition.select.friends"/></input>
+        <input type="radio" name="allFriends" value="true"  <c:if test="${invitationHelper.allFriends}">checked="checked"</c:if>/><spring:message code="competition.all.friends"/><br/>
+        <input type="radio" name="allFriends" value="false" <c:if test="${not invitationHelper.allFriends}">checked="checked"</c:if>/><spring:message code="competition.select.friends"/>
         <p>&nbsp;</p>
     </div>
     <div class="span-12">

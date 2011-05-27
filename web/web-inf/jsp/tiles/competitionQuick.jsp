@@ -3,6 +3,38 @@
    jQuery(document).ready(function() {
         jQuery("#competitionDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
         jQuery("#settlingDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
+        
+        var thumb = $('img#thumb'); 
+
+        new AjaxUpload('#imageUpload', {
+            action: '<c:url value="/savetempcompetitionimage.html"/>',
+            name: 'imageFile',
+            onSubmit: function(file, extension) {
+                $('div.preview').addClass('loading');
+                jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
+            },
+            onComplete: function(file, response) {
+                thumb.load(function(){
+                    $('div.preview').removeClass('loading');
+                    thumb.unbind();
+                });
+
+                try {
+                    var responseJson = jQuery.parseJSON(response);
+                    if (responseJson.success == 'true') {
+                      var newSrc = '<c:url value="/competition/images/"/>';
+                      var date = new Date();
+                      thumb.attr('src', newSrc + responseJson.filename + ".jpg?v=" + date.getTime());
+                      jQuery('#filenameDiv').text(file);
+                    } else {
+                        jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                    }
+                } catch (exception) {
+                    jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                }
+            }
+        });
+        
    });
 </script>
 <c:url value="/quickcompetition.html" var="actionURL"/>
@@ -13,7 +45,6 @@
 	    <span><spring:message code="competition.i.bet"/> </span><form:input id="quickCompetitionStake" path="stake"/>
 	    <form:select path="accountId">
 	    <c:forEach items="${accounts}" var="account">
-	        <!-- TODO: mark selected element! -->
 	        <option value="${account.id}" <c:if test="${account.id == quickCompetition.accountId}">selected="selected"</c:if>>${account.currency}</option>
 	        <form:option label="${account.currency}" value="${account.id}"/>
 	    </c:forEach>
@@ -28,11 +59,18 @@
         <form:textarea path="description" id="quickCompetitionDescription"/>
     </div>    
     <div class="formSectionDiv">
-        <img class="userPic" src='<c:url value="/images/competitions/empty.jpg"/>'/>
-        <div style="display: inline-block;">
-            <spring:message code="competition.add.picture"/><br/> 
-            <input type="file" name="imageFile"/>
+        <div class="span-12">
+            <div class="span-2 labelDiv">
+                <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>' id="thumb"/>
+            </div>  
+            <div class="span-10 last">
+                <div id="filenameDiv" style="padding-top: 8px; padding-bottom: 10px;">&nbsp;</div>
+                <button class="whiteButton110" id="imageUpload">
+                    <spring:message code="button.add.picture"/> 
+                </button>
+            </div>
         </div>
+        &nbsp;
     </div>    
     <div class="formSectionDiv" style="padding-top: 5px; padding-bottom: 15px;">
         <div class="span-12">

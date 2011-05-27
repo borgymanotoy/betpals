@@ -1,6 +1,7 @@
 package se.telescopesoftware.betpals.services;
 
 import java.util.Collection;
+import java.util.Locale;
 
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
@@ -62,7 +63,7 @@ public interface CompetitionService {
 	
 	void settleCompetition(Long competitionId, Long alternativeId);
 	
-	void voidAlternative(Long competitionId, Long alternativeId);
+	void voidAlternative(Long competitionId, Long alternativeId, Locale locale);
 	
 	Integer getTotalUserCompetitionsCount(Long userId);
 

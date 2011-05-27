@@ -7,6 +7,41 @@
 	function deleteCommunity() {
 		jQuery("#deleteCommunityForm").submit();
 	} 
+	
+   jQuery(document).ready(function() {
+        var thumb = $('img#thumb'); 
+
+        new AjaxUpload('#imageUpload', {
+            action: '<c:url value="/savetempcommunityimage.html"/>',
+            name: 'imageFile',
+            onSubmit: function(file, extension) {
+                $('div.preview').addClass('loading');
+                jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
+            },
+            onComplete: function(file, response) {
+                thumb.load(function(){
+                    $('div.preview').removeClass('loading');
+                    thumb.unbind();
+                });
+
+                try {
+                    var responseJson = jQuery.parseJSON(response);
+                    if (responseJson.success == 'true') {
+                      var newSrc = '<c:url value="/communities/images/"/>';
+                      var date = new Date();
+                      thumb.attr('src', newSrc + responseJson.filename + ".jpg?v=" + date.getTime());
+                      jQuery('#filenameDiv').text(file);
+                    } else {
+                        jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                    }
+                } catch (exception) {
+                    jQuery('#filenameDiv').text('<spring:message code="could.not.process.image"/>');
+                }
+            }
+        });
+        
+   });
+	
 </script>
 <div>
     <h2 class="dark"><spring:message code="community.edit.title"/></h2>
@@ -17,10 +52,14 @@
 <form:hidden path="id"/>
 <form:hidden path="ownerId"/>
     <div class="span-12">
-        <div class="span-2 labelDiv"><img class="userPic" src='<c:url value="/communities/images/${community.id}.jpg"/>'/></div>
-        <div style="padding-top: 15px; margin-bottom: 10px;" class="span-10 last formSectionDiv">
-            <spring:message code="community.edit.add.picture"/><br/> 
-            <input type="file" name="imageFile"/>
+        <div class="span-2 labelDiv">
+            <img class="userPic" src='<c:url value="/communities/images/${community.id}.jpeg"/>' id="thumb"/>
+        </div>  
+        <div class="span-10 last">
+            <div id="filenameDiv" style="padding-top: 8px; padding-bottom: 10px;">&nbsp;</div>
+            <button class="whiteButton110" id="imageUpload">
+                <spring:message code="button.add.picture"/> 
+            </button>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
@@ -37,8 +76,8 @@
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="formSectionDiv">
-            <input type="radio" name="accessType" value="PUBLIC"><spring:message code="access.type.public"/></input><br/>
-            <input type="radio" name="accessType" value="PRIVATE"><spring:message code="access.type.private"/></input>
+            <input type="radio" name="accessType" value="PUBLIC" <c:if test="${community.accessType == 'PUBLIC'}">checked="checked"</c:if>/><spring:message code="access.type.public"/><br/>
+            <input type="radio" name="accessType" value="PRIVATE" <c:if test="${community.accessType == 'PRIVATE'}">checked="checked"</c:if>/><spring:message code="access.type.private"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">

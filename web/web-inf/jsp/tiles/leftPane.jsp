@@ -8,7 +8,7 @@
 </script>
 <div id="leftPane" class="span-5">
     <div class="span-2 right">
-        <c:url var="userPictureURL" value="/images/users/${user.userId}.jpg"/>
+        <c:url var="userPictureURL" value="/users/images/${user.userId}.jpeg"/>
         <img class="userPic" src="${userPictureURL}"/>
         <img src='<c:url value="/i/upbt.jpg"/>'/>
     </div>
@@ -62,7 +62,7 @@
 	                   <tr>
 		                   <td rowspan="2" width="56px">
 		                      <a href='<c:url value="/viewprofile/${friend.userId}.html"/>'>
-		                       <img class="userPic" src='<c:url value="/images/users/${friend.userId}.jpg"/>'/>
+		                       <img class="userPic" src='<c:url value="/users/images/${friend.userId}.jpeg"/>'/>
 		                      </a> 
 		                   </td>
 		                   <td class="bottom">
