@@ -6,6 +6,7 @@
 	} 
 	
 	function saveAndExit() {
+        jQuery('#nextStep').val(false);
         jQuery('#competitionForm').submit();
 	} 
 	
@@ -116,10 +117,13 @@
         </form:select> 
     </div>    
     <div class="formSectionDiv">
-        <input type="radio" name="competitionType" value="POOL_BETTING" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>/><spring:message code="competition.type.pool.betting"/><br/>
+        <input type="radio" name="competitionType" value="POOL_BETTING" onclick="jQuery('#fixedStake').val('');" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>/><spring:message code="competition.type.pool.betting"/><br/>
         <input type="radio" name="competitionType" value="FIXED_STAKE" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>/><spring:message code="competition.type.fixed.stake"/>
-        <form:input path="fixedStake" size="4"/>
+        <form:input path="fixedStake" size="4" id="fixedStake"/>
     </div>
+    <p class="error">
+        <form:errors path="*" />
+    </p>
 <!--
     <div class="formSectionDiv">
         <input type="checkbox" name="public"><spring:message code="competition.public"/></input>

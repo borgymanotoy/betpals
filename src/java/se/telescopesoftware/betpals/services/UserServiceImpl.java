@@ -38,10 +38,12 @@ public class UserServiceImpl implements UserService {
 
     public Long registerUser(User user) {
         user.addRole("ROLE_USER");
+        logger.info("Registering " + user);
         return userRepository.registerUser(user);
     }
 
     public void updateUserProfile(UserProfile userProfile) {
+    	logger.info("Saving " + userProfile);
         userRepository.updateUserProfile(userProfile);
     }
 
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void updateUser(User user) {
+    	logger.info("Saving " + user);
         userRepository.storeUser(user);
     }
 
@@ -72,6 +75,7 @@ public class UserServiceImpl implements UserService {
     public void blockUser(Long userId) {
         User user = userRepository.loadUserByUserId(userId);
         user.setEnabled(!user.isEnabled());
+        logger.info("Blocking " + user);
         userRepository.storeUser(user);
     }
 
@@ -111,11 +115,23 @@ public class UserServiceImpl implements UserService {
     }
 
     public User getUserByUsername(String username) {
-        return userRepository.loadUserByUsername(username);
+    	User user = null;
+    	try {
+    		user = userRepository.loadUserByUsername(username);
+    	} catch (Exception ex) {
+    		logger.error(ex);
+    	}
+        return user;
     }
 
     public User getUserByEmail(String email) {
-        return userRepository.loadUserByEmail(email);
+    	User user = null;
+    	try {
+    		user = userRepository.loadUserByEmail(email);
+    	} catch (Exception ex) {
+    		logger.error(ex);
+    	}
+        return user;
     }
 
 	public Collection<User> getUsersByRole(String userRole) {
@@ -143,6 +159,7 @@ public class UserServiceImpl implements UserService {
 				return; // Do not send duplicate requests
 			}
 		}
+		logger.info("Sending " + userRequest);
 		userRepository.storeUserRequest(userRequest);
 	}
 
@@ -169,6 +186,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteUserRequest(Long requestId) {
 		UserRequest userRequest = userRepository.loadUserRequestById(requestId);
 		if (userRequest != null) {
+			logger.info("Deleting " + userRequest);
 			userRepository.deleteUserRequest(userRequest);
 		}
 	}
@@ -192,7 +210,7 @@ public class UserServiceImpl implements UserService {
 		for (Long memberId : group.getMembersIdSet()) {
 			group.addMember(getUserProfileByUserId(memberId));
 		}
-		
+		logger.info("Saving " + group);
 		userRepository.storeGroup(group);
 	}
 
@@ -207,11 +225,13 @@ public class UserServiceImpl implements UserService {
 	public void deleteGroup(Long groupId, Long userId) {
 		Group group = userRepository.loadGroupById(groupId);
 		if (group.checkOwnership(userId)) {
+			logger.info("Deleting " + group);
 			userRepository.deleteGroup(group);
 		}
 	}
 
 	public Community saveCommunity(Community community) {
+		logger.info("Saving " + community);
 		return userRepository.storeCommunity(community);
 	}
 
@@ -226,6 +246,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteCommunity(Long communityId, Long userId) {
 		Community community = userRepository.loadCommunityById(communityId);
 		if (community.checkOwnership(userId) && community.getMembers().size() == 1) {
+			logger.info("Deleting " + community);
 			userRepository.deleteCommunity(community);
 		}
 	}
@@ -239,6 +260,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void registerPasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		logger.info("Saving " + passwordRecoveryRequest);
 		userRepository.storePasswordRecoveryRequest(passwordRecoveryRequest);
 	}
 
@@ -247,6 +269,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
+		logger.info("Deleting " + passwordRecoveryRequest);
 		userRepository.deletePasswordRecoveryRequest(passwordRecoveryRequest);
 	}
 

@@ -126,5 +126,9 @@ Administrative part
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/messageResourcesForm.jsp"/>
     </definition>
 
+    <definition name="logTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/logView.jsp"/>
+    </definition>
+
 
 </tiles-definitions>

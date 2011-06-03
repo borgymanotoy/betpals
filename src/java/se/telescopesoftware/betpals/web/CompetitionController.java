@@ -186,9 +186,10 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/savecompetition")	
-	public String saveCompetition(@ModelAttribute("competition") Competition competition, BindingResult result, Model model) {
+	public String saveCompetition(@Valid Competition competition, BindingResult result, Model model) {
+		boolean goToNextStep = competition.isGoToNextStep();
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getErrorCount());
+    		model.addAttribute(result.getAllErrors());
     		return "createCompetitionView";
     	}
     	
@@ -196,7 +197,6 @@ public class CompetitionController extends AbstractPalsController {
     	Account account = accountService.getAccount(competition.getAccountId());
     	competition.setCurrency(account.getCurrency());
     	MultipartFile imageFile = competition.getImageFile();
-    	boolean goToNextStep = competition.isGoToNextStep();
     	
     	Long competitionId = competition.getId();
     	
@@ -346,7 +346,7 @@ public class CompetitionController extends AbstractPalsController {
 	@RequestMapping(value="/quickcompetition")	
 	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, Model model) {
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getFieldErrorCount());
+    		model.addAttribute(result.getAllErrors());
     		return "quickCompetitionView";
     	}
     	

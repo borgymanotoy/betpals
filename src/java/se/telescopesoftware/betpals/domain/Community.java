@@ -172,4 +172,11 @@ public class Community {
 	public int getMembersCount() {
 		return members.size();
 	}
+
+	@Override
+	public String toString() {
+		return "Community [id=" + id + ", ownerId=" + ownerId + ", created="
+				+ created + ", name=" + name + ", accessType=" + accessType
+				+ "]";
+	}
 }

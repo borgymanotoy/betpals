@@ -48,5 +48,11 @@ public class PasswordRecoveryRequest {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	@Override
+	public String toString() {
+		return "PasswordRecoveryRequest [id=" + id + ", userId=" + userId
+				+ ", requestHash=" + requestHash + "]";
+	}
 	
 }

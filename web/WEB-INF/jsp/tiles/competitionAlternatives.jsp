@@ -90,6 +90,7 @@
         <div class="span-12">
             <div class="span-2 labelDiv">&nbsp;</div>
             <div class="span-10 last">
+                <p class="error"><form:errors path="*"/></p>
 		        <form:hidden path="eventId"/> 
 		        <form:hidden path="competitionId"/> 
 		        <input type="submit" value="<spring:message code='button.add'/>" class="greenButton110"/>
@@ -97,7 +98,6 @@
         </div>
         &nbsp;
     </div>    
-    <p><form:errors path="*"/>&nbsp;</p>
 </form:form>
     <h4><spring:message code="competition.create.alternatives.header"/></h4>
     <div class="formSectionDiv">

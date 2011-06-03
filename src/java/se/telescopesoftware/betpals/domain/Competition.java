@@ -22,15 +22,21 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.codec.Base64;
 import org.springframework.web.multipart.MultipartFile;
 
+import se.telescopesoftware.betpals.validation.CompetitionConstraints;
+
 
 @Entity
 @Table(name="competition")
+@CompetitionConstraints
 public class Competition {
 
 	@Id
@@ -44,15 +50,20 @@ public class Competition {
 	private AccessType accessType;
 	@Enumerated(EnumType.STRING)
 	private CompetitionStatus status;
-	@NotNull
+	@NotBlank
 	private String name;
 	private String description;
 	private Date created;
+	@Future
+	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date deadline;
+	@Future
+	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date settlingDeadline;
 	private String currency;
+	@DecimalMin("0.1")
 	private BigDecimal fixedStake;
 	
 	//TODO: Check cascade type for possible side effects
@@ -74,9 +85,11 @@ public class Competition {
 	private boolean goToNextStep;
 	
 	public Competition() {
+		this.competitionType = CompetitionType.POOL_BETTING;
 	}
 
 	public Competition(String name) {
+		this();
 		this.name = name;
 		this.created = new Date();
 	}
@@ -286,11 +299,13 @@ public class Competition {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("Competition: ");
-		sb.append(this.id);
-		sb.append(" ");
-		sb.append(this.name);
-		return sb.toString();
+		return "Competition [id=" + id + ", ownerId=" + ownerId
+				+ ", accountId=" + accountId + ", competitionType="
+				+ competitionType + ", accessType=" + accessType + ", status="
+				+ status + ", name=" + name + ", created=" + created
+				+ ", deadline=" + deadline + ", settlingDeadline="
+				+ settlingDeadline + ", currency=" + currency + ", fixedStake="
+				+ fixedStake + "]";
 	}
 
 	public UserProfile getOwner() {

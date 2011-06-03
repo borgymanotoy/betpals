@@ -131,5 +131,14 @@ public class AccountTransaction implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public String toString() {
+		return "AccountTransaction [id=" + id + ", accountId=" + accountId
+				+ ", transactionType=" + transactionType + ", transactionDate="
+				+ transactionDate + ", sourceId=" + sourceId
+				+ ", destinationId=" + destinationId + ", currency=" + currency
+				+ ", amount=" + amount + ", description=" + description + "]";
+	}
 	
 }

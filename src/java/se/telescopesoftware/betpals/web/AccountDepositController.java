@@ -47,7 +47,8 @@ public class AccountDepositController extends AbstractPalsController {
 			account = accountService.saveAccount(account);
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
-
+	    	logger.info(getUser() + " has deposited " + amount + " to " + account);
+	    	
 			return "accountDetailsView";
     	}
     	

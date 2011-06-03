@@ -46,6 +46,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	public Account saveAccount(Account account) {
+		logger.debug("Saving " + account);
 		return accountRepository.storeAccount(account);
 	}
 
@@ -75,11 +76,13 @@ public class AccountServiceImpl implements AccountService {
 		String defaultAmount = siteConfigurationService.getParameterValue("defaultAccountAmount");
 		AccountTransaction transaction = new AccountTransaction(account, new BigDecimal(defaultAmount), AccountTransactionType.DEPOSIT);
 		account.addTransaction(transaction);
+		logger.info("Depositing default amount (" + transaction + ")");
 		
 		return saveAccount(account);
 	}
 
 	public void setAsDefault(Account account) {
+		logger.info("Setting as default " + account);
 		account.setDefaultAccount(true);
 		accountRepository.setAsDefault(account);
 	}

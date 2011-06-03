@@ -48,6 +48,7 @@ public class AccountWithdrawController extends AbstractPalsController {
 			account = accountService.saveAccount(account);
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
+	    	logger.info(getUser() + " has withdraw " + amount + " from " + account);
 
 			return "accountDetailsView";
     	}

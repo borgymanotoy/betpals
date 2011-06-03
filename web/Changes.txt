@@ -1,3 +1,14 @@
+== Version 0.8.8 =======================================================
+
+New features and CRs
+
+    * Error reporting, input validation
+    * Logging
+    
+Bug fixes
+
+    * Not possible to switch language on login page.
+    
 == Version 0.8.7 =======================================================
 
 New features and CRs

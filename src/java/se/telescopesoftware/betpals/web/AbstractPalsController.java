@@ -87,8 +87,6 @@ public abstract class AbstractPalsController {
 	protected void sendJPEGImage(String folderName, String filename, HttpServletResponse response) {
     	String path = getAppRoot() + "images" + File.separator + folderName;
     	File imageFile = new File(path, filename + DEFAULT_IMAGE_SUFFIX);
-    	logger.debug("Request for image: " + imageFile.getPath());
-
     	if (!imageFile.exists()) {
     		imageFile = new File(getAppRoot() + "images" + File.separator + "empty" + DEFAULT_IMAGE_SUFFIX);
     	} 

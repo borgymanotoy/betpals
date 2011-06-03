@@ -120,5 +120,11 @@ public class Group {
 		return getOwnerId().compareTo(userId) == 0;
 	}
 
+	@Override
+	public String toString() {
+		return "Group [id=" + id + ", ownerId=" + ownerId + ", created="
+				+ created + ", name=" + name + "]";
+	}
+
 	
 }

@@ -78,8 +78,6 @@ public class HomeController extends AbstractPalsController {
 	
 	@RequestMapping(value="/user/images/{userId}")	
 	public void getImage(@PathVariable String userId, HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("Get image for user: " + userId);
-
     	String path = getAppRoot() + "images" + File.separator + "users";
     	File imageFile = new File(path, userId + ".jpg");
     	if (!imageFile.exists()) {

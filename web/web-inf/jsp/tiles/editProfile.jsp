@@ -35,6 +35,21 @@
         
    });
     
+   function changePassword() {
+	   var oldPassword = jQuery("#oldPassword").val();
+	   var newPassword = jQuery("#newPassword").val();
+	   var newPasswordRepeat = jQuery("#newPasswordRepeat").val();
+
+	   if (oldPassword.length == 0 || newPassword.length == 0 || newPasswordRepeat.length == 0) {
+		   var errorText = '<spring:message code="error.all.fields.are.mandatory"/>';
+		   jQuery("#changePasswordError").html(errorText);
+	   } else if (newPassword != newPasswordRepeat) {
+           var errorText = '<spring:message code="error.passwords.mismatch"/>';
+           jQuery("#changePasswordError").html(errorText);
+	   } else {
+		   jQuery("#changePasswordForm").submit();
+	   }
+   }
 </script>
 
 <div>
@@ -103,6 +118,7 @@
             <form:textarea path="bio" id="userBioTextArea"/>
         </div>
     </div>
+    <p class="error"><form:errors path="*"/></p>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv">&nbsp;</div>
         <div class="span-10 last">
@@ -114,32 +130,34 @@
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <h4><spring:message code="profile.change.password.header"/></h4>
-    <form action='<c:url value="/changepassword.html"/>' method="post">
+    <form action='<c:url value="/changepassword.html"/>' method="post" id="changePasswordForm">
+    <p class="error" id="changePasswordError">
     <c:if test="${wrongOldPassword}">
-    <p class="error"><spring:message code="error.wrong.old.password"/></p>
+        <spring:message code="error.wrong.old.password"/>
     </c:if>
+    </p>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.old"/></div>
         <div class="span-10 last">
-            <input type="password" name="oldPassword"/>
+            <input type="password" name="oldPassword" id="oldPassword"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new"/></div>
         <div class="span-10 last">
-            <input type="password" name="newPassword"/>
+            <input type="password" name="newPassword" id="newPassword"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new.repeat"/></div>
         <div class="span-10 last">
-            <input type="password" name="newPasswordRepeat"/>
+            <input type="password" name="newPasswordRepeat" id="newPasswordRepeat"/>
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv">&nbsp;</div>
         <div class="span-10 last">
-           <input type="submit" class="blueButton110" value="<spring:message code='button.change'/>"/>
+           <button class="blueButton110" onclick="changePassword(); return false;"><spring:message code='button.change'/></button>
         </div>
     </div>
     </form>

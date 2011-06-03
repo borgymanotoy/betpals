@@ -91,10 +91,12 @@
         </div>
         &nbsp;
     </div>    
+    <p class="error">
+	    <form:errors path="*" />
+    </p>
     <button class="whiteButton90" onclick="goHome(); return false;"><spring:message code="button.cancel"/></button>
     <input type="submit" value="<spring:message code='button.next'/>" class="greenButton110"/>
 
-    <p><form:errors path="*"/></p>
     <p>&nbsp;</p>
 </div>
 </form:form>

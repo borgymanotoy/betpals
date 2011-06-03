@@ -138,6 +138,12 @@ public class Event {
     		return null;
     	}
     }
+
+	@Override
+	public String toString() {
+		return "Event [id=" + id + ", competitionId=" + competitionId
+				+ ", name=" + name + "]";
+	}
     
 
 }

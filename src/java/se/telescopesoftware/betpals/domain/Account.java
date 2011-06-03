@@ -154,5 +154,13 @@ public class Account implements Serializable {
 	public boolean getDefaultAccount() {
 		return defaultAccount;
 	}
+
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", ownerId=" + ownerId + ", currency="
+				+ currency + ", balance=" + balance + ", available="
+				+ available + ", created=" + created + ", active=" + active
+				+ ", defaultAccount=" + defaultAccount + "]";
+	}
 	
 }

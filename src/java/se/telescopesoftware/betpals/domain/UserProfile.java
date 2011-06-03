@@ -18,6 +18,8 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -29,8 +31,11 @@ public class UserProfile implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank
     private String name;
     private String surname;
+    @NotBlank
+    @Email
     private String email;
     
     private String address;
@@ -306,6 +311,18 @@ public class UserProfile implements Serializable {
 	@Override
 	public int hashCode() {
 		return id != null ? id.hashCode() : super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "UserProfile [id=" + id + ", name=" + name + ", surname="
+				+ surname + ", email=" + email + ", address=" + address
+				+ ", city=" + city + ", postalCode=" + postalCode
+				+ ", country=" + country + ", registrationDate="
+				+ registrationDate + ", lastLoginDate=" + lastLoginDate
+				+ ", numberOfVisits=" + numberOfVisits + ", username="
+				+ username + ", facebookUser=" + facebookUser
+				+ ", facebookAccessToken=" + facebookAccessToken + "]";
 	}
 
 }

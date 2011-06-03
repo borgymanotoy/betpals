@@ -51,7 +51,7 @@
 	    <div class="panelNoPadding">
            <ul id="invitesAndCompetitions">
                <li><a href='<c:url value="/admin/listmessageresources.html?letter=a&lang=${pageContext.response.locale}"/>'>Message Resources</a></li>
-               <li><a href='<c:url value=""/>'>Logs</a></li>
+               <li><a href='<c:url value="/admin/viewlatestlog.html"/>'>Logs</a></li>
            </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

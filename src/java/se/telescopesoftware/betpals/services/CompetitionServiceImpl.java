@@ -34,6 +34,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	private EmailService emailService;
 	private MessageSource messageSource;
 	
+	//TODO: Move to configuration
 	private BigDecimal SYSTEM_COMMISION = new BigDecimal("0.04");
 	private int DEFAULT_DEADLINE_INTERVAL = 7;
 	private int DEFAULT_SETTLING_INTERVAL = 8;
@@ -59,6 +60,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     
 	public Competition saveCompetition(Competition competition) {
+		logger.info("Saving " + competition);
 		return competitionRepository.storeCompetition(competition);
 	}
 
@@ -80,6 +82,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		}
 
 		if (account != null) {
+			logger.info("Placing " + bet);
 			AccountTransaction transaction = new AccountTransaction(account, bet.getStake().negate(), AccountTransactionType.RESERVATION);
 			account.addTransaction(transaction);
 			
@@ -112,7 +115,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	public void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner) {
 		for (Long friendId : friendIds) {
 			Invitation invitation = new Invitation(competition, owner, friendId);
-			logger.debug(invitation.toString());
+			logger.info("Sending " + invitation);
 			competitionRepository.storeInvitation(invitation);
 		}
 	}
@@ -136,6 +139,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	public void deleteInvitation(Long id) {
 		Invitation invitation = competitionRepository.loadInvitationById(id);
 		//TODO: Add check for ownership
+		logger.info("Deleting " + invitation);
 		competitionRepository.deleteInvitation(invitation);
 	}
 
@@ -144,16 +148,18 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Alternative saveAlternative(Alternative alternative) {
+		logger.info("Saving " + alternative);
 		return competitionRepository.storeAlternative(alternative);
 	}
 
 	public Event saveEvent(Event event) {
+		logger.info("Saving " + event);
 		return competitionRepository.storeEvent(event);
 	}
 
 	public void deleteCompetition(Long id) {
 		Competition competition = getCompetitionById(id);
-		logger.info("Delete " + competition.toString());
+		logger.info("Deleting " + competition);
 		for (Alternative alternative : competition.getAllAlternatives()) {
 			voidAlternative(alternative, competition, null);
 		}
@@ -178,7 +184,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	public void settleCompetition(Long competitionId, Long alternativeId) {
 		Competition competition = competitionRepository.loadCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.SETTLED);
-		logger.info("Settle " + competition.toString());
+		logger.info("Settling " + competition);
 		for (Alternative alternative : competition.getAllAlternatives()) {
 			if (alternative.getId().compareTo(alternativeId) == 0) {
 				alternativeWon(alternative, competition);
@@ -191,14 +197,18 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	private void alternativeWon(Alternative alternative, Competition competition) {
+		logger.info("Won " + alternative);
 		for (Bet bet : alternative.getBets()) {
+			logger.info("Settling " + bet);
 			BigDecimal part = bet.getStake().divide(alternative.getTurnover(), 2, RoundingMode.HALF_UP); //TODO: Find out about required precision
 			BigDecimal competitionTurnoverWithCommission = calculateAmountWithCommission(competition.getTurnover()) ;
 			BigDecimal amountWon = part.multiply(competitionTurnoverWithCommission).subtract(bet.getStake());
 			Account account = accountService.getAccount(bet.getAccountId());
 			AccountTransaction transaction = new AccountTransaction(account, bet.getStake(), AccountTransactionType.RESERVATION);
+			logger.info(transaction);
 			account.addTransaction(transaction);
 			transaction = new AccountTransaction(account, amountWon, AccountTransactionType.WON);
+			logger.info(transaction);
 			account.addTransaction(transaction);
 			
 			accountService.saveAccount(account);
@@ -209,9 +219,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	private void alternativeLost(Alternative alternative) {
+		logger.info("Lost " + alternative);
 		for (Bet bet : alternative.getBets()) {
+			logger.info("Settling " + bet);
 			Account account = accountService.getAccount(bet.getAccountId());
 			AccountTransaction transaction = new AccountTransaction(account, bet.getStake().negate(), AccountTransactionType.LOST);
+			logger.info(transaction);
 			account.addTransaction(transaction);
 			
 			accountService.saveAccount(account);
@@ -232,10 +245,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	private void voidAlternative(Alternative alternative, Competition competition, Locale locale) {
-		logger.info("Void " + alternative.toString());
+		logger.info("Voiding " + alternative);
 		notifyPunters(alternative, competition, locale);
 	
 		for(Bet bet : alternative.getBets()) {
+			logger.info("Removing " + bet);
 			removeBet(bet);
 		}
 

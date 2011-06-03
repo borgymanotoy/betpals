@@ -76,9 +76,9 @@ public class EditUserProfileController extends AbstractPalsController {
 
     @RequestMapping(value="/editprofile", method=RequestMethod.POST)
     public String onSubmit(@Valid UserProfile updatedUserProfile, BindingResult result, Model model) {
-    	
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getErrorCount());
+    		model.addAttribute(result.getAllErrors());
+    		updatedUserProfile.setUser(getUser());
     		return "editProfileView";
     	}
 
@@ -135,6 +135,7 @@ public class EditUserProfileController extends AbstractPalsController {
     		model.addAttribute("error", messageSource.getMessage("error.no.user.with.email", new Object[] {}, locale));
     	}
     	
+    	model.addAttribute("email", email);
     	return "forgotPasswordView";
     }
     

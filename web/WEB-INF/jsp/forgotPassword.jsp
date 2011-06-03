@@ -27,10 +27,20 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     	    jQuery("#headerPane").addClass(logo);
        }
 
-       function getInvitationDetails(competitionId) {
-           jQuery('input', '#invitationDetailsForm').val(competitionId);
-           jQuery('#invitationDetailsForm').submit();
-       } 
+       function changePassword() {
+           var newPassword = jQuery("#newPassword").val();
+           var newPasswordRepeat = jQuery("#newPasswordRepeat").val();
+
+           if (newPassword.length == 0 || newPasswordRepeat.length == 0) {
+               var errorText = '<spring:message code="error.all.fields.are.mandatory"/>';
+               jQuery("#changePasswordError").html(errorText);
+           } else if (newPassword != newPasswordRepeat) {
+               var errorText = '<spring:message code="error.passwords.mismatch"/>';
+               jQuery("#changePasswordError").html(errorText);
+           } else {
+               jQuery("#changePasswordForm").submit();
+           }
+       }
        
     </script>
 </head>
@@ -63,23 +73,25 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 <spring:message code="forgot.password.change.text"/>
                 </p>
                 <form action='<c:url value="/changeforgottenpassword.html"/>' method="post">
+			    <p class="error" id="changePasswordError">
+			    </p>
 			    <div class="span-12 formSectionSlimDiv">
 			        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new"/></div>
 			        <div class="span-10 last">
-			            <input type="password" name="newPassword"/>
+			            <input type="password" name="newPassword" id="newPassword"/>
 			        </div>
 			    </div>
 			    <div class="span-12 formSectionSlimDiv">
 			        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.password.new.repeat"/></div>
 			        <div class="span-10 last">
-			            <input type="password" name="newPasswordRepeat"/>
+			            <input type="password" name="newPasswordRepeat" id="newPasswordRepeat"/>
 			        </div>
 			    </div>
 			    <div class="span-12 formSectionSlimDiv">
 			        <div class="span-2 labelDiv">&nbsp;</div>
 			        <div class="span-10 last">
                        <input type="hidden" name="requestHash" value="${passwordRecoveryRequest.requestHash}"/>
-			           <input type="submit" class="blueButton110" value="<spring:message code='button.change'/>"/>
+			           <button class="blueButton110" onclick="changePassword(); return false;"><spring:message code='button.change'/></button>
 			        </div>
 			    </div>
 			    </form>

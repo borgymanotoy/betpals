@@ -5,8 +5,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
+
+import se.telescopesoftware.betpals.validation.QuickCompetitionConstraints;
 
 /**
  * 
@@ -14,13 +20,19 @@ import org.springframework.web.multipart.MultipartFile;
  * Used only to pass user entered info from web page.
  *
  */
+@QuickCompetitionConstraints
 public class QuickCompetition {
 
+	@NotBlank
 	private String name;
 	private String description;
 	private BigDecimal stake;
+	@NotNull
+	@Future
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date deadline;
+	@NotNull
+	@Future
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date settlingDeadline;
 	private boolean facebookPublish;

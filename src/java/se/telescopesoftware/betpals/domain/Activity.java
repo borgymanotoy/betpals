@@ -197,5 +197,13 @@ public class Activity {
 	public void setExtensionName(String extensionName) {
 		this.extensionName = extensionName;
 	}
+
+	@Override
+	public String toString() {
+		return "Activity [id=" + id + ", ownerId=" + ownerId + ", ownerName="
+				+ ownerName + ", activityType=" + activityType + ", created="
+				+ created + ", extensionId=" + extensionId + ", extensionName="
+				+ extensionName + "]";
+	}
 	
 }

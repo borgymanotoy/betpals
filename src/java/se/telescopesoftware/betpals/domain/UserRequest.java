@@ -109,6 +109,15 @@ public class UserRequest {
 	public void setExtensionName(String extensionName) {
 		this.extensionName = extensionName;
 	}
+
+	@Override
+	public String toString() {
+		return "UserRequest [id=" + id + ", ownerId=" + ownerId
+				+ ", inviteeId=" + inviteeId + ", ownerName=" + ownerName
+				+ ", inviteeName=" + inviteeName + ", requestType="
+				+ requestType + ", extensionId=" + extensionId
+				+ ", extensionName=" + extensionName + "]";
+	}
 	
 
 }

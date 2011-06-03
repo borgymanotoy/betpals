@@ -82,7 +82,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <div class="span-12">&nbsp;</div>
         <div id="loginInput1" class="span-4">
             <spring:message code="login.email"/>
-            <input id="usernameField" type="text" name="j_username" tabindex="1" />
+            <input id="usernameField" type="text" name="j_username" tabindex="1" value='<c:if test="${not empty param.login_error}">${SPRING_SECURITY_LAST_USERNAME}</c:if>'/>
             <input type="checkbox" name="_spring_security_remember_me" tabindex="3"/> <span><spring:message code="login.remember.me"/></span>
         </div>
         <div id="loginInput2" class="span-4">
@@ -95,6 +95,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <button id="facebookLink" onclick="facebookLogin(); return false;"><spring:message code="login.facebook.login"/></button>
         </div>
         </form>
+        <c:if test="${not empty param.login_error}">
+        <div class="span-23 append-1 right error">
+            <spring:message code="login.not.successfull"/>
+            <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+        </div>
+	    </c:if>
     </div>
     <div id="contentArea" class="span-24">
         <div class="span-11">
@@ -112,26 +118,33 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             </div>
         </div>
         <div id="signupArea" class="span-13 last">
-            <form action='<c:url value="/register.html"/>' method="post">
+            <c:url value="/register.html" var="registerURL"/>
+            <form:form commandName="userProfile" action="${registerURL}" method="post">
             <div class="span-4 right label"><spring:message code="registration.email"/></div>
-            <div class="span-9 last"><input type="text" name="email"/></div>
+            <div class="span-9 last"><form:input path="email"/></div>
             <div class="span-4 right label"><spring:message code="registration.first.name"/></div>
-            <div class="span-9 last"><input type="text" name="name"/></div>
+            <div class="span-9 last"><form:input path="name"/></div>
             <div class="span-4 right label"><spring:message code="registration.last.name"/></div>
-            <div class="span-9 last"><input type="text" name="surname"/></div>
+            <div class="span-9 last"><form:input path="surname"/></div>
             <div class="span-4 right label"><spring:message code="registration.password"/></div>
-            <div class="span-9 last"><input type="password" name="password"/></div>
+            <div class="span-9 last"><form:password path="password"/></div>
             <div class="span-4">&nbsp;</div>
-            <div class="span-9 last"><input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/></div>
+            <div class="span-9 last">
+                <p class="error">
+                    <form:errors path="*"/>
+                    <c:if test="${alreadyExist}"><spring:message code='error.user.exist'/></c:if>
+                </p>
+                <input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/>
+            </div>
             <div class="span-4">&nbsp;</div>
-            </form>
+            </form:form>
             <div class="span-9 last">&nbsp;</div>
         </div>
     </div>
     <div class="span-24" id="bottom">&nbsp;</div>
 </div>
 <form action="" method="post" id="languageForm">
-    <input type="hidden" name="lang" value=""/>
+    <input type="hidden" name="sitelang" value=""/>
 </form>
 <form action='<c:url value="/forgotpasswordview.html"/>' method="post" id="forgotPasswordForm">
     <input type="hidden" name="email" value=""/>

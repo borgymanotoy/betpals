@@ -77,12 +77,20 @@ public class RegisterUserController extends AbstractPalsController {
     protected ModelAndView onSubmit(@Valid UserProfile userProfile, BindingResult result, HttpServletRequest request, Locale locale, Model model) {
     	
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getErrorCount());
+    		model.addAttribute(result.getAllErrors());
     		return new ModelAndView("register");
     	}
+    	
         String username = userProfile.getEmail();
         String password = userProfile.getPassword();
-        User user = new User(username);
+        
+        User user = userService.getUserByEmail(username);
+        if (user != null) {
+        	model.addAttribute("alreadyExist", true);
+    		return new ModelAndView("register");
+        }
+        
+        user = new User(username);
         user.encodeAndSetPassword(password);
 
         userProfile.setUsername(username);

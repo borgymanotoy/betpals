@@ -35,12 +35,6 @@
         <property name="basename" value="views"/>
     </bean>
 
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="/WEB-INF/messages/messages"/>
-        <property name="useCodeAsDefaultMessage" value="true"/>
-        <property name="cacheSeconds" value="1"/>
-    </bean>
-
     <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
             <list>
@@ -83,6 +77,11 @@
     </bean>
  -->
  
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+      
+    <!-- //TODO: Move to site configuration manager -->
      <bean id="activitiesPerPage" class="java.lang.Integer">
         <constructor-arg type="java.lang.String" value="10" />
     </bean>
@@ -117,6 +116,10 @@
         <property name="appRoot" ref="appRoot"/>
         <property name="resourceBundlePath" value="/WEB-INF/messages/messages"/>
         <property name="supportedLanguages" ref="supportedLanguages"/>
+    </bean>
+    <bean id="logViewerService" class="se.telescopesoftware.betpals.services.LogViewerServiceImpl">
+        <property name="appRoot" ref="appRoot"/>
+        <property name="logPath" value="/WEB-INF/logs/application.log"/>
     </bean>
     <bean id="activityService" class="se.telescopesoftware.betpals.services.ActivityServiceImpl">
         <property name="activityRepository" ref="activityRepository"/>

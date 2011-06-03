@@ -176,5 +176,11 @@ public class User implements UserDetails {
 		return new String(Base64.encode(sb.toString().getBytes())); 
 	}
 
+	@Override
+	public String toString() {
+		return "User " + username  + " [id=" + id + ", enabled="
+				+ enabled + "]";
+	}
+
 
 }

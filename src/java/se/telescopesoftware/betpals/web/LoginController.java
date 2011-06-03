@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import se.telescopesoftware.betpals.domain.User;
@@ -19,7 +20,8 @@ public class LoginController extends AbstractPalsController {
 	}
 	
 	@RequestMapping("/login")
-	public String get() {
+	public String get(Model model) {
+		model.addAttribute(new UserProfile());
 		return "loginView";
 	}
 
@@ -38,6 +40,8 @@ public class LoginController extends AbstractPalsController {
 		UserProfile userProfile = getUserProfile();
 		userProfile.registerVisit();
 		userService.updateUserProfile(userProfile);
+		logger.info("Logged in " + getUser());
 		return "indexAction";
 	}
+
 }

@@ -152,4 +152,14 @@ public class Bet {
 	public boolean getWon() {
 		return getProfitOrLoss().compareTo(BigDecimal.ZERO) > 0;
 	}
+
+	@Override
+	public String toString() {
+		return "Bet [id=" + id + ", ownerId=" + ownerId + ", accountId="
+				+ accountId + ", selectionId=" + selectionId + ", currency="
+				+ currency + ", odds=" + odds + ", stake=" + stake
+				+ ", placed=" + placed + ", settled=" + settled
+				+ ", profitOrLoss=" + profitOrLoss + ", ownerName=" + ownerName
+				+ "]";
+	}
 }

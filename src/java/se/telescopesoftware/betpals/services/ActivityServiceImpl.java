@@ -35,6 +35,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 	
 	public void saveActivity(Activity activity) {
+		logger.info("Saving " + activity);
 		activityRepository.saveActivity(activity);
 	}
 
@@ -50,10 +51,12 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	public void addActivityComment(ActivityComment comment) {
+		logger.info("Saving " + comment);
 		activityRepository.saveActivityComment(comment);
 	}
 
 	public void addActivityLike(ActivityLike like) {
+		logger.info("Saving " + like);
 		activityRepository.saveActivityLike(like);
 	}
 
@@ -68,7 +71,7 @@ public class ActivityServiceImpl implements ActivityService {
 	public void deleteActivityComment(Long commentId, Long userId) {
 		ActivityComment comment = activityRepository.loadActivityComment(commentId);
 		if (comment.checkOwnership(userId)) {
-			logger.info("Comment deleted by owner: " + comment.toString());
+			logger.info("Deleting by owner " + comment);
 			activityRepository.deleteActivityComment(comment);
 		}
 	}
@@ -76,7 +79,7 @@ public class ActivityServiceImpl implements ActivityService {
 	public void deleteActivityLike(Long likeId, Long userId) {
 		ActivityLike like = activityRepository.loadActivityLike(likeId);
 		if (like.checkOwnership(userId)) {
-			logger.info("Like is deleted by owner: " + like.toString());
+			logger.info("Deleting by owner " + like);
 			activityRepository.deleteActivityLike(like);
 		}
 	}
@@ -86,6 +89,7 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activity.checkOwnership(userId) 
 				&& !activity.hasComments()
 				&& !activity.hasLikes()) {
+			logger.info("Deleting by owner " + activity);
 			activityRepository.deleteActivity(activity);
 		}
 	}

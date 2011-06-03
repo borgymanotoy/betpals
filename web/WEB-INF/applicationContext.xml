@@ -20,6 +20,12 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <constructor-arg type="java.lang.String" value="${betpals.root}" />
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/messages/messages"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="cacheSeconds" value="1"/>
+    </bean>
+
 	<!-- Data source and Hibernate ======================================================== -->
 	<bean id="defaultDataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
@@ -82,6 +88,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/join/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/login.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/processlogout.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/facebooklogin.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/forgotpasswordview.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/forgotpassword.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -93,14 +100,18 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/admin/**" access="ROLE_SUPERVISOR" />
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
 		
-		<security:form-login login-page='/login.html' default-target-url='/processlogin.html' authentication-failure-url="/login.html" />
-		<security:logout logout-success-url="/login.html"/>
+		<security:form-login login-page='/login.html' default-target-url='/processlogin.html' authentication-failure-url="/login.html?login_error=1" />
+		<security:logout success-handler-ref="palsLogoutHandler"/>
 		<security:remember-me key="abracadabra"/>
 	</security:http>
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider
 			ref="daoAuthenticationProvider" />
 	</security:authentication-manager>
+
+    <bean id="palsLogoutHandler" class="se.telescopesoftware.betpals.utils.LogoutSuccessHandlerImpl">
+        <property name="defaultTargetUrl" value="/login.html"/>
+    </bean>
 
 	<bean id="daoAuthenticationProvider"
 		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">

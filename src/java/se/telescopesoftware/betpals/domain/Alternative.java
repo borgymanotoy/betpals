@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -31,6 +32,7 @@ public class Alternative {
 	private Long eventId;
 	@Enumerated(EnumType.STRING)
 	private AlternativeType alternativeType;
+	@NotBlank
 	private String name;
 	private String description;
 	private boolean taken;
@@ -131,11 +133,10 @@ public class Alternative {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("Alternative ");
-		sb.append(this.id);
-		sb.append(" ");
-		sb.append(this.name);
-		return sb.toString();
+		return "Alternative [id=" + id + ", eventId=" + eventId
+				+ ", alternativeType=" + alternativeType + ", name=" + name
+				+ ", taken=" + taken + ", priority=" + priority
+				+ ", competitionId=" + competitionId + "]";
 	}
 
 	public Set<Bet> getBets() {

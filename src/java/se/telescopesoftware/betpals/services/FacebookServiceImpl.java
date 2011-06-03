@@ -102,7 +102,7 @@ public class FacebookServiceImpl implements FacebookService {
 	public FacebookUser getUserDetails(String accessToken) {
 		RestTemplate restTemplate = new RestTemplate();
 		String userDetailsJSON = restTemplate.getForObject("{url}?access_token={token}", String.class, facebookUserInfoUrl, accessToken);
-		logger.debug("user details: " + userDetailsJSON);
+		logger.debug("Facebook user details: " + userDetailsJSON);
 		FacebookUser facebookUser = new FacebookUser(userDetailsJSON);
 		
 		return facebookUser;

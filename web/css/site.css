@@ -1109,6 +1109,41 @@ tr.odd td {background-color: #e5e5e5;}
     font-size: 12px;
 }
 
+.logList {
+    list-style: none;
+    margin: 0;
+    padding: 0;	
+}
+.logInfo {
+    display: none;
+    padding-left: 20px;
+    padding-top: 5px;
+    word-wrap: break-word;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #d0d0d0;
+    border-top: 1px solid #d0d0d0;
+	color: #61695f;
+	font-weight: normal;
+	background-color: #f6f6f6;
+}
+.logFieldTitle {
+	color: #61695f;
+	font-weight: bold;
+}
+.logEntry {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.logHover {
+    background-color: #e5e5e5;
+}
+
+.logLevelFATAL { color: #cb523a !important; }
+.logLevelERROR { color: #cb523a !important; }
+.logLevelWARN { color: #b4ba02 !important; }
+.logLevelDEBUG { color: #a0a5b1 !important; }
+.logLevelINFO { color: #23809e !important; }
+
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }

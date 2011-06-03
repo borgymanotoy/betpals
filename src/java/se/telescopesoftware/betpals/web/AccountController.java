@@ -48,7 +48,7 @@ public class AccountController extends AbstractPalsController {
 	@RequestMapping(value="/addaccount", method=RequestMethod.POST)	
 	public String saveNewAccount(@Valid Account account, BindingResult result, Model model, HttpSession session) {
     	if (result.hasErrors()) {
-    		logger.debug("Error found: " + result.getErrorCount());
+    		model.addAttribute(result.getAllErrors());
     		return "addAccountView";
     	}
 
@@ -66,8 +66,6 @@ public class AccountController extends AbstractPalsController {
 	@RequestMapping(value="/accountdetails")	
 	public String getAccount(@RequestParam("accountId") Long accountId, Model model) {
     	Account account = accountService.getAccount(accountId);
-    	logger.debug("Retrieved account for id " + accountId);
-    	logger.debug("Account owner id " + account.getOwnerId());
     	if (account.getOwnerId().equals(getUserId()) ) {
     		model.addAttribute("account", account);
     		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(getUserId(), accountId));
