@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.AccountTransaction;
 import se.telescopesoftware.betpals.domain.AccountTransactionType;
 import se.telescopesoftware.betpals.repository.AccountRepository;
 
+@Service
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
 
 	private Map<String, String> supportedCurrencies = new HashMap<String, String>();
@@ -21,15 +26,18 @@ public class AccountServiceImpl implements AccountService {
     private static Logger logger = Logger.getLogger(AccountServiceImpl.class);
 	
 	
+    @Autowired
     public void setSiteConfigurationService(SiteConfigurationService siteConfigurationService) {
     	this.siteConfigurationService = siteConfigurationService;
     }
     
+    @Autowired
 	public void setAccountRepository(AccountRepository accountRepository) {
 		this.accountRepository = accountRepository;
 	}
 	
-	public void setSupportedCurrenciesMap(Map<String, String> currencies) {
+    @Autowired
+	public void setSupportedCurrencies(Map<String, String> currencies) {
 		this.supportedCurrencies = currencies;
 	}
 
@@ -45,16 +53,19 @@ public class AccountServiceImpl implements AccountService {
 		return accountRepository.loadAccount(accountId);
 	}
 
+	@Transactional(readOnly = false)
 	public Account saveAccount(Account account) {
 		logger.debug("Saving " + account);
 		return accountRepository.storeAccount(account);
 	}
 
+	@Transactional(readOnly = false)
 	public void depositToAccount(Long accountId, BigDecimal amount) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Transactional(readOnly = false)
 	public void withdrawFromAccount(Long accountId, BigDecimal amount) {
 		// TODO Auto-generated method stub
 		
@@ -69,6 +80,7 @@ public class AccountServiceImpl implements AccountService {
 		return supportedCurrencies.get("default");
 	}
 
+	@Transactional(readOnly = false)
 	public Account createDefaultAccountForUser(Long userId) {
 		logger.info("Creating default account for user " + userId);
 		Account account = saveAccount(new Account(getDefaultCurrency(), userId));
@@ -81,6 +93,7 @@ public class AccountServiceImpl implements AccountService {
 		return saveAccount(account);
 	}
 
+	@Transactional(readOnly = false)
 	public void setAsDefault(Account account) {
 		logger.info("Setting as default " + account);
 		account.setDefaultAccount(true);

@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
@@ -13,27 +16,32 @@ import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.repository.ActivityRepository;
 
+@Service
+@Transactional(readOnly = true)
 public class ActivityServiceImpl implements ActivityService {
 
 	private ActivityRepository activityRepository;
-	private Integer defaultItemsPerPage;
+	private Integer activitiesPerPage;
 	
-
 	private static Logger logger = Logger.getLogger(ActivityServiceImpl.class);
 
     
+    @Autowired
     public void setActivityRepository(ActivityRepository activityRepository) {
     	this.activityRepository = activityRepository;
     }
     
-    public Integer getDefaultItemsPerPage() {
-    	return defaultItemsPerPage;
+    @Autowired
+    public void setActivitiesPerPage(Integer defaultItemsPerPage) {
+    	this.activitiesPerPage = defaultItemsPerPage;
+    }
+
+    
+    public Integer getActivitiesPerPage() {
+    	return activitiesPerPage;
     }
     
-    public void setDefaultItemsPerPage(Integer defaultItemsPerPage) {
-    	this.defaultItemsPerPage = defaultItemsPerPage;
-    }
-	
+	@Transactional(readOnly = false)
 	public void saveActivity(Activity activity) {
 		logger.info("Saving " + activity);
 		activityRepository.saveActivity(activity);
@@ -47,14 +55,16 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityRepository.loadActivitiesForOwnerIds(
 				ownerIds, 
 				pageNumber != null ? pageNumber : 0, 
-				itemsPerPage != null ? itemsPerPage : defaultItemsPerPage, ActivityType.USER);
+				itemsPerPage != null ? itemsPerPage : activitiesPerPage, ActivityType.USER);
 	}
 
+	@Transactional(readOnly = false)
 	public void addActivityComment(ActivityComment comment) {
 		logger.info("Saving " + comment);
 		activityRepository.saveActivityComment(comment);
 	}
 
+	@Transactional(readOnly = false)
 	public void addActivityLike(ActivityLike like) {
 		logger.info("Saving " + like);
 		activityRepository.saveActivityLike(like);
@@ -68,6 +78,7 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityRepository.loadActivityLikes(activityId);
 	}
 
+	@Transactional(readOnly = false)
 	public void deleteActivityComment(Long commentId, Long userId) {
 		ActivityComment comment = activityRepository.loadActivityComment(commentId);
 		if (comment.checkOwnership(userId)) {
@@ -76,6 +87,7 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 	}
 
+	@Transactional(readOnly = false)
 	public void deleteActivityLike(Long likeId, Long userId) {
 		ActivityLike like = activityRepository.loadActivityLike(likeId);
 		if (like.checkOwnership(userId)) {
@@ -84,6 +96,7 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 	}
 
+	@Transactional(readOnly = false)
 	public void deleteActivity(Long activityId, Long userId) {
 		Activity activity = activityRepository.loadActivity(activityId);
 		if (activity.checkOwnership(userId) 
@@ -105,7 +118,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 		Integer totalActivityCount = activityRepository.getActivitiesCountForUserProfile(ownerIds);
 		if (itemsPerPage == null) {
-			itemsPerPage = defaultItemsPerPage;
+			itemsPerPage = activitiesPerPage;
 		}
 		
         if (totalActivityCount != null) {
@@ -122,16 +135,15 @@ public class ActivityServiceImpl implements ActivityService {
 	public Collection<Activity> getActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType) {
 		return activityRepository.loadActivitiesForExtensionIdAndType(extensionId,
 				pageNumber != null ? pageNumber : 0, 
-				itemsPerPage != null ? itemsPerPage : defaultItemsPerPage, activityType);
+				itemsPerPage != null ? itemsPerPage : activitiesPerPage, activityType);
 	}
 
-	@Override
 	public Integer getActivitiesPageCountForExtensionIdAndType(Long extensionId,
 			ActivityType activityType, Integer itemsPerPage) {
 
 		Integer totalActivityCount = activityRepository.getActivitiesCountForExtensionIdAndType(extensionId, activityType);
 		if (itemsPerPage == null) {
-			itemsPerPage = defaultItemsPerPage;
+			itemsPerPage = activitiesPerPage;
 		}
 		
         if (totalActivityCount != null) {

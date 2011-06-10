@@ -46,19 +46,6 @@
 
     <util:properties id="buildProperties" location="classpath:betpals.properties"/>
     
-    <util:map id="supportedCurrencies">
-        <entry key="default" value="FUN"/>
-        <entry key="EUR" value="EUR"/>
-        <entry key="SEK" value="SEK"/>
-        <entry key="USD" value="USD"/>
-        <entry key="GBP" value="GBP"/>
-    </util:map>
-    
-    <util:map id="supportedLanguages">
-        <entry key="default" value="en"/>
-        <entry key="sv" value="sv"/>
-    </util:map>
-    
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="300000"/>
     </bean>
@@ -81,72 +68,4 @@
         <property name="validationMessageSource" ref="messageSource"/>
     </bean>
       
-    <!-- //TODO: Move to site configuration manager -->
-     <bean id="activitiesPerPage" class="java.lang.Integer">
-        <constructor-arg type="java.lang.String" value="10" />
-    </bean>
- 
- 
-    <!-- Repositories ========================================================= -->
-    <bean id="activityRepository" class="se.telescopesoftware.betpals.repository.HibernateActivityRepositoryImpl">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="accountRepository" class="se.telescopesoftware.betpals.repository.HibernateAccountRepositoryImpl">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="competitionRepository" class="se.telescopesoftware.betpals.repository.HibernateCompetitionRepositoryImpl">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <!-- ================================================================= -->
-
-    <!-- Services =========================================================== -->
-    <bean id="siteConfigurationService" class="se.telescopesoftware.betpals.services.SiteConfigurationServiceImpl">
-        <property name="appRoot" ref="appRoot"/>
-        <property name="configurationFilename" value="/WEB-INF/app.properties"/>
-    </bean>
-    <bean id="emailService" class="se.telescopesoftware.betpals.services.EmailServiceImpl">
-        <property name="smtphost" value="localhost"/>
-        <property name="encoding" value="UTF-8"/>
-        <property name="adminEmail" value="noreply@mybetpals.com"/>
-        <property name="adminName" value="MyBetPals"/>
-        <property name="userService" ref="userDetailsService"/>
-    </bean>
-    <bean id="messageResourceService" class="se.telescopesoftware.betpals.services.MessageResourceServiceImpl">
-        <property name="messageSource" ref="messageSource"/>
-        <property name="appRoot" ref="appRoot"/>
-        <property name="resourceBundlePath" value="/WEB-INF/messages/messages"/>
-        <property name="supportedLanguages" ref="supportedLanguages"/>
-    </bean>
-    <bean id="logViewerService" class="se.telescopesoftware.betpals.services.LogViewerServiceImpl">
-        <property name="appRoot" ref="appRoot"/>
-        <property name="logPath" value="/WEB-INF/logs/application.log"/>
-    </bean>
-    <bean id="activityService" class="se.telescopesoftware.betpals.services.ActivityServiceImpl">
-        <property name="activityRepository" ref="activityRepository"/>
-        <property name="defaultItemsPerPage" ref="activitiesPerPage"/>
-    </bean>
-    <bean id="accountService" class="se.telescopesoftware.betpals.services.AccountServiceImpl">
-        <property name="accountRepository" ref="accountRepository"/>
-        <property name="supportedCurrenciesMap" ref="supportedCurrencies"/>
-        <property name="siteConfigurationService" ref="siteConfigurationService"/>
-    </bean>
-    <bean id="competitionService" class="se.telescopesoftware.betpals.services.CompetitionServiceImpl">
-        <property name="competitionRepository" ref="competitionRepository"/>
-        <property name="accountService" ref="accountService"/>
-        <property name="emailService" ref="emailService"/>
-        <property name="messageSource" ref="messageSource"/>
-    </bean>
-    <bean id="facebookService" class="se.telescopesoftware.betpals.services.FacebookServiceImpl">
-        <property name="facebookClientId" value="119321918127784"/>
-        <property name="facebookClientSecret" value="e03b93a9954a8727f7da34e641a8b8ec"/>
-        <property name="facebookReturnUrl" value="http://www.mybetpals.com/facebooklogin.html"/>
-        <property name="facebookAuthorizeUrl" value="https://graph.facebook.com/oauth/authorize"/>
-        <property name="facebookAccessTokenUrl" value="https://graph.facebook.com/oauth/access_token"/>
-        <property name="facebookUserInfoUrl" value="https://graph.facebook.com/me"/>
-        <property name="facebookApiUrl" value="https://graph.facebook.com/"/>
-        <property name="competitionUrl" value="https://www.mybetpals.com/join/"/>
-    </bean>
-    
-    <!-- ================================================================= -->
-
 </beans>

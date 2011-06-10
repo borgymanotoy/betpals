@@ -2,9 +2,11 @@ package se.telescopesoftware.betpals.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -12,7 +14,10 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.AccountTransaction;
@@ -27,6 +32,8 @@ import se.telescopesoftware.betpals.domain.Invitation;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.repository.CompetitionRepository;
 
+@Service
+@Transactional(readOnly = true)
 public class CompetitionServiceImpl implements CompetitionService {
 
 	private CompetitionRepository competitionRepository;
@@ -42,23 +49,28 @@ public class CompetitionServiceImpl implements CompetitionService {
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
     
+    @Autowired
     public void setCompetitionRepository(CompetitionRepository competitionRepository) {
     	this.competitionRepository = competitionRepository;
     }
     
+    @Autowired
 	public void setAccountService(AccountService accountService) {
 		this.accountService = accountService;
 	}
 
+    @Autowired
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
     }
 
+    @Autowired
     public void setMessageSource(MessageSource messageSource) {
     	this.messageSource = messageSource;
     }
 
     
+	@Transactional(readOnly = false)
 	public Competition saveCompetition(Competition competition) {
 		logger.info("Saving " + competition);
 		return competitionRepository.storeCompetition(competition);
@@ -72,6 +84,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.getActiveCompetitionsByUserCount(userId);
 	}
 
+	@Transactional(readOnly = false)
 	public void placeBet(Bet bet) {
 		//TODO: Check this!
 		Account account = null;
@@ -112,6 +125,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadSettledBetsByUserAndAccount(userId, accountId);
 	}
 	
+	@Transactional(readOnly = false)
 	public void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner) {
 		for (Long friendId : friendIds) {
 			Invitation invitation = new Invitation(competition, owner, friendId);
@@ -136,6 +150,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadCompetitionById(id);
 	}
 
+	@Transactional(readOnly = false)
 	public void deleteInvitation(Long id) {
 		Invitation invitation = competitionRepository.loadInvitationById(id);
 		//TODO: Add check for ownership
@@ -147,16 +162,19 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadEventById(id);
 	}
 
+	@Transactional(readOnly = false)
 	public Alternative saveAlternative(Alternative alternative) {
 		logger.info("Saving " + alternative);
 		return competitionRepository.storeAlternative(alternative);
 	}
 
+	@Transactional(readOnly = false)
 	public Event saveEvent(Event event) {
 		logger.info("Saving " + event);
 		return competitionRepository.storeEvent(event);
 	}
 
+	@Transactional(readOnly = false, noRollbackFor = {MessagingException.class, AddressException.class})
 	public void deleteCompetition(Long id) {
 		Competition competition = getCompetitionById(id);
 		logger.info("Deleting " + competition);
@@ -165,6 +183,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 		}
 		competitionRepository.deleteCompetition(competition);
 		competitionRepository.deleteInvitationsByCompetitionId(competition.getId());
+		check();
+	}
+	
+	//TODO: remove this
+	private void check() {
+		List list = new ArrayList();
+		Object o = list.get(5);
 	}
 
 	/**
@@ -181,6 +206,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	 *	Pavel gets 0,75 * 600 = 450
 	 *	And I get mad
 	 */
+	@Transactional(readOnly = false)
 	public void settleCompetition(Long competitionId, Long alternativeId) {
 		Competition competition = competitionRepository.loadCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.SETTLED);
@@ -239,6 +265,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return amount.subtract(percentage);
 	}
 	
+	@Transactional(readOnly = false, noRollbackFor = {MessagingException.class, AddressException.class})
 	public void voidAlternative(Long competitionId, Long alternativeId, Locale locale) {
 		Competition competition = getCompetitionById(competitionId);
 		voidAlternative(competition.getAlternativeById(alternativeId), competition, locale);

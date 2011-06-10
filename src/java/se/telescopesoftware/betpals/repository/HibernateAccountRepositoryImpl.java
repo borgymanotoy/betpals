@@ -1,41 +1,60 @@
 package se.telescopesoftware.betpals.repository;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import se.telescopesoftware.betpals.domain.Account;
 
-public class HibernateAccountRepositoryImpl extends HibernateDaoSupport implements AccountRepository {
+@Repository
+public class HibernateAccountRepositoryImpl implements AccountRepository {
 
+	private SessionFactory sessionFactory;
+	
+	@Autowired
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	public Collection<Account> loadUserAccounts(Long userId) {
-		return getHibernateTemplate().find("from Account a where a.ownerId = ?", userId);
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Account a where a.ownerId = :userId");
+    	query.setLong("userId", userId);
+		return query.list();
 	}
 
 	public Account loadAccount(Long accountId) {
-		return getHibernateTemplate().get(Account.class, accountId);
+    	Session session = sessionFactory.getCurrentSession();
+		return (Account) session.get(Account.class, accountId);
 	}
 
 	public Account storeAccount(Account account) {
-		return getHibernateTemplate().merge(account);
+    	Session session = sessionFactory.getCurrentSession();
+		return (Account) session.merge(account);
 	}
 
 	public Account loadUserAccountForCurrency(Long userId, String currency) {
-		@SuppressWarnings("unchecked")
-		List<Account> result = getHibernateTemplate().findByNamedParam("from Account a where a.ownerId = :userId and a.currency = :currency",
-				new String [] {"userId", "currency"},
-				new Object [] {userId, currency});
-		if (result != null) {
-			return (Account) result.get(0);
-		}
-		return null;
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Account a where a.ownerId = :userId and a.currency = :currency");
+    	query.setLong("userId", userId);
+    	query.setString("currency", currency);
+    	Iterator<?> iterator = query.iterate();
+    	return (Account) (iterator.hasNext() ? iterator.next() : null);
 	}
 
 	public void setAsDefault(Account account) {
-		getHibernateTemplate().bulkUpdate("update Account set defaultAccount = false where ownerId = ?", account.getOwnerId());
-		getHibernateTemplate().saveOrUpdate(account);
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("update Account set defaultAccount = false where ownerId = :ownerId");
+    	query.setLong("ownerId", account.getOwnerId());
+    	query.executeUpdate();
+		session.saveOrUpdate(account);
 	}
 
 }

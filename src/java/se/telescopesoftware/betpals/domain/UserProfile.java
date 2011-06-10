@@ -229,7 +229,7 @@ public class UserProfile implements Serializable {
 		
 		Set<Long> idSet = new HashSet<Long>();
 		for (UserProfile friend : friends) {
-			idSet.add(friend.getId());
+			idSet.add(friend.getUserId());
 		}
 		
 		return idSet;

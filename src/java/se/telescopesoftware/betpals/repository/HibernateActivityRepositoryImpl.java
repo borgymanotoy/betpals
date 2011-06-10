@@ -1,31 +1,38 @@
 package se.telescopesoftware.betpals.repository;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
 import se.telescopesoftware.betpals.domain.ActivityLike;
 import se.telescopesoftware.betpals.domain.ActivityType;
 
-public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
-		implements ActivityRepository {
+@Repository
+public class HibernateActivityRepositoryImpl implements ActivityRepository {
 
+	private SessionFactory sessionFactory;
+	
+	@Autowired
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
 
 	public void saveActivity(Activity activity) {
-		getHibernateTemplate().saveOrUpdate(activity);
+    	Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(activity);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<Activity> loadActivitiesForOwnerIds(Collection<Long> ownerIds, Integer pageNumber, Integer itemsPerPage, ActivityType activityType) {
-    	List<Activity> result = new ArrayList<Activity>();
-		Session session = getSession();
+    	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("from Activity a where a.ownerId in (:ownerIds) and a.activityType = :activityType order by a.created desc");
     	query.setParameterList("ownerIds", ownerIds);
     	query.setParameter("activityType", activityType);
@@ -39,72 +46,78 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
         query.setFirstResult(offset);
         query.setMaxResults(resultsPerPage);
     	
-    	result = query.list();
-    	session.close();
-    	
-//    	for(Activity activity : result) {
-//    		activity.setComments(loadActivityComments(activity.getId()));
-//    		activity.setLikes(loadActivityLikes(activity.getId()));
-//    	}
-    	
-    	return result;
+    	return query.list();
 	}
 	
 	public void saveActivityComment(ActivityComment comment) {
-		getHibernateTemplate().saveOrUpdate(comment);
+    	Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(comment);
 	}
 
 	public void saveActivityLike(ActivityLike like) {
-		getHibernateTemplate().saveOrUpdate(like);
+    	Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(like);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<ActivityComment> loadActivityComments(Long activityId) {
-		return getHibernateTemplate().find("from ActivityComment ac where ac.activity.id = ?", activityId);
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from ActivityComment ac where ac.activity.id = :activityId");
+    	query.setLong("activityId", activityId);
+		return query.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<ActivityLike> loadActivityLikes(Long activityId) {
-		return getHibernateTemplate().find("from ActivityLike al where al.activity.id = ?", activityId);
+    	Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from ActivityLike al where al.activity.id = :activityId");
+    	query.setLong("activityId", activityId);
+		return query.list();
 	}
 
 	public ActivityComment loadActivityComment(Long commentId) {
-		return getHibernateTemplate().get(ActivityComment.class, commentId);
+    	Session session = sessionFactory.getCurrentSession();
+		return (ActivityComment) session.get(ActivityComment.class, commentId);
 	}
 
 	public ActivityLike loadActivityLike(Long likeId) {
-		return getHibernateTemplate().get(ActivityLike.class, likeId);
+    	Session session = sessionFactory.getCurrentSession();
+		return (ActivityLike) session.get(ActivityLike.class, likeId);
 	}
 
 	public void deleteActivityComment(ActivityComment comment) {
-		getHibernateTemplate().delete(comment);
+    	Session session = sessionFactory.getCurrentSession();
+		session.delete(comment);
 	}
 
 	public void deleteActivityLike(ActivityLike like) {
-		getHibernateTemplate().delete(like);
+    	Session session = sessionFactory.getCurrentSession();
+		session.delete(like);
 	}
 
 	public void deleteActivity(Activity activity) {
-		getHibernateTemplate().delete(activity);
+    	Session session = sessionFactory.getCurrentSession();
+		session.delete(activity);
 	}
 
 	public Activity loadActivity(Long activityId) {
-		return getHibernateTemplate().get(Activity.class, activityId);
+    	Session session = sessionFactory.getCurrentSession();
+		return (Activity) session.get(Activity.class, activityId);
 	}
 
 	public Integer getActivitiesCountForUserProfile(Collection<Long> ownerIds) {
-    	return DataAccessUtils.intResult(
-    			getHibernateTemplate().findByNamedParam("select count(*) from Activity a where a.ownerId in (:ownerIds) and a.activityType = :activityType",
-    					new String[] {"ownerIds", "activityType"},
-    					new Object[] { ownerIds, ActivityType.USER }) );
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("select count(*) from Activity a where a.ownerId in (:ownerIds) and a.activityType = :activityType");
+    	query.setParameterList("ownerIds", ownerIds);
+    	query.setParameter("activityType", ActivityType.USER);
+    	return DataAccessUtils.intResult(query.list());
 	}
 
 	@SuppressWarnings("unchecked")
 	public Collection<Activity> loadActivitiesForExtensionIdAndType(
 			Long extensionId, Integer pageNumber, Integer itemsPerPage,
 			ActivityType activityType) {
-    	List<Activity> result = new ArrayList<Activity>();
-		Session session = getSession();
+    	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("from Activity a where a.extensionId = :extensionId and a.activityType = :activityType order by a.created desc");
     	query.setParameter("extensionId", extensionId);
     	query.setParameter("activityType", activityType);
@@ -118,16 +131,14 @@ public class HibernateActivityRepositoryImpl extends HibernateDaoSupport
         query.setFirstResult(offset);
         query.setMaxResults(resultsPerPage);
     	
-    	result = query.list();
-    	session.close();
-    	
-    	return result;
+    	return query.list();
 	}
 
 	public Integer getActivitiesCountForExtensionIdAndType(Long extensionId, ActivityType activityType) {
-    	return DataAccessUtils.intResult(
-    			getHibernateTemplate().findByNamedParam("select count(*) from Activity a where a.extensionId = :extensionId and a.activityType = :activityType",
-    					new String[] {"extensionId", "activityType"},
-    					new Object[] { extensionId, activityType }) );
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("select count(*) from Activity a where a.extensionId = :extensionId and a.activityType = :activityType");
+    	query.setLong("extensionId", extensionId);
+    	query.setParameter("activityType", activityType);
+    	return DataAccessUtils.intResult(query.list());
 	}
 }
