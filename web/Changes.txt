@@ -1,3 +1,16 @@
+== Version 0.9.0 =======================================================
+
+New features and CRs
+
+    * Email field added to user profile edit form
+    * Limit left side user list to 5 and sort according to last login date
+    
+Bug fixes
+
+    * Bet count not updated on left menu
+    * Currencies not available in select boxes
+    
+
 == Version 0.8.9 =======================================================
 
 New features and CRs

@@ -106,7 +106,7 @@ public class Group {
 		
 		Set<Long> idSet = new HashSet<Long>();
 		for (UserProfile member : members) {
-			idSet.add(member.getId());
+			idSet.add(member.getUserId());
 		}
 		
 		return idSet;

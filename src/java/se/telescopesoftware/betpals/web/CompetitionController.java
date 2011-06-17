@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.joda.time.DateTime;
@@ -94,7 +95,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/confirmcompetition")	
-	public String confirmCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
+	public String confirmCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.OPEN);
 		competition = competitionService.saveCompetition(competition);
@@ -106,6 +107,7 @@ public class CompetitionController extends AbstractPalsController {
     	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
 		
+    	updateCompetitionCounts(session);
 		return "inviteToCompetitionView";
 	}
 	
@@ -186,7 +188,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/savecompetition")	
-	public String saveCompetition(@Valid Competition competition, BindingResult result, Model model) {
+	public String saveCompetition(@Valid Competition competition, BindingResult result, HttpSession session, Model model) {
 		boolean goToNextStep = competition.isGoToNextStep();
     	if (result.hasErrors()) {
     		model.addAttribute(result.getAllErrors());
@@ -225,6 +227,8 @@ public class CompetitionController extends AbstractPalsController {
 
     		return "createAlternativeView";
     	}
+
+    	updateCompetitionCounts(session);
 		return "userHomepageAction";
 	}
 
@@ -344,7 +348,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/quickcompetition")	
-	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, Model model) {
+	public String processSubmit(@Valid QuickCompetition quickCompetition, BindingResult result, HttpSession session, Model model) {
     	if (result.hasErrors()) {
     		model.addAttribute(result.getAllErrors());
     		return "quickCompetitionView";
@@ -368,6 +372,8 @@ public class CompetitionController extends AbstractPalsController {
     	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
 		
+    	updateCompetitionCounts(session);
+    	
 		return "inviteToCompetitionView";
 	}
 
@@ -376,5 +382,14 @@ public class CompetitionController extends AbstractPalsController {
     	sendJPEGImage(IMAGE_FOLDER_COMPETITIONS, competitionId, response);
 	}
 	
-    
+    private void updateCompetitionCounts(HttpSession session) {
+    	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("mySettledCompetitionCount", competitionService.getSettledCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("myNewCompetitionCount", competitionService.getNewCompetitionsByUserCount(getUserId()));
+    	Integer ongoingCompetitionCount = competitionService.getOngoingCompetitionsByUserCount(getUserId());
+    	session.setAttribute("myOngoingCompetitionsCount", ongoingCompetitionCount);
+    	Integer invitationsCount = competitionService.getInvitationsForUserCount(getUserId());
+    	session.setAttribute("myInvitationsCount", new Integer(ongoingCompetitionCount.intValue() + invitationsCount.intValue()));
+    }
+
 }

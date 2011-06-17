@@ -83,7 +83,28 @@ public class EditUserProfileController extends AbstractPalsController {
     	}
 
     	UserProfile userProfile = getUserProfile();
-    	
+
+    	if (!userProfile.getEmail().equalsIgnoreCase(updatedUserProfile.getEmail())) {
+	        User user = userService.getUserByEmail(updatedUserProfile.getEmail());
+	        if (user != null) {
+	        	model.addAttribute("alreadyExist", true);
+	    		updatedUserProfile.setUser(getUser());
+	    		return "editProfileView";
+	        }
+	        
+	        user = getUser();
+	        if (user.checkPassword(updatedUserProfile.getPassword())) {
+	        	userProfile.setEmail(updatedUserProfile.getEmail());
+	        	user.setUsername(updatedUserProfile.getEmail());
+	        	user.encodeAndSetPassword(updatedUserProfile.getPassword());
+				userService.updateUser(user);
+	        } else {
+	        	model.addAttribute("wrongPassword", true);
+	    		updatedUserProfile.setUser(getUser());
+	    		return "editProfileView";
+	        }
+    	}
+
     	userProfile.setName(updatedUserProfile.getName());
     	userProfile.setSurname(updatedUserProfile.getSurname());
     	userProfile.setAddress(updatedUserProfile.getAddress());

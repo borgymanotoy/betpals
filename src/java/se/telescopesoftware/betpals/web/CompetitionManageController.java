@@ -102,9 +102,10 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/deletecompetition")	
-	public String deleteCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
+	public String deleteCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
 		competitionService.deleteCompetition(competitionId);
 		
+		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
@@ -119,19 +120,21 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/settlecompetition")	
-	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
+	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, HttpSession session, Model model) {
 		competitionService.settleCompetition(competitionId, alternativeId);
 		
+		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
 	@RequestMapping(value="/closecompetition")	
-	public String closeCompetition(@RequestParam("competitionId") Long competitionId, Model model) {
+	public String closeCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.CLOSE);
 		competition.setDeadline(new Date());
 		competitionService.saveCompetition(competition);
 		
+		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
@@ -147,9 +150,18 @@ public class CompetitionManageController extends AbstractPalsController {
 		storedCompetition.setSettlingDeadline(competition.getSettlingDeadline());
 		competitionService.saveCompetition(storedCompetition);
 		
-		
 		return "manageCompetitionsAction";
 	}
 
+    private void updateCompetitionCounts(HttpSession session) {
+    	session.setAttribute("myCompetitionsCount", competitionService.getActiveCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("mySettledCompetitionCount", competitionService.getSettledCompetitionsByUserCount(getUserId()));
+    	session.setAttribute("myNewCompetitionCount", competitionService.getNewCompetitionsByUserCount(getUserId()));
+    	Integer ongoingCompetitionCount = competitionService.getOngoingCompetitionsByUserCount(getUserId());
+    	session.setAttribute("myOngoingCompetitionsCount", ongoingCompetitionCount);
+    	Integer invitationsCount = competitionService.getInvitationsForUserCount(getUserId());
+    	session.setAttribute("myInvitationsCount", new Integer(ongoingCompetitionCount.intValue() + invitationsCount.intValue()));
+    }
+	
 	
 }

@@ -59,7 +59,7 @@ https://www.mybetpals.com/join/${competition.encodedLink}
             <div class="selectionDiv115">
                 <ul class="selectionList">
                 <c:forEach items="${friendList}" var="friend">
-                    <li><form:checkbox path="friendsIdSet" label="${friend.fullName}" value="${friend.id}"/></li>
+                    <li><form:checkbox path="friendsIdSet" label="${friend.fullName}" value="${friend.userId}"/></li>
                 </c:forEach>
                 </ul>
             </div>

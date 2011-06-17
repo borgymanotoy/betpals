@@ -33,6 +33,9 @@
             }
         });
         
+        jQuery("#emailField").change(function (){
+        	jQuery("#emailPassword").show();
+        });
    });
     
    function changePassword() {
@@ -84,6 +87,19 @@
         </div>
     </div>
     <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.edit.email"/></div>
+        <div class="span-10 last">
+            <form:input path="email" id="emailField"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv" style="display: none;" id="emailPassword">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.edit.password"/></div>
+        <div class="span-10 last">
+            <span class="error"><spring:message code="profile.edit.email.password"/></span><br/>
+            <form:password path="password"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="profile.edit.address"/></div>
         <div class="span-10 last">
             <form:input path="address" style="width: 300px;"/>
@@ -119,6 +135,8 @@
         </div>
     </div>
     <p class="error"><form:errors path="*"/></p>
+    <c:if test="${alreadyExist}"><p class="error"><spring:message code="profile.edit.user.exists"/></p></c:if>
+    <c:if test="${wrongPassword}"><p class="error"><spring:message code="profile.edit.wrong.password"/></p></c:if>
     <div class="span-12 formSectionSlimDiv">
         <div class="span-2 labelDiv">&nbsp;</div>
         <div class="span-10 last">

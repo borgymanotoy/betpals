@@ -1,8 +1,11 @@
 package se.telescopesoftware.betpals.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -216,6 +219,15 @@ public class UserProfile implements Serializable {
 
 	public Set<UserProfile> getFriends() {
 		return friends;
+	}
+	
+	public List<UserProfile> getLastLoggedInFriends() {
+		List<UserProfile> lastLoggedFriends = new ArrayList<UserProfile>(friends);
+		Collections.sort(lastLoggedFriends, new LastLoggedUserComparator());
+		if (lastLoggedFriends.size() > 5) {
+			return lastLoggedFriends.subList(0, 5);
+		}
+		return lastLoggedFriends;
 	}
 	
 	public void addFriend(UserProfile userProfile) {

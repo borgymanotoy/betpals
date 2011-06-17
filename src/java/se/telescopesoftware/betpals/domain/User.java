@@ -84,8 +84,7 @@ public class User implements UserDetails {
         return username;
     }
 
-    @SuppressWarnings("unused")
-	private void setUsername(String username) {
+	public void setUsername(String username) {
         this.username = username;
     }
 

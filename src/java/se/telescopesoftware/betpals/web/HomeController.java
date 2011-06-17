@@ -58,7 +58,7 @@ public class HomeController extends AbstractPalsController {
     	Collection<Activity> activities = activityService.getActivitiesForUserProfile(getUserProfile(), pageId, null);
     	Collection<Account> accounts = accountService.getUserAccounts(getUserId());
     	
-    	session.setAttribute("friendsSideList", getUserProfile().getFriends());    	
+    	session.setAttribute("friendsSideList", getUserProfile().getLastLoggedInFriends());    	
     	session.setAttribute("user", getUserProfile());
     	session.setAttribute("accounts", accounts);
     	session.setAttribute("myRequestsCount", userService.getUserRequestForUserCount(getUserId()));
