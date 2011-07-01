@@ -292,5 +292,22 @@ public class UserServiceImpl implements UserService {
 		userRepository.deletePasswordRecoveryRequest(passwordRecoveryRequest);
 	}
 
+	public Collection<UserProfile> getAllUserProfiles(User user,
+			Integer lastLog, Integer lastReg) {
+		
+		List<UserProfile> result = new ArrayList<UserProfile>();
+		for (User loadedUser : getAllUsers(user, lastLog, lastReg)) {
+			UserProfile userProfile = loadedUser.getUserProfile();
+			if (userProfile != null) {
+				result.add(userProfile);
+			}
+		}
+		return result;
+	}
+
+	public UserProfile getUserProfile(Long id) {
+		return userRepository.loadUserProfile(id);
+	}
+
    
 }

@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService {
 		logger.info("Creating default account for user " + userId);
 		Account account = saveAccount(new Account(getDefaultCurrency(), userId));
 		account.setDefaultAccount(true);
-		String defaultAmount = siteConfigurationService.getParameterValue("defaultAccountAmount");
+		String defaultAmount = siteConfigurationService.getParameterValue("default.account.amount", "100");
 		AccountTransaction transaction = new AccountTransaction(account, new BigDecimal(defaultAmount), AccountTransactionType.DEPOSIT);
 		account.addTransaction(transaction);
 		logger.info("Depositing default amount (" + transaction + ")");

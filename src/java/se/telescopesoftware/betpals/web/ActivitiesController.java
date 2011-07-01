@@ -96,8 +96,12 @@ public class ActivitiesController extends AbstractPalsController {
     @RequestMapping(value="/removelike")
     public String removeLike(@RequestParam("likeId") Long likeId, Model model) {
     	ActivityLike activityLike = activityService.getActivityLike(likeId);
-    	Activity activity = activityService.getActivity(activityLike.getActivityId());
-    	activityService.deleteActivityLike(likeId, getUserId());
+    	Activity activity = activityLike.getActivity();
+    	
+    	if (activityLike.checkOwnership(getUserId())) {
+    		activity.removeLike(activityLike);
+    		activityService.saveActivity(activity);
+    	}
     	
     	return getReturnUrlForActivity(activity, model);
     }
@@ -105,8 +109,12 @@ public class ActivitiesController extends AbstractPalsController {
     @RequestMapping(value="/removecomment")
     public String removeComment(@RequestParam("commentId") Long commentId, Model model) {
     	ActivityComment comment = activityService.getActivityComment(commentId);
-    	Activity activity = activityService.getActivity(comment.getActivityId());
-    	activityService.deleteActivityComment(commentId, getUserId());
+    	
+    	Activity activity = comment.getActivity();
+    	if (comment.checkOwnership(getUserId())) {
+    		activity.removeComment(comment);
+    		activityService.saveActivity(activity);
+    	}
     	
     	return getReturnUrlForActivity(activity, model);
     }

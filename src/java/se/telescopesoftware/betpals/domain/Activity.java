@@ -1,5 +1,6 @@
 package se.telescopesoftware.betpals.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -37,13 +38,13 @@ public class Activity {
 	private Long extensionId;
 	private String extensionName;
 	
-    @OneToMany(mappedBy="activity")
+    @OneToMany(mappedBy="activity", orphanRemoval = true)
     @Cascade(CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<ActivityComment> comments;
-    @OneToMany(mappedBy="activity")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy="activity", orphanRemoval = true)
     @Cascade(CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<ActivityLike> likes;
 	
 	
@@ -133,6 +134,12 @@ public class Activity {
 	public void addComment(ActivityComment comment) {
 		this.comments.add(comment);
 	}
+
+	public void removeComment(ActivityComment comment) {
+		Collection<ActivityComment> filteredComments = new ArrayList<ActivityComment>();
+		filteredComments.add(comment);
+		this.comments.removeAll(filteredComments);
+	}
 	
 	public Collection<ActivityLike> getLikes() {
 		return likes;
@@ -144,6 +151,12 @@ public class Activity {
 	
 	public void addLike(ActivityLike like) {
 		this.likes.add(like);
+	}
+	
+	public void removeLike(ActivityLike like) {
+		Collection<ActivityLike> filteredLikes = new ArrayList<ActivityLike>();
+		filteredLikes.add(like);
+		this.likes.removeAll(filteredLikes);
 	}
 	
 	public String getTimeSinceCreated() {

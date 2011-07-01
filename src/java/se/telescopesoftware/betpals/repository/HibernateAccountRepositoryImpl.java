@@ -46,7 +46,8 @@ public class HibernateAccountRepositoryImpl implements AccountRepository {
     	query.setLong("userId", userId);
     	query.setString("currency", currency);
     	Iterator<?> iterator = query.iterate();
-    	return (Account) (iterator.hasNext() ? iterator.next() : null);
+    	Account account = (Account) (iterator.hasNext() ? iterator.next() : null);
+    	return loadAccount(account.getId());
 	}
 
 	public void setAsDefault(Account account) {

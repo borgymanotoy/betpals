@@ -39,7 +39,6 @@ public class Account implements Serializable {
 	private boolean active = true;
 	private boolean defaultAccount = false;
 	
-	//TODO: Check cascade type for possible side effects
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name="join_account_transaction",
@@ -155,6 +154,10 @@ public class Account implements Serializable {
 		return defaultAccount;
 	}
 
+	public boolean isValidStake(BigDecimal stake) {
+		return available.compareTo(stake) >= 0;
+	}
+	
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", ownerId=" + ownerId + ", currency="
@@ -162,5 +165,6 @@ public class Account implements Serializable {
 				+ available + ", created=" + created + ", active=" + active
 				+ ", defaultAccount=" + defaultAccount + "]";
 	}
+	
 	
 }

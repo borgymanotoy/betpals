@@ -25,6 +25,8 @@ public interface UserService extends UserDetailsService {
 
     Collection<User> getAllUsers(User user, Integer lastLog, Integer lastReg);
 
+    Collection<UserProfile> getAllUserProfiles(User user, Integer lastLog, Integer lastReg);
+
     void updateUser(User user);
 
     void deleteUserByUserId(Long userId);
@@ -39,7 +41,9 @@ public interface UserService extends UserDetailsService {
 
     User getUserByEmail(String email);
 
-    UserProfile getUserProfileByUserId(Long id);
+    UserProfile getUserProfileByUserId(Long userId);
+
+    UserProfile getUserProfile(Long id);
     
     Collection<UserProfile> getUserFriends(Long userId);
 

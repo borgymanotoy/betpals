@@ -165,7 +165,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 	<!-- Services =========================================================== --> 
     <bean id="siteConfigurationService" class="se.telescopesoftware.betpals.services.SiteConfigurationServiceImpl">
         <property name="appRoot" ref="appRoot"/>
-        <property name="configurationFilename" value="/WEB-INF/app.properties"/>
+        <property name="configurationFilename" value="/WEB-INF/config.properties"/>
     </bean>
     <bean id="emailService" class="se.telescopesoftware.betpals.services.EmailServiceImpl">
         <property name="smtphost" value="localhost"/>

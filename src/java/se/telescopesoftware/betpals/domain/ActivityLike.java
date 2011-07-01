@@ -54,6 +54,10 @@ public class ActivityLike {
 		this.activity = activity;
 	}
 	
+	public Activity getActivity() {
+		return activity;
+	}
+	
 	public Long getOwnerId() {
 		return ownerId;
 	}

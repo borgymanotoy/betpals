@@ -30,8 +30,10 @@ import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
+import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Group;
+import se.telescopesoftware.betpals.domain.Invitation;
 import se.telescopesoftware.betpals.domain.InvitationHelper;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
@@ -40,7 +42,6 @@ import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.services.FacebookService;
 import se.telescopesoftware.betpals.services.UserService;
 
-//TODO: Split to several controllers
 @Controller
 public class CompetitionController extends AbstractPalsController {
 
@@ -377,6 +378,68 @@ public class CompetitionController extends AbstractPalsController {
 		return "inviteToCompetitionView";
 	}
 
+	@RequestMapping(value="/placebet")
+	public String placeBet(@RequestParam("invitationId") Long invitationId, 
+			@RequestParam("alternativeId") Long alternativeId, 
+			@RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
+		
+		Invitation invitation = competitionService.getInvitationById(invitationId);
+		Competition competition = competitionService.getCompetitionById(invitation.getCompetitionId());
+
+    	Bet bet = new Bet(getUserProfile(), competition);
+    	bet.setSelectionId(alternativeId);
+    	
+		BigDecimal validStake = getValidStake(competition, stake);
+		if (validStake == null) {
+			model.addAttribute("invalidStake", true);
+			model.addAttribute("invitationId", invitationId);
+			return "invitationAction";
+		}
+		bet.setStake(validStake);
+    	
+    	competitionService.placeBet(bet);
+    	competitionService.deleteInvitation(invitationId);
+    	
+    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
+    	activity.setMessage("Joined the competition: " + competition.getName());
+    	
+    	activityService.saveActivity(activity);
+
+		return "userHomepageAction";
+	}
+	
+	@RequestMapping(value="/placeanotherbet")
+	public String placeAnotherBet(@RequestParam("alternativeId") Long alternativeId, 
+			@RequestParam("competitionId") Long competitionId, 
+			@RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
+	
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		
+		Bet bet = new Bet(getUserProfile(), competition);
+		bet.setSelectionId(alternativeId);
+		
+		BigDecimal validStake = getValidStake(competition, stake);
+		if (validStake == null) {
+			model.addAttribute("invalidStake", true);
+			model.addAttribute("competitionId", competitionId);
+			return "ongoingCompetitionAction";
+		}
+		bet.setStake(validStake);
+
+		competitionService.placeBet(bet);
+		
+		return "userHomepageAction";
+	}
+	
+	private BigDecimal getValidStake(Competition competition, BigDecimal stake) {
+		if (competition.getCompetitionType() != CompetitionType.POOL_BETTING) {
+			stake = competition.getFixedStake();
+		} 
+		
+		Account account = accountService.getUserAccountForCurrency(getUserId(), competition.getCurrency());
+		return account.isValidStake(stake) ? stake : null;
+	}
+	
 	@RequestMapping(value="/competition/images/{competitionId}")	
 	public void getImage(@PathVariable String competitionId, HttpServletResponse response) {
     	sendJPEGImage(IMAGE_FOLDER_COMPETITIONS, competitionId, response);

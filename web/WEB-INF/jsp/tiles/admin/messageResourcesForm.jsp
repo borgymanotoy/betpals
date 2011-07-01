@@ -32,16 +32,16 @@
 		<div class="span-12 formSectionSlimDiv">
 	        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="admin.cms.message.resource.key"/></div>
 	        <div class="span-10 last">
-                <input id="key" name="key" value="${messageResource.key}" size="50"/>	        
+                <input type="text" id="key" name="key" value="${messageResource.key}" size="50"/>	        
             </div>
 	    </div>
 		<div class="span-12 formSectionSlimDiv">
 	        <div class="span-2 labelDiv" style="padding-top: 8px;"><spring:message code="admin.cms.message.resource.value"/></div>
 	        <div class="span-10 last">
-                <input id="value" name="value" value="${messageResource.value}" size="50"/>	        
+                <input type="text" id="value" name="value" value="${messageResource.value}" size="50"/>	        
             </div>
 	    </div>
-	    <div class="span-12 formSectionSlimDiv">
+	    <div class="span-12 formSectionSlimDiv" style="padding-top: 8px;">
 	        <div class="span-2 labelDiv">&nbsp;</div>
 	        <div class="span-10 last">
 	           <input type="submit" class="greenButton90" value='<spring:message code="button.save"/>'/>

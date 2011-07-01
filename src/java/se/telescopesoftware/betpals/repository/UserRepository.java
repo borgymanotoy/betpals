@@ -32,7 +32,9 @@ public interface UserRepository {
 
     boolean isUsernameExists(String username);
 
-    UserProfile loadUserProfileByUserId(Long id);
+    UserProfile loadUserProfileByUserId(Long userId);
+
+    UserProfile loadUserProfile(Long id);
 
     Integer getRegistrationCountByPeriod(Integer period);
 

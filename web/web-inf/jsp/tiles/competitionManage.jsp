@@ -6,11 +6,11 @@
 	} 
 	
 	function closeCompetition() {
-        jQuery('#closeCompetitionForm').submit();;
+        jQuery('#closeCompetitionForm').submit();
 	} 
 	
 	function inviteToCompetition() {
-		jQuery('#inviteToCompetitionForm').submit();;
+		jQuery('#inviteToCompetitionForm').submit();
 	} 
 	
 	function voidAlternative(alternativeId) {

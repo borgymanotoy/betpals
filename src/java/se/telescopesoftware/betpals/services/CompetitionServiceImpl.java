@@ -2,11 +2,9 @@ package se.telescopesoftware.betpals.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -40,11 +38,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	private AccountService accountService;
 	private EmailService emailService;
 	private MessageSource messageSource;
-	
-	//TODO: Move to configuration
-	private BigDecimal SYSTEM_COMMISION = new BigDecimal("0.04");
-	private int DEFAULT_DEADLINE_INTERVAL = 7;
-	private int DEFAULT_SETTLING_INTERVAL = 8;
+	private SiteConfigurationService siteConfigurationService;
 	
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
@@ -69,6 +63,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     	this.messageSource = messageSource;
     }
 
+    @Autowired
+    public void setSiteConfigurationService(SiteConfigurationService siteConfigurationService) {
+    	this.siteConfigurationService = siteConfigurationService;
+    }
+    
     
 	@Transactional(readOnly = false)
 	public Competition saveCompetition(Competition competition) {
@@ -94,12 +93,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 			account = accountService.getUserAccountForCurrency(bet.getOwnerId(), bet.getCurrency());
 		}
 
-		if (account != null) {
+		if (account != null && account.isValidStake(bet.getStake())) {
 			logger.info("Placing " + bet);
 			AccountTransaction transaction = new AccountTransaction(account, bet.getStake().negate(), AccountTransactionType.RESERVATION);
 			account.addTransaction(transaction);
 			
-			//TODO: Add check for available funds
 			accountService.saveAccount(account);
 			bet.setAccountId(account.getId());
 			bet.setCurrency(account.getCurrency());
@@ -153,7 +151,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 	@Transactional(readOnly = false)
 	public void deleteInvitation(Long id) {
 		Invitation invitation = competitionRepository.loadInvitationById(id);
-		//TODO: Add check for ownership
 		logger.info("Deleting " + invitation);
 		competitionRepository.deleteInvitation(invitation);
 	}
@@ -183,15 +180,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 		}
 		competitionRepository.deleteCompetition(competition);
 		competitionRepository.deleteInvitationsByCompetitionId(competition.getId());
-		check();
 	}
 	
-	//TODO: remove this
-	private void check() {
-		List list = new ArrayList();
-		Object o = list.get(5);
-	}
-
 	/**
 	 *  The formula for settling pool bets is "part * (turnover - commision)"
 	 *  
@@ -261,7 +251,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 	
 	private BigDecimal calculateAmountWithCommission(BigDecimal amount) {
-		BigDecimal percentage = amount.multiply(SYSTEM_COMMISION);
+		BigDecimal systemCommision = new BigDecimal(siteConfigurationService.getParameterValue("system.commision", "0.04"));
+		BigDecimal percentage = amount.multiply(systemCommision);
 		return amount.subtract(percentage);
 	}
 	
@@ -368,11 +359,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public int getDefaultDeadlineInterval() {
-		return DEFAULT_DEADLINE_INTERVAL;
+		return new Integer(siteConfigurationService.getParameterValue("interval.deadline.days", "7")).intValue();
 	}
 
 	public int getDefaultSettlingInterval() {
-		return DEFAULT_SETTLING_INTERVAL;
+		return new Integer(siteConfigurationService.getParameterValue("interval.settling.days", "8")).intValue();
 	}
 
 	public Collection<Competition> getNewCompetitionsByUser(Long userId) {

@@ -69,7 +69,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 		return query.iterate().hasNext();
     }
 
-    private UserProfile loadUserProfile(Long userId) {
+    private UserProfile loadUserProfileForUser(Long userId) {
     	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("from UserProfile profile where profile.user.id = :userId");
     	query.setLong("userId", userId);
@@ -161,7 +161,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     }
 
     public UserProfile loadUserProfileByUserId(Long id) {
-        return loadUserProfile(id);
+        return loadUserProfileForUser(id);
     }
 
     public void deleteUserById(Long userId) {
@@ -391,7 +391,7 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
 	@SuppressWarnings("unchecked")
 	public Collection<Community> loadUserCommunities(Long userId) {
-		UserProfile userProfile = loadUserProfile(userId);
+		UserProfile userProfile = loadUserProfileForUser(userId);
     	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("from Community g where :user in elements(g.members)");
     	query.setParameter("user", userProfile);
@@ -430,6 +430,11 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 	public void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest) {
     	Session session = sessionFactory.getCurrentSession();
 		session.delete(passwordRecoveryRequest);
+	}
+
+	public UserProfile loadUserProfile(Long id) {
+    	Session session = sessionFactory.getCurrentSession();
+		return (UserProfile) session.get(UserProfile.class, id);
 	}
     
 }

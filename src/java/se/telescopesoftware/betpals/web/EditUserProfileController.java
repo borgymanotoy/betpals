@@ -133,7 +133,7 @@ public class EditUserProfileController extends AbstractPalsController {
     	if (user != null) {
     		PasswordRecoveryRequest passwordRecoveryRequest = new PasswordRecoveryRequest(user);
     		userService.registerPasswordRecoveryRequest(passwordRecoveryRequest);
-    		String link = siteConfigurationService.getParameterValue("siteUrl") + "/forgotpassword/" + passwordRecoveryRequest.getRequestHash();
+    		String link = siteConfigurationService.getParameterValue("site.url", "http://www.mybetpals.com") + "/forgotpassword/" + passwordRecoveryRequest.getRequestHash();
 			String subject = messageSource.getMessage("email.forgot.password.subject", new Object[] {}, locale);
 			String text = messageSource.getMessage("email.forgot.password.text", new Object[] {link}, locale);
 

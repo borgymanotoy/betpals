@@ -55,6 +55,10 @@ public class ActivityComment {
 		this.activity = activity;
 	}
 	
+	public Activity getActivity() {
+		return activity;
+	}
+	
 	public Long getOwnerId() {
 		return ownerId;
 	}

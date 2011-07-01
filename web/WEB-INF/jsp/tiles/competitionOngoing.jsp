@@ -68,6 +68,9 @@ jQuery(document).ready(function() {
     <h4><spring:message code="competition.alternatives.header"/></h4>
     <div class="formSectionDiv">
         <ul id="friendList">
+    <c:if test="${not empty param.invalidStake}">
+        <p class="error"><spring:message code="error.invalid.stake"/></p>
+    </c:if>
         <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
         <li>
             <div class="span-12">

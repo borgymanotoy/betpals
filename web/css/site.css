@@ -332,6 +332,9 @@ p {
     border-bottom: 1px solid #d4d4d4;
     padding-right: 0;
 }
+.palsTableHover td {
+    background-color: #b6b6b6 !important;	
+}
 
 .reputationTable td {
     font-family: "MS Trebuchet", sans-serif;

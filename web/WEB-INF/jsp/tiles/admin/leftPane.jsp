@@ -43,15 +43,16 @@
 	    </div>
 	    <div class="panelNoPadding">
 	       <ul id="invitesAndCompetitions">
-	           <li><a href='<c:url value=""/>'>User list</a></li>
+	           <li><a href='<c:url value="/admin/listusers.html"/>'><spring:message code="admin.link.user.list"/></a></li>
 	       </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>
 	    <div class="greenTitle">&nbsp;</div>
 	    <div class="panelNoPadding">
            <ul id="invitesAndCompetitions">
-               <li><a href='<c:url value="/admin/listmessageresources.html?letter=a&lang=${pageContext.response.locale}"/>'>Message Resources</a></li>
-               <li><a href='<c:url value="/admin/viewlatestlog.html"/>'>Logs</a></li>
+               <li><a href='<c:url value="/admin/viewconfiguration.html"/>'><spring:message code="admin.link.configuration"/></a></li>
+               <li><a href='<c:url value="/admin/listmessageresources.html?letter=a&lang=${pageContext.response.locale}"/>'><spring:message code="admin.link.message.resources"/></a></li>
+               <li><a href='<c:url value="/admin/viewlatestlog.html"/>'><spring:message code="admin.link.logs"/></a></li>
            </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

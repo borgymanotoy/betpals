@@ -29,7 +29,6 @@ public class Event {
 	private String name;
 	private String description;
 	
-	//TODO: Check cascade type for possible side effects
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name="join_event_alternative",

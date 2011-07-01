@@ -20,6 +20,9 @@
     </div>
     
     <ul id="friendList">
+    <c:if test="${not empty param.invalidStake}">
+        <p class="error"><spring:message code="error.invalid.stake"/></p>
+    </c:if>
     <c:forEach items="${competition.events}" var="event">
         <c:forEach items="${event.alternatives}" var="alternative">
             <li>

@@ -130,5 +130,16 @@ Administrative part
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/logView.jsp"/>
     </definition>
 
+    <definition name="userListTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/userList.jsp"/>
+    </definition>
+    <definition name="userTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/userView.jsp"/>
+    </definition>
+
+    <definition name="configurationTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/configuration.jsp"/>
+    </definition>
+
 
 </tiles-definitions>

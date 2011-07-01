@@ -66,7 +66,6 @@ public class Competition {
 	@DecimalMin("0.1")
 	private BigDecimal fixedStake;
 	
-	//TODO: Check cascade type for possible side effects
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name="join_competition_event",

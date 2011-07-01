@@ -40,6 +40,18 @@ public class Bet {
     )
 	private Alternative alternative;
 	
+	public Bet() {
+		this.placed = new Date();
+	}
+
+	public Bet(UserProfile owner, Competition competition) {
+		this();
+		this.ownerId = owner.getUserId();
+		this.ownerName = owner.getFullName();
+		this.currency = competition.getCurrency();
+		this.details = competition.getName();
+	}
+	
 	public Long getId() {
 		return id;
 	}
