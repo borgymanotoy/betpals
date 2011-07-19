@@ -26,6 +26,16 @@ public class UserTableDecorator extends TableDecorator {
 		return formatDate(userProfile.getLastLoginDate());
 	}
 	
+	public String getLastBetDate() {
+		UserProfile userProfile = (UserProfile) getCurrentRowObject();
+		return formatDate(userProfile.getLastBetDate());
+	}
+	
+	public String getLastCompetitionDate() {
+		UserProfile userProfile = (UserProfile) getCurrentRowObject();
+		return formatDate(userProfile.getLastCompetitionDate());
+	}
+	
 	private String formatDate(Date date) {
 		return date != null ? this.dateFormat.format(date) : "";
 	}

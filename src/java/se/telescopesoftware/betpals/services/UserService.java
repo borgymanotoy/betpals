@@ -9,6 +9,7 @@ import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserRequestType;
@@ -92,4 +93,8 @@ public interface UserService extends UserDetailsService {
     PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash);
 
     void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
+    
+    void saveUserLogEntry(UserLogEntry userLogEntry);
+    
+    Collection<UserLogEntry> getUserLogEntries(Long userId);
 }

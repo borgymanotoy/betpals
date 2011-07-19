@@ -20,6 +20,7 @@ import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserRequestType;
@@ -435,6 +436,19 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 	public UserProfile loadUserProfile(Long id) {
     	Session session = sessionFactory.getCurrentSession();
 		return (UserProfile) session.get(UserProfile.class, id);
+	}
+
+	public void storeUserLogEntry(UserLogEntry userLogEntry) {
+    	Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(userLogEntry);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<UserLogEntry> loadUserLogEntries(Long userId) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from UserLogEntry ule where ule.userId = :userId order by ule.created desc");
+    	query.setLong("userId", userId);
+		return query.list();
 	}
     
 }

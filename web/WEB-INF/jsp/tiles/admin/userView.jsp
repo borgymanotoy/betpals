@@ -3,6 +3,15 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
 
+        jQuery("tr", "#accountsTable tbody").hover(
+                function () {
+                  jQuery(this).addClass("palsTableHover clickable");
+                }, 
+                function () {
+                  jQuery(this).removeClass("palsTableHover clickable");
+                }
+           );
+
     	jQuery("#confirmDelete").dialog({
             resizable: false,
             autoOpen: false,
@@ -20,6 +29,20 @@
             }
         });
 
+        jQuery(".logEntry").click(function() {
+            jQuery(".logInfo", this).toggle();
+            jQuery(this).toggleClass("bold");
+        });
+        
+        jQuery(".logEntry").hover(
+              function () {
+                jQuery(this).addClass("logHover");
+              }, 
+              function () {
+                jQuery(this).removeClass("logHover");
+              }
+            );
+    	
     });
 
     function deleteUser() {
@@ -28,6 +51,15 @@
     
     function blockUser() {
         jQuery('#blockUserForm').submit();
+    } 
+    
+    function switchUser() {
+        jQuery('#switchUserForm').submit();
+    } 
+    
+    function getAccountDetails(accountId) {
+        jQuery('input', '#accountDetailsForm').val(accountId);
+        jQuery('#accountDetailsForm').submit();
     } 
     
 </script>
@@ -63,16 +95,19 @@
          </c:choose>
             
          </button> 
+         <button class="greenButton110" onclick="switchUser();return false;"><spring:message code="button.login.as.user"/></button> 
          <button class="whiteButton90" onclick="deleteUser();return false;"><spring:message code="button.delete"/></button> 
     </div>
     <div class="span-16 formSectionSlimDiv" style="padding-top: 16px;">
        <h4><spring:message code="admin.user.accounts.title"/></h4>
-       <table class="palsTable altRows">
+       <table class="palsTable altRows" id="accountsTable">
+        <thead>
             <tr>
                 <th><spring:message code="account.currency"/>&nbsp;</th>
                 <th><spring:message code="account.balance"/></th>
                 <th><spring:message code="account.available"/></th>
             </tr>
+         </thead>
         <c:forEach items="${userAccountList}" var="account">
             <tr onclick="getAccountDetails(${account.id});">
                 <td class="currencyCell">${account.currency}</td>
@@ -83,6 +118,20 @@
         </table>
        <p>&nbsp;</p>
     </div>
+    <div class="span-16 formSectionSlimDiv" style="padding-top: 16px;">
+       <h4><spring:message code="admin.user.log.title"/></h4>
+    <ul class="logList">
+        <c:forEach items="${userLog}" var="entry">
+            <li class="logEntry clickable">
+                <fmt:formatDate value="${entry.created}" pattern="yyyy-MM-dd HH:mm"/> <c:out value="${entry.shortMessage}"/>
+                <div class="logInfo">
+                <span class="logFieldTitle">Date</span>: <fmt:formatDate value="${entry.created}" pattern="yyyy-MM-dd HH:mm:ss"/><br/>
+                <span class="logFieldTitle">Message</span>: <c:out value="${entry.message}"/><br/>
+                </div>
+            </li>
+        </c:forEach>
+    </ul>&nbsp;
+    </div>   
    <p>&nbsp;</p>
 </div>
 <div id="confirmDelete" title="<spring:message code='confirmation.delete.user.title'/>">
@@ -92,7 +141,13 @@
 <form action='<c:url value="/admin/deleteuser.html"/>' method="post" id="deleteUserForm">
     <input type="hidden" name="userId" value="${userProfile.userId}"/>
 </form>
+<form action='<c:url value="/j_spring_security_switch_user"/>' method="post" id="switchUserForm">
+    <input type="hidden" name="j_username" value="${userProfile.user.username}"/>
+</form>
 <form action='<c:url value="/admin/blockuser.html"/>' method="post" id="blockUserForm">
     <input type="hidden" name="userId" value="${userProfile.userId}"/>
+</form>
+<form action='<c:url value="/admin/accountdetails.html"/>' method="post" id="accountDetailsForm">
+    <input type="hidden" name="accountId" value=""/>
 </form>
 

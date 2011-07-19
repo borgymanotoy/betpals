@@ -34,7 +34,7 @@ public class AccountWithdrawController extends AbstractPalsController {
 	
 	//TODO: Add transaction (not account transaction) around withdraw method	
 	@RequestMapping(value="/accountwithdraw")	
-	public String depositToAccount(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
+	public String withdrawFromAccount(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
 		//TODO: Add parameter validation
 		//TODO: Add validation for account
 		//TODO: Move to service?
@@ -49,11 +49,29 @@ public class AccountWithdrawController extends AbstractPalsController {
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
 	    	logger.info(getUser() + " has withdraw " + amount + " from " + account);
-
+	    	logUserAction("Withdraw " + amount + " from " + account);
+	    	
 			return "accountDetailsView";
     	}
     	
 		return "accountWithdrawView";
+	}
+	
+	@RequestMapping(value="/admin/accountwithdraw")	
+	public String withdrawFromAccountByAdmin(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
+		//TODO: Add parameter validation
+		//TODO: Add validation for account
+		//TODO: Move to service?
+		Account account = accountService.getAccount(accountId);
+		AccountTransaction transaction = new AccountTransaction(account, amount.negate(), AccountTransactionType.WITHDRAW);
+		account.addTransaction(transaction);
+			
+		//TODO: Add check for available funds
+		account = accountService.saveAccount(account);
+		model.addAttribute("accountId", accountId);
+		logger.info(getUser() + " has withdraw " + amount + " from " + account);
+			
+		return "accountDetailsAdminAction";
 	}
 	
 	

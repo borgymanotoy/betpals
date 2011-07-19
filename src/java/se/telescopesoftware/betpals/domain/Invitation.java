@@ -23,11 +23,13 @@ public class Invitation implements Serializable {
 	private Long inviteeId;
 	private Long competitionId;
 	private Date deadline;
+	private Date created;
 	private String ownerName;
 	private String competitionName;
 	
 	
 	public Invitation() {
+		this.created = new Date();
 	}
 
 	public Invitation(Competition competition, Long inviteeId) {
@@ -35,6 +37,7 @@ public class Invitation implements Serializable {
 	}
 
 	public Invitation(Competition competition, UserProfile owner, Long inviteeId) {
+		this();
 		this.ownerId = owner.getUserId();
 		this.ownerName = owner.getFullName();
 		this.inviteeId = inviteeId;
@@ -116,6 +119,14 @@ public class Invitation implements Serializable {
 		sb.append(getDeadline());
 		
 		return sb.toString();
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 	
 	

@@ -29,13 +29,11 @@ import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.EmailService;
-import se.telescopesoftware.betpals.services.UserService;
 
 
 @Controller
 public class RegisterUserController extends AbstractPalsController {
 
-    private UserService userService;
     private AuthenticationManager authenticationManager;
 	private AccountService accountService;
     private EmailService emailService;
@@ -51,11 +49,6 @@ public class RegisterUserController extends AbstractPalsController {
 	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Autowired
     public void setEmailService(EmailService emailService) {
@@ -84,7 +77,7 @@ public class RegisterUserController extends AbstractPalsController {
         String username = userProfile.getEmail();
         String password = userProfile.getPassword();
         
-        User user = userService.getUserByEmail(username);
+        User user = getUserService().getUserByEmail(username);
         if (user != null) {
         	model.addAttribute("alreadyExist", true);
     		return new ModelAndView("register");
@@ -99,7 +92,7 @@ public class RegisterUserController extends AbstractPalsController {
 
         user.setUserProfile(userProfile);
         
-        Long userId = userService.registerUser(user);
+        Long userId = getUserService().registerUser(user);
         model.addAttribute(user);
 
     	accountService.createDefaultAccountForUser(userId);

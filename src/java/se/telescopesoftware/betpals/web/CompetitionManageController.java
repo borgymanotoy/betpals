@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
+import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.services.ActivityService;
@@ -103,17 +104,21 @@ public class CompetitionManageController extends AbstractPalsController {
 	
 	@RequestMapping(value="/deletecompetition")	
 	public String deleteCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		logUserAction("Deleted " + competition);
 		competitionService.deleteCompetition(competitionId);
-		
 		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
 	@RequestMapping(value="/voidalternative")	
 	public String voidAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Locale locale, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		Alternative alternative = competition.getAlternativeById(alternativeId);
+		logUserAction("Voiding " + alternative);
 		competitionService.voidAlternative(competitionId, alternativeId, locale);
 		
-		Competition competition = competitionService.getCompetitionById(competitionId);
+		competition = competitionService.getCompetitionById(competitionId);
 		model.addAttribute(competition);
 
 		return "manageCompetitionView";
@@ -121,6 +126,8 @@ public class CompetitionManageController extends AbstractPalsController {
 	
 	@RequestMapping(value="/settlecompetition")	
 	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, HttpSession session, Model model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		logUserAction("Settle " + competition);
 		competitionService.settleCompetition(competitionId, alternativeId);
 		
 		updateCompetitionCounts(session);
@@ -133,7 +140,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		competition.setStatus(CompetitionStatus.CLOSE);
 		competition.setDeadline(new Date());
 		competitionService.saveCompetition(competition);
-		
+		logUserAction("Close " + competition);
 		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
@@ -149,6 +156,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		storedCompetition.setDeadline(competition.getDeadline());
 		storedCompetition.setSettlingDeadline(competition.getSettlingDeadline());
 		competitionService.saveCompetition(storedCompetition);
+		logUserAction("Update " + competition);
 		
 		return "manageCompetitionsAction";
 	}

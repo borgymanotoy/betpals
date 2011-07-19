@@ -14,24 +14,17 @@ import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class ActivitiesController extends AbstractPalsController {
 
     private ActivityService activityService;
-    private UserService userService;
 	private CompetitionService competitionService;
 
     
     @Autowired
     public void setActivityService(ActivityService activityService) {
         this.activityService = activityService;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-    	this.userService = userService;
     }
 
 	@Autowired
@@ -45,7 +38,7 @@ public class ActivitiesController extends AbstractPalsController {
     		@RequestParam(value="communityId", required = false) Long communityId, 
     		@RequestParam(value="competitionId", required = false) Long competitionId, Model model) {
     	if (communityId != null) {
-    		Community community = userService.getCommunityById(communityId);
+    		Community community = getUserService().getCommunityById(communityId);
     		if (community.checkMembership(getUserId())) {
     			Activity activity = new Activity(getUserProfile(), community.getId(), community.getName(), message, ActivityType.COMMUNITY);
     			activityService.saveActivity(activity);

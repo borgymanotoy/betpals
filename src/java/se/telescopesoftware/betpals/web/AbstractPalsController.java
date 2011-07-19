@@ -13,10 +13,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
 import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.services.UserService;
 import se.telescopesoftware.betpals.utils.ThumbnailUtil;
 
 /**
@@ -24,10 +27,13 @@ import se.telescopesoftware.betpals.utils.ThumbnailUtil;
  * Extend this class when creating new controller.
  *
  */
+@Component
 public abstract class AbstractPalsController {
 
     private String appRoot;
-    
+
+	private UserService userService;
+
     protected final String IMAGE_FOLDER_COMPETITIONS = "competitions";
     protected final String IMAGE_FOLDER_COMMUNITIES = "communities";
     protected final String IMAGE_FOLDER_USERS = "users";
@@ -38,10 +44,16 @@ public abstract class AbstractPalsController {
 
     protected Logger logger = Logger.getLogger(this.getClass());
 
+
     @Autowired
     public void setAppRoot(String appRoot) {
     	this.appRoot = appRoot;
     }
+    
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
     
     /**
      * Return system path to application root folder.
@@ -140,7 +152,13 @@ public abstract class AbstractPalsController {
     	return true;
    	}
 
-    
+    /**
+     * Sends specified message and HTTP response code.
+     * 
+     * @param response - HttpServletResponse object
+     * @param status - HTTP response code
+     * @param message
+     */
     protected void sendResponseStatusAndMessage(HttpServletResponse response, int status, String message) {
 		try {
 			PrintWriter writer = response.getWriter();
@@ -151,6 +169,32 @@ public abstract class AbstractPalsController {
 		} catch (Exception ex) {
 			logger.error("Could not send response", ex);
 		}
+    }
+    
+    /**
+     * Saves supplied message to current user log.
+     * 
+     * @param message
+     */
+    protected void logUserAction(String message) {
+    	UserLogEntry userLogEntry = new UserLogEntry(getUserId(), message);
+    	userService.saveUserLogEntry(userLogEntry);
+    }
+    
+    /**
+     * Saves supplied message to current user log.
+     * 
+     * @param userId
+     * @param message
+     */
+    protected void logUserAction(Long userId, String message) {
+    	UserLogEntry userLogEntry = new UserLogEntry(userId, message);
+    	userService.saveUserLogEntry(userLogEntry);
+    }
+    
+    
+    protected UserService getUserService() {
+    	return userService;
     }
     
 }

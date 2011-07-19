@@ -18,6 +18,7 @@ import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserRequestType;
@@ -307,6 +308,15 @@ public class UserServiceImpl implements UserService {
 
 	public UserProfile getUserProfile(Long id) {
 		return userRepository.loadUserProfile(id);
+	}
+
+	@Transactional(readOnly = false)
+	public void saveUserLogEntry(UserLogEntry userLogEntry) {
+		userRepository.storeUserLogEntry(userLogEntry);
+	}
+
+	public Collection<UserLogEntry> getUserLogEntries(Long userId) {
+		return userRepository.loadUserLogEntries(userId);
 	}
 
    

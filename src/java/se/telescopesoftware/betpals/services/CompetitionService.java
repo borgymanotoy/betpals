@@ -1,11 +1,13 @@
 package se.telescopesoftware.betpals.services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionLogEntry;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
 import se.telescopesoftware.betpals.domain.UserProfile;
@@ -22,6 +24,8 @@ public interface CompetitionService {
 	Collection<Competition> getOngoingCompetitionsByUser(Long userId);
 
 	Collection<Competition> getNewCompetitionsByUser(Long userId);
+
+	Collection<Competition> getAllCompetitions(Integer pageNumber, Integer itemsPerPage);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
@@ -69,7 +73,16 @@ public interface CompetitionService {
 
 	Integer getTotalUserBetsCount(Long userId);
 
+	Date getLastCompetitionCreatedDate(Long userId);
+	
+	Date getLastBetPlacedDate(Long userId);
+	
 	int getDefaultDeadlineInterval();
 
 	int getDefaultSettlingInterval();
+	
+    void saveCompetitionLogEntry(CompetitionLogEntry competitionLogEntry);
+    
+    Collection<CompetitionLogEntry> getCompetitionLogEntries(Long competitionId);
+	
 }

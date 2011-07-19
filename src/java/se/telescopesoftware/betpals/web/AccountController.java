@@ -36,6 +36,7 @@ public class AccountController extends AbstractPalsController {
 		this.competitionService = competitionService;
 	}
 	
+	
 	@RequestMapping(value="/addaccount", method=RequestMethod.GET)	
 	public String addNewAccount(ModelMap model) {
 		Collection<String> currencies = accountService.getSupportedCurrencies();
@@ -56,6 +57,7 @@ public class AccountController extends AbstractPalsController {
     	account.setOwnerId(getUser().getId());
     	//TODO: Add check for existing account with same currency
     	accountService.saveAccount(account);
+    	logUserAction("Adding new account " + account);
     	
     	model.addAttribute(account);
     	session.setAttribute("accounts", accountService.getUserAccounts(getUser().getId()));
@@ -74,6 +76,17 @@ public class AccountController extends AbstractPalsController {
     	
 		return "accountDetailsView";
 	}
+
+	@RequestMapping(value="/admin/accountdetails")	
+	public String getAccountByAdmin(@RequestParam("accountId") Long accountId, Model model) {
+		Account account = accountService.getAccount(accountId);
+		model.addAttribute("account", account);
+		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(account.getOwnerId(), accountId));
+		model.addAttribute("settledBets", competitionService.getSettledBetsByUserAndAccount(account.getOwnerId(), accountId));
+		model.addAttribute("userProfile", getUserService().getUserProfileByUserId(account.getOwnerId()));
+		
+		return "accountDetailsAdminView";
+	}
 	
 	@RequestMapping(value="/accountsetdefault")	
 	public String makeDefault(@RequestParam("accountId") Long accountId, Model model, HttpSession session) {
@@ -84,9 +97,19 @@ public class AccountController extends AbstractPalsController {
     		model.addAttribute("activeBets", competitionService.getActiveBetsByUserAndAccount(getUserId(), accountId));
     		model.addAttribute("settledBets", competitionService.getSettledBetsByUserAndAccount(getUserId(), accountId));
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
+	    	logUserAction("Setting default account to " + account);
     	}
     	
 		return "accountDetailsView";
+	}
+	
+	@RequestMapping(value="/admin/accountsetdefault")	
+	public String makeDefaultByAdmin(@RequestParam("accountId") Long accountId, Model model, HttpSession session) {
+		Account account = accountService.getAccount(accountId);
+		accountService.setAsDefault(account);
+		model.addAttribute("accountId", accountId);
+		
+		return "accountDetailsAdminAction";
 	}
 	
 	private Collection<String> filterExistingAccountCurrencies(Collection<String> currencies) {

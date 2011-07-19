@@ -48,11 +48,27 @@ public class AccountDepositController extends AbstractPalsController {
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
 	    	logger.info(getUser() + " has deposited " + amount + " to " + account);
+	    	logUserAction("Deposited " + amount + " to " + account);
 	    	
 			return "accountDetailsView";
     	}
     	
 		return "accountDepositView";
+	}
+	
+	@RequestMapping(value="/admin/accountdeposit")	
+	public String depositToAccountByAdmin(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
+		//TODO: Add parameter validation
+		//TODO: Add validation for account
+		//TODO: Move to service?
+		Account account = accountService.getAccount(accountId);
+		AccountTransaction transaction = new AccountTransaction(account, amount, AccountTransactionType.DEPOSIT);
+		account.addTransaction(transaction);
+		account = accountService.saveAccount(account);
+		model.addAttribute("accountId", accountId);
+		logger.info(getUser() + " has deposited " + amount + " to " + account);
+			
+		return "accountDetailsAdminAction";
 	}
 	
 	

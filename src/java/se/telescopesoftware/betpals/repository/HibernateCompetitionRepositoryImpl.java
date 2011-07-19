@@ -1,6 +1,8 @@
 package se.telescopesoftware.betpals.repository;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionLogEntry;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
@@ -57,7 +60,7 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 	@SuppressWarnings("unchecked")
 	public Collection<Bet> loadActiveBetsByUser(Long userId) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from Bet b where b.ownerId = :ownerId");
+    	Query query = session.createQuery("from Bet b where b.ownerId = :ownerId order by b.placed desc");
     	query.setLong("ownerId", userId);
 		return query.list();
 	}
@@ -86,7 +89,7 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 	@SuppressWarnings("unchecked")
 	public Collection<Invitation> loadInvitationsForUser(Long userId) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from Invitation i where i.inviteeId = :userId");
+    	Query query = session.createQuery("from Invitation i where i.inviteeId = :userId order by i.created desc");
     	query.setLong("userId", userId);
 		return query.list();
 	}
@@ -193,6 +196,66 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
     	query.setLong("ownerId", userId);
     	query.setParameter("status", competitionStatus);
 		return DataAccessUtils.intResult(query.list());
+	}
+
+	public Date getLastCompetitionCreatedDate(Long userId) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Competition c where c.ownerId = :userId order by c.created desc");
+    	query.setLong("userId", userId);
+    	
+    	@SuppressWarnings("unchecked")
+		Iterator<Competition> iterator = query.iterate();
+    	if (iterator.hasNext()) {
+    		Competition competition = iterator.next();
+    		return competition.getCreated();
+    	}
+		return null;
+	}
+
+	public Date getLastBetPlacedDate(Long userId) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Bet b where b.ownerId = :ownerId order by b.placed desc");
+    	query.setLong("ownerId", userId);
+    	
+    	@SuppressWarnings("unchecked")
+		Iterator<Bet> iterator = query.iterate();
+    	if (iterator.hasNext()) {
+    		Bet bet = iterator.next();
+    		return bet.getPlaced();
+    	}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Competition> loadCompetitions(Integer pageNumber, Integer itemsPerPage) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Competition c order by c.created desc");
+    	
+    	int offset = 0;
+        int resultsPerPage = itemsPerPage.intValue();
+        if (pageNumber.intValue() > 0) {
+            offset = pageNumber.intValue() * resultsPerPage;
+        }
+
+        query.setFirstResult(offset);
+        query.setMaxResults(resultsPerPage);
+    	
+    	return query.list();
+	}
+
+
+	public void storeCompetitionLogEntry(CompetitionLogEntry competitionLogEntry) {
+		Session session = sessionFactory.getCurrentSession();
+		session.saveOrUpdate(competitionLogEntry);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public Collection<CompetitionLogEntry> loadCompetitionLogEntries(Long competitionId) {
+		Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from CompetitionLogEntry cle where cle.competitionId = :competitionId order by cle.created desc");
+    	query.setLong("competitionId", competitionId);
+		return query.list();
 	}
 
 }

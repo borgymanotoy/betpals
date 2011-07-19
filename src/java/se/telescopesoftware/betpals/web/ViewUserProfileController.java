@@ -8,20 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.CompetitionService;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class ViewUserProfileController extends AbstractPalsController {
 
-    private UserService userService;
 	private CompetitionService competitionService;
 
 	
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
 	@Autowired
 	public void setCompetitionService(CompetitionService competitionService) {
 		this.competitionService = competitionService;
@@ -30,7 +23,7 @@ public class ViewUserProfileController extends AbstractPalsController {
 	
     @RequestMapping(value="/viewprofile/{userId}")
     protected String viewUserProfile(@PathVariable("userId") Long userId, ModelMap model) {
-    	UserProfile userProfile = userService.getUserProfileByUserId(userId);
+    	UserProfile userProfile = getUserService().getUserProfileByUserId(userId);
     	model.addAttribute("userProfile", userProfile);
     	model.addAttribute("totalCompetitions", competitionService.getTotalUserCompetitionsCount(userId));
     	model.addAttribute("totalBets", competitionService.getTotalUserBetsCount(userId));

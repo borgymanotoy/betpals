@@ -83,6 +83,15 @@ public class UserProfile implements Serializable {
 	@Transient
     private String facebookAccessToken;
 	
+	@Transient
+	private Integer competitionsCount;
+	@Transient
+	private Integer betsCount;
+	@Transient
+	private Date lastCompetitionDate;
+	@Transient
+	private Date lastBetDate;
+	
 	
 	public UserProfile() {
     }
@@ -339,6 +348,38 @@ public class UserProfile implements Serializable {
 				+ ", numberOfVisits=" + numberOfVisits + ", username="
 				+ username + ", facebookUser=" + facebookUser
 				+ ", facebookAccessToken=" + facebookAccessToken + "]";
+	}
+
+	public void setCompetitionsCount(Integer competitionsCount) {
+		this.competitionsCount = competitionsCount;
+	}
+
+	public Integer getCompetitionsCount() {
+		return competitionsCount;
+	}
+
+	public void setBetsCount(Integer betsCount) {
+		this.betsCount = betsCount;
+	}
+
+	public Integer getBetsCount() {
+		return betsCount;
+	}
+
+	public void setLastCompetitionDate(Date lastCompetitionDate) {
+		this.lastCompetitionDate = lastCompetitionDate;
+	}
+
+	public Date getLastCompetitionDate() {
+		return lastCompetitionDate;
+	}
+
+	public void setLastBetDate(Date lastBetDate) {
+		this.lastBetDate = lastBetDate;
+	}
+
+	public Date getLastBetDate() {
+		return lastBetDate;
 	}
 
 }

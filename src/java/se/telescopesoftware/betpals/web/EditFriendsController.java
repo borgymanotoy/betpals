@@ -1,6 +1,5 @@
 package se.telescopesoftware.betpals.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,22 +9,17 @@ import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserRequestType;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class EditFriendsController extends AbstractPalsController {
 
-    private UserService userService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @RequestMapping(value="/invitefriend")
     public String inviteFriend(@RequestParam("friendId") Long friendId) {
-    	UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
-    	userService.sendUserRequest(new UserRequest(getUserProfile(), friendProfile));
+    	UserProfile friendProfile = getUserService().getUserProfileByUserId(friendId);
+    	UserRequest userRequest = new UserRequest(getUserProfile(), friendProfile);
+    	getUserService().sendUserRequest(userRequest);
+    	logUserAction("Send " + userRequest);
     	return "friendsAndGroupsAction";
     }
     
@@ -34,37 +28,40 @@ public class EditFriendsController extends AbstractPalsController {
      */
     @RequestMapping(value="/acceptrequest")
     public String acceptRequest(@RequestParam("requestId") Long requestId) {
-    	UserRequest userRequest = userService.getUserRequestById(requestId);
-    	UserProfile friendProfile = userService.getUserProfileByUserId(userRequest.getOwnerId());
+    	UserRequest userRequest = getUserService().getUserRequestById(requestId);
+    	UserProfile friendProfile = getUserService().getUserProfileByUserId(userRequest.getOwnerId());
 
     	if (userRequest.getRequestType() == UserRequestType.COMMUNITY) {
-    		Community community = userService.getCommunityById(userRequest.getExtensionId());
+    		Community community = getUserService().getCommunityById(userRequest.getExtensionId());
     		community.addMember(friendProfile);
-    		userService.saveCommunity(community);
+    		getUserService().saveCommunity(community);
     	} else {
     		UserProfile currentUserProfile = getUserProfile();
     		friendProfile.addFriend(currentUserProfile);
     		currentUserProfile.addFriend(friendProfile);
     		
-    		userService.updateUserProfile(friendProfile);
-    		userService.updateUserProfile(currentUserProfile);
+    		getUserService().updateUserProfile(friendProfile);
+    		getUserService().updateUserProfile(currentUserProfile);
     	}
     	
-    	userService.deleteUserRequest(requestId);
+    	logUserAction("Accept " + userRequest);
+    	getUserService().deleteUserRequest(requestId);
     	
     	return "userRequestsListAction";
     }
 
     @RequestMapping(value="/rejectrequest")
     public String rejectRequest(@RequestParam("requestId") Long requestId, Model model) {
-    	userService.deleteUserRequest(requestId);
+    	UserRequest userRequest = getUserService().getUserRequestById(requestId);
+    	logUserAction("Reject " + userRequest);
+    	getUserService().deleteUserRequest(requestId);
     	return "userRequestsListAction";
     }
     
     @RequestMapping(value="/myrequests")
     public String viewUserRequests(Model model) {
-    	model.addAttribute("userRequestFriendList", userService.getUserRequestsForUserByType(getUserId(), UserRequestType.FRIEND));
-    	model.addAttribute("userRequestCommunityList", userService.getUserRequestsForUserByType(getUserId(), UserRequestType.COMMUNITY));
+    	model.addAttribute("userRequestFriendList", getUserService().getUserRequestsForUserByType(getUserId(), UserRequestType.FRIEND));
+    	model.addAttribute("userRequestCommunityList", getUserService().getUserRequestsForUserByType(getUserId(), UserRequestType.COMMUNITY));
     	return "userRequestsListView";
     }
 

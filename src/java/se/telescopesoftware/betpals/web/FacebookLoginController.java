@@ -18,20 +18,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.services.FacebookService;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class FacebookLoginController extends AbstractPalsController {
 	
-	private UserService userService;
 	private AuthenticationManager authenticationManager;
 	private FacebookService facebookService;
 	
-
-	@Autowired
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
 
 	@Autowired
 	public void setFacebookService(FacebookService facebookService) {
@@ -61,14 +54,15 @@ public class FacebookLoginController extends AbstractPalsController {
 				if (facebookUser != null) {
 					User user = null;
 					try {
-						user = userService.getUserByUsername(facebookUser.getMybetpalsUsername());
+						user = getUserService().getUserByUsername(facebookUser.getMybetpalsUsername());
 					} catch(UsernameNotFoundException ex) {
 						logger.info("New Facebook user.");
-						Long userId = userService.registerFacebookUser(facebookUser);
-						user = userService.getUserByUserId(userId);
+						Long userId = getUserService().registerFacebookUser(facebookUser);
+						user = getUserService().getUserByUserId(userId);
 					}
 					
 					logger.info("Login from facebook for user: " + user.toString());
+					logUserAction(user.getId(), "Login from Facebook");
 					Authentication auth = new UsernamePasswordAuthenticationToken(facebookUser.getMybetpalsUsername(), facebookUser.getMybetpalsPassword());
 					SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(auth));
 					

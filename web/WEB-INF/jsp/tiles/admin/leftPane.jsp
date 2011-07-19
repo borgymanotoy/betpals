@@ -44,6 +44,7 @@
 	    <div class="panelNoPadding">
 	       <ul id="invitesAndCompetitions">
 	           <li><a href='<c:url value="/admin/listusers.html"/>'><spring:message code="admin.link.user.list"/></a></li>
+	           <li><a href='<c:url value="/admin/listcompetitions.html"/>'><spring:message code="admin.link.competition.list"/></a></li>
 	       </ul>
 	    </div>
 	    <div class="panelFooter">&nbsp;</div>

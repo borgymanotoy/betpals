@@ -8,6 +8,7 @@ import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.PasswordRecoveryRequest;
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.domain.UserRequestType;
@@ -89,5 +90,9 @@ public interface UserRepository {
     PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash);
 
     void deletePasswordRecoveryRequest(PasswordRecoveryRequest passwordRecoveryRequest);
+
+    void storeUserLogEntry(UserLogEntry userLogEntry);
+    
+    Collection<UserLogEntry> loadUserLogEntries(Long userId);
 
 }

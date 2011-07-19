@@ -29,22 +29,16 @@ import se.telescopesoftware.betpals.domain.User;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.services.EmailService;
 import se.telescopesoftware.betpals.services.SiteConfigurationService;
-import se.telescopesoftware.betpals.services.UserService;
 
 
 @Controller
 public class EditUserProfileController extends AbstractPalsController {
 
-    private UserService userService;
     private EmailService emailService;
     private SiteConfigurationService siteConfigurationService;
     private AuthenticationManager authenticationManager;
 	private MessageSource messageSource;
 
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Autowired
     public void setEmailService(EmailService emailService) {
@@ -85,7 +79,7 @@ public class EditUserProfileController extends AbstractPalsController {
     	UserProfile userProfile = getUserProfile();
 
     	if (!userProfile.getEmail().equalsIgnoreCase(updatedUserProfile.getEmail())) {
-	        User user = userService.getUserByEmail(updatedUserProfile.getEmail());
+	        User user = getUserService().getUserByEmail(updatedUserProfile.getEmail());
 	        if (user != null) {
 	        	model.addAttribute("alreadyExist", true);
 	    		updatedUserProfile.setUser(getUser());
@@ -97,7 +91,7 @@ public class EditUserProfileController extends AbstractPalsController {
 	        	userProfile.setEmail(updatedUserProfile.getEmail());
 	        	user.setUsername(updatedUserProfile.getEmail());
 	        	user.encodeAndSetPassword(updatedUserProfile.getPassword());
-				userService.updateUser(user);
+	        	getUserService().updateUser(user);
 	        } else {
 	        	model.addAttribute("wrongPassword", true);
 	    		updatedUserProfile.setUser(getUser());
@@ -113,7 +107,8 @@ public class EditUserProfileController extends AbstractPalsController {
     	userProfile.setCountry(updatedUserProfile.getCountry());
     	userProfile.setPostalCode(updatedUserProfile.getPostalCode());
     	
-        userService.updateUserProfile(userProfile);
+    	getUserService().updateUserProfile(userProfile);
+        logUserAction("Update user profile");
         
         saveImage(updatedUserProfile.getUserImageFile(), IMAGE_FOLDER_USERS, getUserId().toString());
 
@@ -129,10 +124,11 @@ public class EditUserProfileController extends AbstractPalsController {
     @RequestMapping(value="/forgotpassword", method=RequestMethod.POST)
     public String forgotPassword(@RequestParam("email") String email, Locale locale, ModelMap model) {
     	
-    	User user = userService.getUserByEmail(email);
+    	User user = getUserService().getUserByEmail(email);
     	if (user != null) {
     		PasswordRecoveryRequest passwordRecoveryRequest = new PasswordRecoveryRequest(user);
-    		userService.registerPasswordRecoveryRequest(passwordRecoveryRequest);
+    		getUserService().registerPasswordRecoveryRequest(passwordRecoveryRequest);
+    		logUserAction(user.getId(), "Send " + passwordRecoveryRequest);
     		String link = siteConfigurationService.getParameterValue("site.url", "http://www.mybetpals.com") + "/forgotpassword/" + passwordRecoveryRequest.getRequestHash();
 			String subject = messageSource.getMessage("email.forgot.password.subject", new Object[] {}, locale);
 			String text = messageSource.getMessage("email.forgot.password.text", new Object[] {link}, locale);
@@ -162,7 +158,7 @@ public class EditUserProfileController extends AbstractPalsController {
     
     @RequestMapping(value="/forgotpassword/{requestHash}")
     public String forgotPasswordProcessLink(@PathVariable("requestHash") String requestHash, Locale locale, ModelMap model) {
-    	PasswordRecoveryRequest passwordRecoveryRequest = userService.findPasswordRecoveryRequest(requestHash);
+    	PasswordRecoveryRequest passwordRecoveryRequest = getUserService().findPasswordRecoveryRequest(requestHash);
     	if (passwordRecoveryRequest != null) {
     		model.addAttribute(passwordRecoveryRequest);
     	} else {
@@ -178,7 +174,8 @@ public class EditUserProfileController extends AbstractPalsController {
 		User user = getUser();
 		if (user.checkPassword(oldPassword)) {
 			user.encodeAndSetPassword(newPassword);
-			userService.updateUser(user);
+			getUserService().updateUser(user);
+			logUserAction("Changed password");
 		} else {
 	    	model.addAttribute("userProfile", getUserProfile());
 	    	model.addAttribute("countryList", Country.values());
@@ -190,11 +187,12 @@ public class EditUserProfileController extends AbstractPalsController {
 
 	@RequestMapping(value="/changeforgottenpassword")
 	public String changeForgottenPassword(@RequestParam("requestHash") String requestHash, @RequestParam("newPassword") String newPassword, Model model) {
-    	PasswordRecoveryRequest passwordRecoveryRequest = userService.findPasswordRecoveryRequest(requestHash);
+    	PasswordRecoveryRequest passwordRecoveryRequest = getUserService().findPasswordRecoveryRequest(requestHash);
     	if (passwordRecoveryRequest != null) {
-    		User user = userService.getUserByUserId(passwordRecoveryRequest.getUserId());
+    		User user = getUserService().getUserByUserId(passwordRecoveryRequest.getUserId());
     		user.encodeAndSetPassword(newPassword);
-    		userService.updateUser(user);
+    		getUserService().updateUser(user);
+    		logUserAction(user.getId(), "Changed forgotten password");
     		Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), newPassword);
     		SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
     	}

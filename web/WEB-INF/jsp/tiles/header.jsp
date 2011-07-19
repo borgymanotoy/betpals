@@ -7,7 +7,15 @@
     <a href="javascript:changeBgColor('#297085', 'logo2');"><img src='<c:url value="/i/c4.jpg"/>'/></a>
 </div>
 <div class="span-3 right" style="padding-top: 43px;">
+    <security:authorize ifAllGranted="ROLE_PREVIOUS_ADMINISTRATOR">
+    <c:url value="/j_spring_security_exit_user" var="exitURL">
+        <c:param name="targetUrl" value="${switchUserReturnUrl}"/>
+    </c:url>
+    <a class="whiteDotLink white noline" href="${exitURL}"><spring:message code="exit"/></a>&nbsp;
+    </security:authorize>
+    <security:authorize ifNotGranted="ROLE_PREVIOUS_ADMINISTRATOR">
     <a class="whiteDotLink white noline" href='<c:url value="/j_spring_security_logout"/>'><spring:message code="logout"/></a>&nbsp;
+    </security:authorize>
 </div>
 <div class="span-3 last left" style="padding-top: 42px;">
     <select id="langSelector" style="background-color: #67b116; color: white; margin: 0; font-size: 12px;" onchange="changeLanguage();">

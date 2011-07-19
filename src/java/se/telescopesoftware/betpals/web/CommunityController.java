@@ -23,20 +23,13 @@ import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.services.ActivityService;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class CommunityController extends AbstractPalsController {
 
-    private UserService userService;
     private ActivityService activityService;
 
 	
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
     @Autowired
     public void setActivityService(ActivityService activityService) {
         this.activityService = activityService;
@@ -51,7 +44,7 @@ public class CommunityController extends AbstractPalsController {
 	
     @RequestMapping(value="/deletecommunity")
     public String deleteCommunity(@RequestParam(value="communityId") Long communityId, Model model) {
-		userService.deleteCommunity(communityId, getUserId());
+    	getUserService().deleteCommunity(communityId, getUserId());
     	
     	model.addAttribute("tab", "communities");
     	return "friendsAndGroupsAction";
@@ -60,7 +53,7 @@ public class CommunityController extends AbstractPalsController {
     @RequestMapping(value="/editcommunity", method=RequestMethod.GET)
     protected String formBackingObject(@RequestParam(value="communityId", required=false) Long communityId, ModelMap model) {
     	if (communityId != null) {
-    		Community community = userService.getCommunityById(communityId);
+    		Community community = getUserService().getCommunityById(communityId);
     		if (!community.checkOwnership(getUserId())) {
     			community = new Community(AccessType.PUBLIC);
     		}
@@ -85,14 +78,16 @@ public class CommunityController extends AbstractPalsController {
     		community.setCreated(new Date());
     		community.setOwnerId(getUserId());
     		community.addMember(getUserProfile());
+    		logUserAction("Created " + community);
     	} else {
-    		Community originalCommunity = userService.getCommunityById(community.getId());
+    		Community originalCommunity = getUserService().getCommunityById(community.getId());
     		originalCommunity.setName(community.getName());
     		originalCommunity.setDescription(community.getDescription());
     		community = originalCommunity;
+    		logUserAction("Updated " + community);
     	}
         
-    	community = userService.saveCommunity(community);
+    	community = getUserService().saveCommunity(community);
         saveImage(imageFile, IMAGE_FOLDER_COMMUNITIES, community.getId().toString());
         
     	model.addAttribute("tab", "communities");
@@ -101,22 +96,25 @@ public class CommunityController extends AbstractPalsController {
     
 	@RequestMapping(value="/unjoincommunity")	
 	public String unjoinCommunity(@RequestParam(value="communityId") Long communityId, Model model) {
-		Community community = userService.getCommunityById(communityId);
+		Community community = getUserService().getCommunityById(communityId);
 		community.removeMember(getUserProfile());
-		userService.saveCommunity(community);
-
+		getUserService().saveCommunity(community);
+		logUserAction("Unjoined " + community);
+		
 		model.addAttribute("tab", "communities");
         return "friendsAndGroupsAction";
 	}
 	
 	@RequestMapping(value="/joincommunity")	
 	public String joinCommunity(@RequestParam(value="communityId") Long communityId, Model model) {
-		Community community = userService.getCommunityById(communityId);
+		Community community = getUserService().getCommunityById(communityId);
 		if (community.getAccessType() == AccessType.PUBLIC) {
 			community.addMember(getUserProfile());
-			userService.saveCommunity(community);
+			getUserService().saveCommunity(community);
+			logUserAction("Joined " + community);
 		} else {
-			userService.sendUserRequest(new UserRequest(getUserProfile(), community));
+			getUserService().sendUserRequest(new UserRequest(getUserProfile(), community));
+			logUserAction("Send request to join " + community);
 		}
 		
 		model.addAttribute("tab", "communities");
@@ -134,7 +132,7 @@ public class CommunityController extends AbstractPalsController {
 	}
 	
 	private String getCommunityView(Long communityId, Integer pageId, Model model) {
-		Community community = userService.getCommunityById(communityId);
+		Community community = getUserService().getCommunityById(communityId);
 		model.addAttribute(community);
 		
 		Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(communityId, pageId, null, ActivityType.COMMUNITY);

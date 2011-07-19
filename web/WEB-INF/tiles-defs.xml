@@ -141,5 +141,16 @@ Administrative part
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/configuration.jsp"/>
     </definition>
 
+    <definition name="accountDetailsAdminTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/accountDetails.jsp"/>
+    </definition>
+
+    <definition name="competitionListTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/competitionList.jsp"/>
+    </definition>
+    <definition name="adminCompetitionTilesView" extends="adminHomeTilesView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/admin/competitionView.jsp"/>
+    </definition>
+
 
 </tiles-definitions>

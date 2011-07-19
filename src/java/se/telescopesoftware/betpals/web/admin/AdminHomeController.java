@@ -10,22 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
-import se.telescopesoftware.betpals.services.UserService;
 import se.telescopesoftware.betpals.web.AbstractPalsController;
 
 
 @Controller
 public class AdminHomeController extends AbstractPalsController {
 
-    private UserService userService;
     private ActivityService activityService;
     private AccountService accountService;
     private CompetitionService competitionService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 
     @Autowired
     public void setActivityService(ActivityService activityService) {

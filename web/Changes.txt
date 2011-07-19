@@ -1,3 +1,21 @@
+== Version 0.9.2 =======================================================
+
+New features and CRs
+
+    * Updated user list in backoffice
+    * Login as user for administrator
+    * Search users in backoffice
+    * Bet list
+    * Bet details
+    * View the bet in the Manage bet view with the same permissions as the bet creator.
+    * Lock/unlock user
+    * User log
+    * Bet log
+    
+Bug fixes
+
+
+
 == Version 0.9.1 =======================================================
 
 New features and CRs

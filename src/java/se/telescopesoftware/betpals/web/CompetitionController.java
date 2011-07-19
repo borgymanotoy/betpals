@@ -40,7 +40,6 @@ import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;
 import se.telescopesoftware.betpals.services.CompetitionService;
 import se.telescopesoftware.betpals.services.FacebookService;
-import se.telescopesoftware.betpals.services.UserService;
 
 @Controller
 public class CompetitionController extends AbstractPalsController {
@@ -49,7 +48,6 @@ public class CompetitionController extends AbstractPalsController {
 	private AccountService accountService;
 	private ActivityService activityService;
 	private FacebookService facebookService;
-	private UserService userService;
 	
     
     @Autowired
@@ -70,11 +68,6 @@ public class CompetitionController extends AbstractPalsController {
 	@Autowired
 	public void setFacebookService(FacebookService facebookService) {
 		this.facebookService = facebookService;
-	}
-	
-	@Autowired
-	public void setUserService(UserService userService) {
-		this.userService = userService;
 	}
 	
 
@@ -104,10 +97,10 @@ public class CompetitionController extends AbstractPalsController {
 		InvitationHelper invitationHelper = new InvitationHelper();
 		invitationHelper.setCompetitionId(competitionId);
 		model.addAttribute(invitationHelper);
-    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+    	model.addAttribute("groupList", getUserService().getUserGroups(getUserId()));
+    	model.addAttribute("communityList", getUserService().getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
-		
+		logUserAction("Confirm " + competition);
     	updateCompetitionCounts(session);
 		return "inviteToCompetitionView";
 	}
@@ -119,8 +112,8 @@ public class CompetitionController extends AbstractPalsController {
 		InvitationHelper invitationHelper = new InvitationHelper();
 		invitationHelper.setCompetitionId(competitionId);
 		model.addAttribute(invitationHelper);
-		model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-		model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+		model.addAttribute("groupList", getUserService().getUserGroups(getUserId()));
+		model.addAttribute("communityList", getUserService().getUserCommunities(getUserId()));
 		model.addAttribute("friendList", getUserProfile().getFriends());
 		
 		return "inviteToCompetitionView";
@@ -219,6 +212,8 @@ public class CompetitionController extends AbstractPalsController {
         	competition = competitionService.saveCompetition(competition);
     	}
 
+    	logUserAction("Saved " + competition);
+    	
     	if (goToNextStep) {
     		Alternative alternative = new Alternative();
     		alternative.setEventId(competition.getDefaultEvent().getId());
@@ -265,13 +260,13 @@ public class CompetitionController extends AbstractPalsController {
 	    		friendsIdSet.addAll(invitationHelper.getFriendsIdSet());
 	    		Set<Long> groupIdSet = invitationHelper.getGroupIdSet();
 	    		for (Long groupId : groupIdSet) {
-	    			Group group = userService.getGroupById(groupId);
+	    			Group group = getUserService().getGroupById(groupId);
 	    			friendsIdSet.addAll(group.getMembersIdSet());
 	    		}
 	    	}
 	    	
 	    	for (Long communityId : invitationHelper.getCommunityIdSet()) {
-	    		Community community = userService.getCommunityById(communityId);
+	    		Community community = getUserService().getCommunityById(communityId);
 	    		friendsIdSet.addAll(community.getMembersIdSet());
 	    	}
 	
@@ -358,19 +353,20 @@ public class CompetitionController extends AbstractPalsController {
     	Account account = accountService.getAccount(quickCompetition.getAccountId());
     	Competition competition = quickCompetition.createCompetition(getUserId(), account.getCurrency());
     	competition = competitionService.saveCompetition(competition);
-    	
+    	logUserAction("Created " + competition);
     	saveImage(quickCompetition.getImageFile(), IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	
     	Bet bet = quickCompetition.createBet(getUserProfile());
     	bet.setSelectionId(competition.getOwnerAlternativeId());
     	competitionService.placeBet(bet);
+    	logUserAction("Placed " + bet);
     	
 		model.addAttribute(competition);
 		InvitationHelper invitationHelper = new InvitationHelper();
 		invitationHelper.setCompetitionId(competition.getId());
 		model.addAttribute(invitationHelper);
-    	model.addAttribute("groupList", userService.getUserGroups(getUserId()));
-    	model.addAttribute("communityList", userService.getUserCommunities(getUserId()));
+    	model.addAttribute("groupList", getUserService().getUserGroups(getUserId()));
+    	model.addAttribute("communityList", getUserService().getUserCommunities(getUserId()));
     	model.addAttribute("friendList", getUserProfile().getFriends());
 		
     	updateCompetitionCounts(session);
@@ -399,6 +395,8 @@ public class CompetitionController extends AbstractPalsController {
     	
     	competitionService.placeBet(bet);
     	competitionService.deleteInvitation(invitationId);
+    	logUserAction("Joined " + competition);
+    	logUserAction("Placed " + bet);
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
     	activity.setMessage("Joined the competition: " + competition.getName());
@@ -427,6 +425,7 @@ public class CompetitionController extends AbstractPalsController {
 		bet.setStake(validStake);
 
 		competitionService.placeBet(bet);
+    	logUserAction("Placed " + bet);
 		
 		return "userHomepageAction";
 	}

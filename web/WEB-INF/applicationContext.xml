@@ -82,6 +82,8 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 				<value>se.telescopesoftware.betpals.domain.ActivityComment</value>
 				<value>se.telescopesoftware.betpals.domain.ActivityLike</value>
 				<value>se.telescopesoftware.betpals.domain.PasswordRecoveryRequest</value>
+				<value>se.telescopesoftware.betpals.domain.UserLogEntry</value>
+				<value>se.telescopesoftware.betpals.domain.CompetitionLogEntry</value>
 			</list>
 		</property>
 		<property name="eventListeners">
@@ -121,6 +123,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:intercept-url pattern="/changeforgottenpassword.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/favicon.ico" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/robots.txt" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/j_spring_security_switch_user" access="ROLE_SUPERVISOR" />
 		<security:intercept-url pattern="/admin**" access="ROLE_SUPERVISOR" />
 		<security:intercept-url pattern="/admin/**" access="ROLE_SUPERVISOR" />
 		<security:intercept-url pattern="/**" access="ROLE_USER" />
@@ -128,14 +131,26 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 		<security:form-login login-page='/login.html' default-target-url='/processlogin.html' authentication-failure-url="/login.html?login_error=1" />
 		<security:logout success-handler-ref="palsLogoutHandler"/>
 		<security:remember-me key="abracadabra"/>
+		<security:custom-filter ref="switchUserProcessingFilter" position="SWITCH_USER_FILTER"/>
 	</security:http>
 	<security:authentication-manager alias="authenticationManager">
 		<security:authentication-provider
 			ref="daoAuthenticationProvider" />
 	</security:authentication-manager>
 
+	<bean id="switchUserProcessingFilter" class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
+        <property name="userDetailsService" ref="userDetailsService" />
+        <property name="switchUserUrl" value="/j_spring_security_switch_user" />
+        <property name="exitUserUrl" value="/j_spring_security_exit_user" />
+        <property name="successHandler" ref="palsSwitchUserHandler" />
+    </bean>
+
     <bean id="palsLogoutHandler" class="se.telescopesoftware.betpals.utils.LogoutSuccessHandlerImpl">
         <property name="defaultTargetUrl" value="/login.html"/>
+    </bean>
+
+    <bean id="palsSwitchUserHandler" class="se.telescopesoftware.betpals.utils.SwitchUserSuccessAuthenticationHandlerImpl">
+        <property name="defaultTargetUrl" value="/index.html"/>
     </bean>
 
 	<bean id="daoAuthenticationProvider"

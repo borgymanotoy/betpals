@@ -23,6 +23,7 @@ import se.telescopesoftware.betpals.domain.AccountTransactionType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
+import se.telescopesoftware.betpals.domain.CompetitionLogEntry;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
@@ -72,7 +73,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 	@Transactional(readOnly = false)
 	public Competition saveCompetition(Competition competition) {
 		logger.info("Saving " + competition);
-		return competitionRepository.storeCompetition(competition);
+		Competition storedCompetition = competitionRepository.storeCompetition(competition);
+		saveCompetitionLogEntry(storedCompetition.getId(), "Competition saved");
+		return storedCompetition;
 	}
 
 	public Collection<Competition> getActiveCompetitionsByUser(Long userId) {
@@ -104,6 +107,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			Alternative alternative = competitionRepository.loadAlternativeById(bet.getSelectionId());
 			alternative.addBet(bet);
 			Competition competition = alternative.getEvent().getCompetition();
+			saveCompetitionLogEntry(competition.getId(), "Bet placed: " + bet);
 			if (competition.getCompetitionType() != CompetitionType.POOL_BETTING) {
 				alternative.setTaken(true);
 			}
@@ -128,6 +132,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 		for (Long friendId : friendIds) {
 			Invitation invitation = new Invitation(competition, owner, friendId);
 			logger.info("Sending " + invitation);
+			saveCompetitionLogEntry(competition.getId(), "Sending " + invitation);
 			competitionRepository.storeInvitation(invitation);
 		}
 	}
@@ -162,12 +167,14 @@ public class CompetitionServiceImpl implements CompetitionService {
 	@Transactional(readOnly = false)
 	public Alternative saveAlternative(Alternative alternative) {
 		logger.info("Saving " + alternative);
+		saveCompetitionLogEntry(alternative.getCompetitionId(), "Saving " + alternative);
 		return competitionRepository.storeAlternative(alternative);
 	}
 
 	@Transactional(readOnly = false)
 	public Event saveEvent(Event event) {
 		logger.info("Saving " + event);
+		saveCompetitionLogEntry(event.getCompetitionId(), "Saving " + event);
 		return competitionRepository.storeEvent(event);
 	}
 
@@ -201,6 +208,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 		Competition competition = competitionRepository.loadCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.SETTLED);
 		logger.info("Settling " + competition);
+		saveCompetitionLogEntry(competitionId, "Settling competition");
+
 		for (Alternative alternative : competition.getAllAlternatives()) {
 			if (alternative.getId().compareTo(alternativeId) == 0) {
 				alternativeWon(alternative, competition);
@@ -214,8 +223,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	private void alternativeWon(Alternative alternative, Competition competition) {
 		logger.info("Won " + alternative);
+		saveCompetitionLogEntry(competition.getId(), "Won " + alternative);
+
 		for (Bet bet : alternative.getBets()) {
 			logger.info("Settling " + bet);
+			saveCompetitionLogEntry(competition.getId(), "Settling " + bet);
+
 			BigDecimal part = bet.getStake().divide(alternative.getTurnover(), 2, RoundingMode.HALF_UP); //TODO: Find out about required precision
 			BigDecimal competitionTurnoverWithCommission = calculateAmountWithCommission(competition.getTurnover()) ;
 			BigDecimal amountWon = part.multiply(competitionTurnoverWithCommission).subtract(bet.getStake());
@@ -236,8 +249,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	private void alternativeLost(Alternative alternative) {
 		logger.info("Lost " + alternative);
+		saveCompetitionLogEntry(alternative.getCompetitionId(), "Lost " + alternative);
+
 		for (Bet bet : alternative.getBets()) {
 			logger.info("Settling " + bet);
+			saveCompetitionLogEntry(alternative.getCompetitionId(), "Settling " + bet);
 			Account account = accountService.getAccount(bet.getAccountId());
 			AccountTransaction transaction = new AccountTransaction(account, bet.getStake().negate(), AccountTransactionType.LOST);
 			logger.info(transaction);
@@ -264,10 +280,13 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	private void voidAlternative(Alternative alternative, Competition competition, Locale locale) {
 		logger.info("Voiding " + alternative);
+		saveCompetitionLogEntry(alternative.getCompetitionId(), "Voiding " + alternative);
+
 		notifyPunters(alternative, competition, locale);
 	
 		for(Bet bet : alternative.getBets()) {
 			logger.info("Removing " + bet);
+			saveCompetitionLogEntry(alternative.getCompetitionId(), "Removing " + bet);
 			removeBet(bet);
 		}
 
@@ -288,6 +307,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			String text = messageSource.getMessage("email.void.alternative.text", new Object[] {alternative.getName(), competition.getName()}, locale);
 			try {
 				logger.info("Notify punter: " + participantId);
+				saveCompetitionLogEntry(competition.getId(), "Notify punter: " + participantId);
 				emailService.sendEmail(competition.getOwnerId(), participantId, subject, text);
 			} catch (AddressException ex) {
 				logger.error("Incorrect email address", ex);
@@ -374,5 +394,31 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.getCompetitionsCount(userId, CompetitionStatus.NEW);
 	}
 
+	public Date getLastCompetitionCreatedDate(Long userId) {
+		return competitionRepository.getLastCompetitionCreatedDate(userId);
+	}
+
+	public Date getLastBetPlacedDate(Long userId) {
+		return competitionRepository.getLastBetPlacedDate(userId);
+	}
+
+	public Collection<Competition> getAllCompetitions(Integer pageNumber, Integer itemsPerPage) {
+		return competitionRepository.loadCompetitions(pageNumber != null ? pageNumber : new Integer(0), 
+				itemsPerPage != null ? itemsPerPage : new Integer(100)); //TODO: Move to configuration
+	}
+
+	@Transactional(readOnly = false)
+	public void saveCompetitionLogEntry(CompetitionLogEntry competitionLogEntry) {
+		competitionRepository.storeCompetitionLogEntry(competitionLogEntry);
+	}
+
+	public Collection<CompetitionLogEntry> getCompetitionLogEntries(Long competitionId) {
+		return competitionRepository.loadCompetitionLogEntries(competitionId);
+	}
+
+	private void saveCompetitionLogEntry(Long competitionId, String message) {
+		CompetitionLogEntry logEntry = new CompetitionLogEntry(competitionId, message);
+		saveCompetitionLogEntry(logEntry);
+	}
 
 }
