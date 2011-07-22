@@ -1,3 +1,22 @@
+== Version 0.9.3 =======================================================
+
+New features and CRs
+
+    * New user setting (Profile) 
+            Send me an email when I’m invited to a bet (default = true), 
+            Send me an email when one of my bets are settled (default = true), 
+            Send me an email when a bet is posted to a community where I am a member (default = true)
+    * Send email on bet invitation (User setting)
+    * Send email when bet was settled (User setting)
+    * Send email on bet modification (Always)
+    * Send an email to the bet creator, when the settle date is passed and a remainder X days after if it is still not settled. (Always)
+    * If a bet is not settled X days after settle date, the bet should be voided. An email should be sent to all participants and the bet creator. (Always)
+    
+Bug fixes
+
+
+
+
 == Version 0.9.2 =======================================================
 
 New features and CRs

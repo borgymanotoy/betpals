@@ -78,5 +78,6 @@ public class EmailServiceImpl implements EmailService {
 		UserProfile toUserProfile = userService.getUserProfileByUserId(toUserId);
 		sendEmail(adminEmail, adminName, toUserProfile.getEmail(), subject, text);
 	}
+	
 
 }

@@ -243,6 +243,25 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
     	return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public Collection<Competition> loadAllActiveCompetitions(Integer pageNumber, Integer itemsPerPage) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Competition c where c.status != :status order by c.created desc");
+    	query.setParameter("status", CompetitionStatus.SETTLED);
+
+    	if (itemsPerPage != null) {
+			int offset = 0;
+			int resultsPerPage = itemsPerPage.intValue();
+			if (pageNumber.intValue() > 0) {
+				offset = pageNumber.intValue() * resultsPerPage;
+			}
+			
+			query.setFirstResult(offset);
+			query.setMaxResults(resultsPerPage);
+    	}
+		return query.list();
+	}
+	
 
 	public void storeCompetitionLogEntry(CompetitionLogEntry competitionLogEntry) {
 		Session session = sessionFactory.getCurrentSession();

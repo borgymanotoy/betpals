@@ -32,7 +32,8 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
 	public String getParameterValue(String parameterName, String defaultValue) {
     	Properties properties = getProperties();
     	if (properties != null) {
-    		return properties.getProperty(parameterName);
+    		String value = properties.getProperty(parameterName); 
+    		return value != null ? value : defaultValue;
     	}
 		return defaultValue;
 	}

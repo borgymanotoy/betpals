@@ -41,6 +41,14 @@ public class CompetitionsController extends AbstractPalsController {
 		return "adminCompetitionView";
 	}
 	
+	@RequestMapping(value="/admin/processexpired")	
+	public String processExpired(Model model) {
+		competitionService.processExpiredCompetitions();
+		Collection<Competition> competitions = competitionService.getAllCompetitions(null, null);
+    	model.addAttribute("competitionList", competitions);
+		return "competitionListView";
+	}
+	
 	
 	
 }

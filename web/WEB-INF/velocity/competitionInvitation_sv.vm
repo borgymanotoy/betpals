@@ -1,0 +1,5 @@
+Hello,
+ 
+${invitation.ownerName} invites you to join the ${invitation.competitionName} bet.
+ 
+Deadline for betting is ${invitation.deadline} 

@@ -4,18 +4,23 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import javax.mail.internet.AddressException;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.AccountTransaction;
@@ -37,9 +42,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
 	private CompetitionRepository competitionRepository;
 	private AccountService accountService;
+	private UserService userService;
 	private EmailService emailService;
 	private MessageSource messageSource;
 	private SiteConfigurationService siteConfigurationService;
+	private VelocityEngine velocityEngine;
+
 	
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
@@ -53,6 +61,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 	public void setAccountService(AccountService accountService) {
 		this.accountService = accountService;
 	}
+
+    @Autowired
+    public void setUserService(UserService userService) {
+    	this.userService = userService;
+    }
 
     @Autowired
     public void setEmailService(EmailService emailService) {
@@ -69,12 +82,20 @@ public class CompetitionServiceImpl implements CompetitionService {
     	this.siteConfigurationService = siteConfigurationService;
     }
     
+    @Autowired
+    public void setVelocityEngine(VelocityEngine velocityEngine) {
+    	this.velocityEngine = velocityEngine;
+    }
+    
     
 	@Transactional(readOnly = false)
-	public Competition saveCompetition(Competition competition) {
+	public Competition saveCompetition(Competition competition, Locale locale, boolean sendEmail) {
 		logger.info("Saving " + competition);
 		Competition storedCompetition = competitionRepository.storeCompetition(competition);
 		saveCompetitionLogEntry(storedCompetition.getId(), "Competition saved");
+		if (sendEmail) {
+			sendModifiedEmail(storedCompetition, locale);
+		}
 		return storedCompetition;
 	}
 
@@ -128,12 +149,16 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 	
 	@Transactional(readOnly = false)
-	public void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner) {
+	public void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner, Locale locale) {
 		for (Long friendId : friendIds) {
 			Invitation invitation = new Invitation(competition, owner, friendId);
 			logger.info("Sending " + invitation);
 			saveCompetitionLogEntry(competition.getId(), "Sending " + invitation);
 			competitionRepository.storeInvitation(invitation);
+			UserProfile friendProfile = userService.getUserProfileByUserId(friendId);
+			if (friendProfile.isEmailOnBetInvitation()) {
+				sendInvitationByMail(invitation, locale);
+			}
 		}
 	}
 
@@ -204,7 +229,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	 *	And I get mad
 	 */
 	@Transactional(readOnly = false)
-	public void settleCompetition(Long competitionId, Long alternativeId) {
+	public void settleCompetition(Long competitionId, Long alternativeId, Locale locale) {
 		Competition competition = competitionRepository.loadCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.SETTLED);
 		logger.info("Settling " + competition);
@@ -213,11 +238,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 		for (Alternative alternative : competition.getAllAlternatives()) {
 			if (alternative.getId().compareTo(alternativeId) == 0) {
 				alternativeWon(alternative, competition);
+				sendSettleEmail(competition, alternative, locale);
 			} else {
 				alternativeLost(alternative);
 			}
 		}
-		saveCompetition(competition);
+		saveCompetition(competition, null, false);
 		competitionRepository.deleteInvitationsByCompetitionId(competitionId);
 	}
 
@@ -298,7 +324,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			}
 		}
 		competition.getDefaultEvent().setAlternatives(filteredAlternatives);
-		saveCompetition(competition);
+		saveCompetition(competition, locale, true);
 	}
 	
 	private void notifyPunters(Alternative alternative, Competition competition, Locale locale) {
@@ -420,5 +446,117 @@ public class CompetitionServiceImpl implements CompetitionService {
 		CompetitionLogEntry logEntry = new CompetitionLogEntry(competitionId, message);
 		saveCompetitionLogEntry(logEntry);
 	}
+	
+	private void sendInvitationByMail(Invitation invitation, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "competitionInvitation_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+            model.put("invitation", invitation);
+
+            String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.competition.invitation.subject", new Object[] {invitation.getCompetitionName()}, locale);
+			emailService.sendEmail(invitation.getOwnerId(), invitation.getInviteeId(), subject, message);
+		} catch (Exception e) {
+			logger.error("Could not send invitation email: ", e);
+		}
+
+	}
+	
+	private void sendSettleEmail(Competition competition, Alternative winAlternative, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "competitionSettled_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("competition", competition);
+			model.put("alternative", winAlternative);
+			
+			String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.competition.settled.subject", new Object[] {competition.getName()}, locale);
+			
+			for (Long participantId : competition.getParticipantsIdSet()) {
+				emailService.sendEmail(competition.getOwnerId(), participantId, subject, message);
+			}
+			
+		} catch (Exception e) {
+			logger.error("Could not send email: ", e);
+		}
+		
+	}
+	
+	private void sendModifiedEmail(Competition competition, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "competitionModified_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("competition", competition);
+			
+			String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.competition.modified.subject", new Object[] {competition.getName()}, locale);
+			
+			for (Long participantId : competition.getParticipantsIdSet()) {
+				emailService.sendEmail(competition.getOwnerId(), participantId, subject, message);
+			}
+			
+		} catch (Exception e) {
+			logger.error("Could not send email: ", e);
+		}
+		
+	}
+
+	private void sendVoidEmail(Competition competition, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "competitionVoided_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("competition", competition);
+			
+			String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.competition.voided.subject", new Object[] {competition.getName()}, locale);
+			
+			for (Long participantId : competition.getParticipantsIdSet()) {
+				emailService.sendEmail(competition.getOwnerId(), participantId, subject, message);
+			}
+			
+		} catch (Exception e) {
+			logger.error("Could not send email: ", e);
+		}
+		
+	}
+	
+	private void sendSettlingNotificationEmail(Competition competition, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "competitionSettleNotification_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("competition", competition);
+			
+			String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.competition.settle.notification.subject", new Object[] {competition.getName()}, locale);
+			
+			emailService.sendEmail(competition.getOwnerId(), competition.getOwnerId(), subject, message);
+			
+		} catch (Exception e) {
+			logger.error("Could not send email: ", e);
+		}
+		
+	}
+	
+	@Transactional(readOnly = false, noRollbackFor = {SendFailedException.class, MessagingException.class, AddressException.class})
+	public void processExpiredCompetitions() {
+		logger.info("Processing expired competitions");
+		Collection<Competition> competitions = competitionRepository.loadAllActiveCompetitions(null, null);
+		int expirationDaysInterval = new Integer(siteConfigurationService.getParameterValue("interval.competition.expiration.days", "7")).intValue();
+		int notificationDaysInterval = new Integer(siteConfigurationService.getParameterValue("interval.competition.notification.days", "3")).intValue();
+		for (Competition competition : competitions) {
+			if (competition.isExpired(expirationDaysInterval)) {
+				sendVoidEmail(competition, null); //TODO: Store locale in Competition?
+				deleteCompetition(competition.getId()); 
+			} else if (competition.isExpirationNotificationNeeded(notificationDaysInterval)) {
+				sendSettlingNotificationEmail(competition, null); //TODO: Store locale in Competition?
+			}
+		}
+	}
+
 
 }

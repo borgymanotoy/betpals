@@ -134,7 +134,25 @@
             <form:textarea path="bio" id="userBioTextArea"/>
         </div>
     </div>
-    <p class="error"><form:errors path="*"/></p>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"></div>
+        <div class="span-10 last">
+            <form:checkbox path="emailOnBetInvitation"/>&nbsp;<spring:message code="profile.edit.emailOnBetInvitation"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"></div>
+        <div class="span-10 last">
+            <form:checkbox path="emailOnBetSettling"/>&nbsp;<spring:message code="profile.edit.emailOnBetSettling"/>
+        </div>
+    </div>
+    <div class="span-12 formSectionSlimDiv">
+        <div class="span-2 labelDiv" style="padding-top: 8px;"></div>
+        <div class="span-10 last">
+            <form:checkbox path="emailOnBetPostToCommunity"/>&nbsp;<spring:message code="profile.edit.emailOnBetPostToCommunity"/>
+        </div>
+    </div>
+    <p class="error">&nbsp;<form:errors path="*"/></p>
     <c:if test="${alreadyExist}"><p class="error"><spring:message code="profile.edit.user.exists"/></p></c:if>
     <c:if test="${wrongPassword}"><p class="error"><spring:message code="profile.edit.wrong.password"/></p></c:if>
     <div class="span-12 formSectionSlimDiv">

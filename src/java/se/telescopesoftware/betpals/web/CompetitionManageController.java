@@ -125,28 +125,28 @@ public class CompetitionManageController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/settlecompetition")	
-	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, HttpSession session, Model model) {
+	public String settleCompetition(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, HttpSession session, Locale locale, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		logUserAction("Settle " + competition);
-		competitionService.settleCompetition(competitionId, alternativeId);
+		competitionService.settleCompetition(competitionId, alternativeId, locale);
 		
 		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
 	@RequestMapping(value="/closecompetition")	
-	public String closeCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
+	public String closeCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Locale locale, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.CLOSE);
 		competition.setDeadline(new Date());
-		competitionService.saveCompetition(competition);
+		competitionService.saveCompetition(competition, locale, true);
 		logUserAction("Close " + competition);
 		updateCompetitionCounts(session);
 		return "manageCompetitionsAction";
 	}
 	
 	@RequestMapping(value="/updatecompetition")	
-	public String inviteToCompetition(@ModelAttribute("competition") Competition competition, BindingResult result, Model model) {
+	public String inviteToCompetition(@ModelAttribute("competition") Competition competition, BindingResult result, Locale locale, Model model) {
 		if (result.hasErrors()) {
 			logger.debug("Error found: " + result.getErrorCount());
 			return "manageCompetitionView";
@@ -155,7 +155,7 @@ public class CompetitionManageController extends AbstractPalsController {
 		Competition storedCompetition = competitionService.getCompetitionById(competition.getId());
 		storedCompetition.setDeadline(competition.getDeadline());
 		storedCompetition.setSettlingDeadline(competition.getSettlingDeadline());
-		competitionService.saveCompetition(storedCompetition);
+		competitionService.saveCompetition(storedCompetition, locale, true);
 		logUserAction("Update " + competition);
 		
 		return "manageCompetitionsAction";

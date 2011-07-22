@@ -51,6 +51,10 @@ public class UserProfile implements Serializable {
     private Date lastLoginDate;
     private Integer numberOfVisits;
 
+    private Boolean emailOnBetInvitation = Boolean.TRUE;
+    private Boolean emailOnBetSettling = Boolean.TRUE;
+    private Boolean emailOnBetPostToCommunity = Boolean.TRUE;
+    
     @Transient
     private String username;
     @Transient
@@ -380,6 +384,42 @@ public class UserProfile implements Serializable {
 
 	public Date getLastBetDate() {
 		return lastBetDate;
+	}
+
+	public Boolean isEmailOnBetInvitation() {
+		return emailOnBetInvitation != null ? emailOnBetInvitation : Boolean.TRUE;
+	}
+
+	public Boolean getEmailOnBetInvitation() {
+		return isEmailOnBetInvitation();
+	}
+	
+	public void setEmailOnBetInvitation(Boolean emailOnBetInvitation) {
+		this.emailOnBetInvitation = emailOnBetInvitation;
+	}
+
+	public Boolean isEmailOnBetSettling() {
+		return emailOnBetSettling != null ? emailOnBetSettling : Boolean.TRUE;
+	}
+
+	public Boolean getEmailOnBetSettling() {
+		return isEmailOnBetSettling();
+	}
+	
+	public void setEmailOnBetSettling(Boolean emailOnBetSettling) {
+		this.emailOnBetSettling = emailOnBetSettling;
+	}
+
+	public Boolean isEmailOnBetPostToCommunity() {
+		return emailOnBetPostToCommunity != null ? emailOnBetPostToCommunity : Boolean.TRUE;
+	}
+
+	public Boolean getEmailOnBetPostToCommunity() {
+		return isEmailOnBetPostToCommunity();
+	}
+	
+	public void setEmailOnBetPostToCommunity(Boolean emailOnBetPostToCommunity) {
+		this.emailOnBetPostToCommunity = emailOnBetPostToCommunity;
 	}
 
 }

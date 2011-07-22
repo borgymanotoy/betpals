@@ -2,6 +2,7 @@ package se.telescopesoftware.betpals.web;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -92,7 +93,7 @@ public class CompetitionController extends AbstractPalsController {
 	public String confirmCompetition(@RequestParam("competitionId") Long competitionId, HttpSession session, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		competition.setStatus(CompetitionStatus.OPEN);
-		competition = competitionService.saveCompetition(competition);
+		competition = competitionService.saveCompetition(competition, null, false);
 		model.addAttribute(competition);
 		InvitationHelper invitationHelper = new InvitationHelper();
 		invitationHelper.setCompetitionId(competitionId);
@@ -132,7 +133,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/deletealternative")	
-	public String deleteAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Model model) {
+	public String deleteAlternative(@RequestParam("competitionId") Long competitionId, @RequestParam("alternativeId") Long alternativeId, Locale locale, Model model) {
 		Competition competition = competitionService.getCompetitionById(competitionId);
 		
 		Set<Alternative> alternatives = competition.getDefaultEvent().getAlternatives();
@@ -144,7 +145,7 @@ public class CompetitionController extends AbstractPalsController {
 		}
 		competition.getDefaultEvent().setAlternatives(filteredAlternatives);
 		competition.getDefaultEvent().normalizeAlternativesPriorities();
-		competition = competitionService.saveCompetition(competition);
+		competition = competitionService.saveCompetition(competition, locale, true);
 		
 		Alternative alternative = new Alternative();
 		alternative.setEventId(competition.getDefaultEvent().getId());
@@ -170,7 +171,7 @@ public class CompetitionController extends AbstractPalsController {
             nextAlternative.decreasePriority();
         }
 		
-		competition = competitionService.saveCompetition(competition);
+		competition = competitionService.saveCompetition(competition, null, false);
 		
 		Alternative alternative = new Alternative();
 		alternative.setEventId(competition.getDefaultEvent().getId());
@@ -202,14 +203,14 @@ public class CompetitionController extends AbstractPalsController {
     	} 
 
     	competition.setStatus(CompetitionStatus.NEW);
-    	competition = competitionService.saveCompetition(competition);
+    	competition = competitionService.saveCompetition(competition, null, false);
     	saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	
     	if (competition.getEvents() == null || competition.getEvents().isEmpty()) {
     		logger.debug("Adding default event to competition");
     		Event event = new Event(competition.getName());
     		competition.addEvent(event);
-        	competition = competitionService.saveCompetition(competition);
+        	competition = competitionService.saveCompetition(competition, null, false);
     	}
 
     	logUserAction("Saved " + competition);
@@ -242,7 +243,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
 	@RequestMapping(value="/invitetocompetition")	
-	public String inviteToCompetition(@ModelAttribute("invitationHelper") InvitationHelper invitationHelper, BindingResult result, Model model) {
+	public String inviteToCompetition(@ModelAttribute("invitationHelper") InvitationHelper invitationHelper, BindingResult result, Locale locale, Model model) {
 		if (result.hasErrors()) {
 			logger.debug("Error found: " + result.getErrorCount());
 			return "inviteToCompetitionView";
@@ -270,7 +271,7 @@ public class CompetitionController extends AbstractPalsController {
 	    		friendsIdSet.addAll(community.getMembersIdSet());
 	    	}
 	
-	    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile());
+	    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile(), locale);
 		}
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
@@ -352,7 +353,7 @@ public class CompetitionController extends AbstractPalsController {
     	
     	Account account = accountService.getAccount(quickCompetition.getAccountId());
     	Competition competition = quickCompetition.createCompetition(getUserId(), account.getCurrency());
-    	competition = competitionService.saveCompetition(competition);
+    	competition = competitionService.saveCompetition(competition, null, false);
     	logUserAction("Created " + competition);
     	saveImage(quickCompetition.getImageFile(), IMAGE_FOLDER_COMPETITIONS, competition.getId().toString());
     	

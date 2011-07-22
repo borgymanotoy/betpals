@@ -72,5 +72,6 @@ public interface CompetitionRepository {
     void storeCompetitionLogEntry(CompetitionLogEntry competitionLogEntry);
     
     Collection<CompetitionLogEntry> loadCompetitionLogEntries(Long competitionId);
-	
+
+    public Collection<Competition> loadAllActiveCompetitions(Integer pageNumber, Integer itemsPerPage);
 }

@@ -15,7 +15,7 @@ import se.telescopesoftware.betpals.domain.UserProfile;
 public interface CompetitionService {
 
 	
-	Competition saveCompetition(Competition competition);
+	Competition saveCompetition(Competition competition, Locale locale, boolean sendEmail);
 	
 	Collection<Competition> getActiveCompetitionsByUser(Long userId);
 
@@ -45,7 +45,7 @@ public interface CompetitionService {
 	
 	Collection<Bet> getActiveBetsBySelectionId(Long selectionId);
 	
-	void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner);
+	void sendInvitationsToFriends(Competition competition, Collection<Long> friendIds, UserProfile owner, Locale locale);
 	
 	Integer getInvitationsForUserCount(Long userId);
 	
@@ -65,7 +65,7 @@ public interface CompetitionService {
 	
 	void deleteCompetition(Long id);
 	
-	void settleCompetition(Long competitionId, Long alternativeId);
+	void settleCompetition(Long competitionId, Long alternativeId, Locale locale);
 	
 	void voidAlternative(Long competitionId, Long alternativeId, Locale locale);
 	
@@ -85,4 +85,6 @@ public interface CompetitionService {
     
     Collection<CompetitionLogEntry> getCompetitionLogEntries(Long competitionId);
 	
+    void processExpiredCompetitions();
+
 }

@@ -106,6 +106,9 @@ public class EditUserProfileController extends AbstractPalsController {
     	userProfile.setCity(updatedUserProfile.getCity());
     	userProfile.setCountry(updatedUserProfile.getCountry());
     	userProfile.setPostalCode(updatedUserProfile.getPostalCode());
+    	userProfile.setEmailOnBetInvitation(updatedUserProfile.getEmailOnBetInvitation());
+    	userProfile.setEmailOnBetPostToCommunity(updatedUserProfile.getEmailOnBetPostToCommunity());
+    	userProfile.setEmailOnBetSettling(updatedUserProfile.getEmailOnBetSettling());
     	
     	getUserService().updateUserProfile(userProfile);
         logUserAction("Update user profile");

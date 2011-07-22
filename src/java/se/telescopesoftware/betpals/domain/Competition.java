@@ -27,6 +27,7 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.codec.Base64;
 import org.springframework.web.multipart.MultipartFile;
@@ -331,5 +332,29 @@ public class Competition {
 		return new String(Base64.encode(sb.toString().getBytes())); 
 	}
 	
+	public Set<Long> getParticipantsIdSet() {
+		Set<Long> result = new HashSet<Long>();
+		for (Alternative alternative : getAllAlternatives()) {
+			result.addAll(alternative.getParticipantsIdSet());
+		}
+		
+		return result;
+	}
+
+	public boolean isExpired(int expirationIntervalInDays) {
+		if (getSettlingDeadline() != null) {
+			DateTime expirationDateTime = new DateTime(getSettlingDeadline()).plusDays(expirationIntervalInDays);
+			return expirationDateTime.isBeforeNow();
+		}
+		return false;
+	}
+	
+	public boolean isExpirationNotificationNeeded(int notificationIntervalInDays) {
+		if (getSettlingDeadline() != null) {
+			DateTime notificationDateTime = new DateTime(getSettlingDeadline()).plusDays(notificationIntervalInDays);
+			return notificationDateTime.isBeforeNow();
+		}
+		return false;
+	}
     
 }

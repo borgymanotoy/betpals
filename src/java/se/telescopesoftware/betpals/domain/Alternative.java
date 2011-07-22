@@ -170,6 +170,7 @@ public class Alternative {
 	}
 	
 	public String getParticipantName() {
+		//FIXME: Why next? What about order of bets. Rethink. 
 		Bet bet = getBets().iterator().next();
 		if (bet != null) {
 			return bet.getOwnerName();
@@ -178,6 +179,7 @@ public class Alternative {
 	}
 	
 	public Long getParticipantId() {
+		//FIXME: Why next? What about order of bets. Rethink. 
 		Bet bet = getBets().iterator().next();
 		if (bet != null) {
 			return bet.getOwnerId();
