@@ -3,15 +3,21 @@ package se.telescopesoftware.betpals.services;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.FacebookUser;
@@ -30,23 +36,48 @@ import se.telescopesoftware.betpals.repository.UserRepository;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+	private EmailService emailService;
+	private MessageSource messageSource;
+	private VelocityEngine velocityEngine;
+
     
     private static Logger logger = Logger.getLogger(UserServiceImpl.class);
 
+    
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Autowired
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    @Autowired
+    public void setMessageSource(MessageSource messageSource) {
+    	this.messageSource = messageSource;
+    }
+
+    @Autowired
+    public void setVelocityEngine(VelocityEngine velocityEngine) {
+    	this.velocityEngine = velocityEngine;
+    }
+
+    
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         return userRepository.loadUserByUsername(username);
     }
 
 	@Transactional(readOnly = false)
-    public Long registerUser(User user) {
+    public Long registerUser(User user, Locale locale) {
         user.addRole("ROLE_USER");
         logger.info("Registering " + user);
-        return userRepository.registerUser(user);
+        Long userId = userRepository.registerUser(user);
+        if (userId != null) {
+        	sendRegistrationWelcomeEmail(user.getUserProfile(), locale);
+        }
+        return userId;
     }
 
 	@Transactional(readOnly = false)
@@ -205,7 +236,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional(readOnly = false)
-	public Long registerFacebookUser(FacebookUser facebookUser) {
+	public Long registerFacebookUser(FacebookUser facebookUser, Locale locale) {
 		User user = new User(facebookUser.getMybetpalsUsername());
 		user.encodeAndSetPassword(facebookUser.getMybetpalsPassword());
 		UserProfile userProfile = new UserProfile();
@@ -217,7 +248,7 @@ public class UserServiceImpl implements UserService {
 		
 		user.setUserProfile(userProfile);
 		
-		return registerUser(user);
+		return registerUser(user, locale);
 	}
 
 	@Transactional(readOnly = false)
@@ -319,5 +350,22 @@ public class UserServiceImpl implements UserService {
 		return userRepository.loadUserLogEntries(userId);
 	}
 
+	private void sendRegistrationWelcomeEmail(UserProfile userProfile, Locale locale) {
+		try {
+			String language = locale != null ? locale.getLanguage() : "en";
+			String template = "registrationWelcome_" + language + ".vm";
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("userProfile", userProfile);
+			
+			String message = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, model);
+			String subject = messageSource.getMessage("email.registration.welcome.subject", new Object[] {}, locale);
+			
+			emailService.sendEmail(userProfile.getUserId(), subject, message);
+			
+		} catch (Exception e) {
+			logger.error("Could not send email: ", e);
+		}
+		
+	}
    
 }

@@ -1,8 +1,7 @@
-package se.telescopesoftware.betpals.domain;
+package se.telescopesoftware.betpals.web;
 
 import java.util.HashSet;
 import java.util.Set;
-//TODO: move to other package
 
 /**
  * 

@@ -232,14 +232,15 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
     	Query query = session.createQuery("from Competition c order by c.created desc");
     	
     	int offset = 0;
-        int resultsPerPage = itemsPerPage.intValue();
-        if (pageNumber.intValue() > 0) {
-            offset = pageNumber.intValue() * resultsPerPage;
-        }
-
-        query.setFirstResult(offset);
-        query.setMaxResults(resultsPerPage);
-    	
+    	if (itemsPerPage != null) {
+	        int resultsPerPage = itemsPerPage.intValue();
+	        if (pageNumber.intValue() > 0) {
+	            offset = pageNumber.intValue() * resultsPerPage;
+	        }
+	
+	        query.setFirstResult(offset);
+	        query.setMaxResults(resultsPerPage);
+    	}
     	return query.list();
 	}
 

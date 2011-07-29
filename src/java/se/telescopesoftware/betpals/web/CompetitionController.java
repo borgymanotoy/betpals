@@ -35,7 +35,6 @@ import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Group;
 import se.telescopesoftware.betpals.domain.Invitation;
-import se.telescopesoftware.betpals.domain.InvitationHelper;
 import se.telescopesoftware.betpals.domain.QuickCompetition;
 import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.ActivityService;

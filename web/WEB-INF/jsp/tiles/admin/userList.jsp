@@ -35,7 +35,7 @@
     </div>
 
      <display:table requestURI="/admin/listusers.html" name="userList" 
-        id="userListTable" class="palsTable"  
+        id="userListTable" class="palsTable" pagesize="20" 
         decorator="se.telescopesoftware.betpals.web.decorators.UserTableDecorator">
          <display:column class="userListColumn" property="name" title="Name" sortable="true"/>
          <display:column class="userListColumn" property="surname" title="Surname" sortable="true"/>

@@ -1,5 +1,48 @@
 <%@include file="includes.jsp"%>
+<%@ taglib prefix="display" uri="http://displaytag.sf.net" %>
 <script type="text/javascript">
+
+	jQuery(document).ready(function() {
+	    
+	    jQuery("tr", "#activeBetsTable tbody").hover(
+	         function () {
+	           jQuery(this).addClass("palsTableHover clickable");
+	         }, 
+	         function () {
+	           jQuery(this).removeClass("palsTableHover clickable");
+	         }
+	    );
+	
+	    jQuery("tr", "#activeBetsTable tbody").click(
+	         function () {
+	           var userId = jQuery(".betIdCell", this).text();
+	           var competitionId = jQuery(".competitionIdCell", this).text();
+	           jQuery('#competitionToManage', '#viewActiveCompetitionForm').val("/ongoingcompetition.html?competitionId=" + competitionId);
+	           jQuery('#viewActiveCompetitionForm').submit();
+	         } 
+	    );
+	    
+	    jQuery("tr", "#settledBetsTable tbody").hover(
+	         function () {
+	           jQuery(this).addClass("palsTableHover clickable");
+	         }, 
+	         function () {
+	           jQuery(this).removeClass("palsTableHover clickable");
+	         }
+	    );
+	
+	    jQuery("tr", "#settledBetsTable tbody").click(
+	         function () {
+	           var userId = jQuery(".betIdCell", this).text();
+	           var competitionId = jQuery(".competitionIdCell", this).text();
+	           jQuery('#competitionToManage', '#viewSettledCompetitionForm').val("/settledcompetition.html?competitionId=" + competitionId);
+	           jQuery('#viewSettledCompetitionForm').submit();
+	         } 
+	    );
+	
+	});
+
+
    function setAsDefaultAccount() {
        jQuery('#defaultAccountForm').submit();
    } 
@@ -57,66 +100,47 @@
         <li><a href="#settledBets"><spring:message code="account.settled.bets"/></a></li>
     </ul>
     <div id="transactions" class="contentDiv">
-        <table id="transactionTable" class="palsTable altRows">
-            <tr>
-                <th><spring:message code="account.transaction.table.id"/></th>
-                <th><spring:message code="account.transaction.table.type"/></th>
-                <th><spring:message code="account.transaction.table.details"/></th>
-                <th><spring:message code="account.transaction.table.amount"/></th>
-                <th><spring:message code="account.transaction.table.created"/></th>
-            </tr>
-            <c:forEach items="${account.transactions}" var="transaction">
-            <tr>
-                <td>${transaction.id}</td>
-                <td>${transaction.transactionType}</td><!-- //TODO: change to message resource -->
-                <td>${transaction.description}</td>
-                <td><fmt:formatNumber value="${transaction.amount}" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td><fmt:formatDate value="${transaction.transactionDate}" pattern="yyyy-MM-dd HH:mm"/></td>
-            </tr>
-            </c:forEach>
-        </table>
+         <display:table requestURI="/accountdetails.html#transactions" name="account.transactions" 
+	        id="transactionListTable" class="palsTable" pagesize="20"
+	        decorator="se.telescopesoftware.betpals.web.decorators.TransactionTableDecorator" >
+		     <display:setProperty name="paging.banner.item_name" value="transaction"/>
+		     <display:setProperty name="paging.banner.items_name" value="transactions"/>
+	         <display:column class="userListColumn" property="id" titleKey="account.transaction.table.id"/>
+	         <display:column class="userListColumn" property="transactionType" titleKey="account.transaction.table.type"/>
+	         <display:column class="userListColumn" property="description" titleKey="account.transaction.table.details"/>
+	         <display:column class="userListColumn" property="amount" titleKey="account.transaction.table.amount"/>
+	         <display:column class="userListColumn" property="transactionDate" titleKey="account.transaction.table.created"/>
+        </display:table>
         <p>&nbsp;</p>
     </div>
     <div id="activeBets" class="contentDiv">
-        <table id="transactionTable" class="palsTable altRows">
-            <tr>
-                <th><spring:message code="account.transaction.table.id"/></th>
-                <th><spring:message code="account.transaction.table.stake"/></th>
-                <th><spring:message code="account.transaction.table.details"/></th>
-                <th><spring:message code="account.transaction.table.placed"/></th>
-            </tr>
-            <c:forEach items="${activeBets}" var="activeBet">
-            <tr>
-                <td>${activeBet.id}</td>
-                <td><fmt:formatNumber value="${activeBet.stake}" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td><span class="clickable" onclick="viewActiveCompetition(${activeBet.alternative.event.competition.id});">${activeBet.details}</span></td>
-                <td><fmt:formatDate value="${activeBet.placed}" pattern="yyyy-MM-dd HH:mm"/></td>
-            </tr>
-            </c:forEach>
-        </table>
+	     <display:table requestURI="/accountdetails.html#activeBets" name="activeBets" 
+	        id="activeBetsTable" class="palsTable" pagesize="20"
+	        decorator="se.telescopesoftware.betpals.web.decorators.BetTableDecorator" >
+    	     <display:setProperty name="paging.banner.item_name" value="bet"/>
+	        <display:setProperty name="paging.banner.items_name" value="bets"/>
+	         <display:column class="betIdCell userListColumn" property="id" titleKey="account.transaction.table.id"/>
+	         <display:column class="userListColumn" property="stake" titleKey="account.transaction.table.stake"/>
+	         <display:column class="userListColumn" property="details" titleKey="account.transaction.table.details"/>
+	         <display:column class="userListColumn" property="placed" titleKey="account.transaction.table.placed"/>
+	         <display:column class="competitionIdCell" property="alternative.event.competition.id" style="display: none;" title=""/>
+	    </display:table>
         <p>&nbsp;</p>
     </div>
     <div id="settledBets" class="contentDiv">
-        <table id="transactionTable" class="palsTable altRows">
-            <tr>
-                <th><spring:message code="account.transaction.table.id"/></th>
-                <th><spring:message code="account.transaction.table.stake"/></th>
-                <th><spring:message code="account.transaction.table.details"/></th>
-                <th><spring:message code="account.transaction.table.placed"/></th>
-                <th><spring:message code="account.transaction.table.profitloss"/></th>
-                <th><spring:message code="account.transaction.table.settled"/></th>
-            </tr>
-            <c:forEach items="${settledBets}" var="settledBet">
-            <tr>
-                <td>${settledBet.id}</td>
-                <td><fmt:formatNumber value="${settledBet.stake}" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td><span class="clickable" onclick="viewSettledCompetition(${settledBet.alternative.event.competition.id});">${settledBet.details}</span></td>
-                <td><fmt:formatDate value="${settledBet.placed}" pattern="yyyy-MM-dd HH:mm"/></td>
-                <td><fmt:formatNumber value="${settledBet.profitOrLoss}" maxFractionDigits="2" minFractionDigits="2"/></td>
-                <td><fmt:formatDate value="${settledBet.settled}" pattern="yyyy-MM-dd HH:mm"/></td>
-            </tr>
-            </c:forEach>
-        </table>
+	     <display:table requestURI="/accountdetails.html#settledBets" name="settledBets" 
+	        id="settledBetsTable" class="palsTable" pagesize="20"
+	        decorator="se.telescopesoftware.betpals.web.decorators.BetTableDecorator" >
+		     <display:setProperty name="paging.banner.item_name" value="bet"/>
+		     <display:setProperty name="paging.banner.items_name" value="bets"/>
+	         <display:column class="betIdCell userListColumn" property="id" titleKey="account.transaction.table.id"/>
+	         <display:column class="userListColumn" property="stake" titleKey="account.transaction.table.stake"/>
+	         <display:column class="userListColumn" property="details" titleKey="account.transaction.table.details"/>
+	         <display:column class="userListColumn" property="placed" titleKey="account.transaction.table.placed"/>
+	         <display:column class="userListColumn" property="profitOrLoss" titleKey="account.transaction.table.profitloss"/>
+	         <display:column class="userListColumn" property="settled" titleKey="account.transaction.table.settled"/>
+	         <display:column class="competitionIdCell" property="alternative.event.competition.id" style="display: none;" title=""/>
+	    </display:table>
         <p>&nbsp;</p>
     </div>
 </div>

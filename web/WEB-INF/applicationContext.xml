@@ -155,10 +155,12 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 
     <bean id="palsLogoutHandler" class="se.telescopesoftware.betpals.utils.LogoutSuccessHandlerImpl">
         <property name="defaultTargetUrl" value="/login.html"/>
+        <property name="userService" ref="userDetailsService" />
     </bean>
 
     <bean id="palsSwitchUserHandler" class="se.telescopesoftware.betpals.utils.SwitchUserSuccessAuthenticationHandlerImpl">
         <property name="defaultTargetUrl" value="/index.html"/>
+        <property name="userService" ref="userDetailsService" />
     </bean>
 
 	<bean id="daoAuthenticationProvider"

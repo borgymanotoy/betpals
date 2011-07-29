@@ -95,7 +95,9 @@
          </c:choose>
             
          </button> 
-         <button class="greenButton110" onclick="switchUser();return false;"><spring:message code="button.login.as.user"/></button> 
+         <c:if test="${userProfile.user.enabled == true}">
+         <button class="greenButton110" onclick="switchUser();return false;"><spring:message code="button.login.as.user"/></button>
+         </c:if> 
          <button class="whiteButton90" onclick="deleteUser();return false;"><spring:message code="button.delete"/></button> 
     </div>
     <div class="span-16 formSectionSlimDiv" style="padding-top: 16px;">

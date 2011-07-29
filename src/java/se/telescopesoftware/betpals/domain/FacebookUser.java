@@ -20,6 +20,7 @@ public class FacebookUser {
 		this.firstName = jObject.getString("first_name");
 		this.lastName = jObject.getString("last_name");
 		this.name = jObject.getString("name");
+		this.email = jObject.getString("email");
 		this.id = jObject.getString("id");
 	}
 	

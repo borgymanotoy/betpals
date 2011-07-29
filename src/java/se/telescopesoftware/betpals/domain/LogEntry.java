@@ -7,7 +7,7 @@ public class LogEntry {
 
 	private String message;
 	private String additionalInfo;
-	private String level;
+	private LogEntryLevel level;
 	private String source;
 	private Date date;
 	
@@ -29,11 +29,11 @@ public class LogEntry {
 		this.additionalInfo = additionalInfo;
 	}
 
-	public String getLevel() {
+	public LogEntryLevel getLevel() {
 		return level;
 	}
 
-	public void setLevel(String level) {
+	public void setLevel(LogEntryLevel level) {
 		this.level = level;
 	}
 

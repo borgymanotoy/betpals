@@ -32,18 +32,14 @@ public class AccountDepositController extends AbstractPalsController {
 		return "accountDepositView";
 	}
 	
-	//TODO: Add transaction (not account transaction) around deposit method	
 	@RequestMapping(value="/accountdeposit")	
 	public String depositToAccount(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
-		//TODO: Add parameter validation
-		//TODO: Add validation for account
-		//TODO: Move to service?
+		//TODO: Move to service when deposit logic will be defined 
 		Account account = accountService.getAccount(accountId);
     	if (account.getOwnerId().equals(getUserId()) ) {
 			AccountTransaction transaction = new AccountTransaction(account, amount, AccountTransactionType.DEPOSIT);
 			account.addTransaction(transaction);
 			
-			//TODO: Add check for correct currency
 			account = accountService.saveAccount(account);
 			model.addAttribute("account", account);
 	    	session.setAttribute("accounts", accountService.getUserAccounts(getUserId()));
@@ -58,9 +54,7 @@ public class AccountDepositController extends AbstractPalsController {
 	
 	@RequestMapping(value="/admin/accountdeposit")	
 	public String depositToAccountByAdmin(@RequestParam("accountId") Long accountId, @RequestParam("amount") BigDecimal amount, Model model, HttpSession session) {
-		//TODO: Add parameter validation
-		//TODO: Add validation for account
-		//TODO: Move to service?
+		//TODO: Move to service when deposit logic will be defined 
 		Account account = accountService.getAccount(accountId);
 		AccountTransaction transaction = new AccountTransaction(account, amount, AccountTransactionType.DEPOSIT);
 		account.addTransaction(transaction);

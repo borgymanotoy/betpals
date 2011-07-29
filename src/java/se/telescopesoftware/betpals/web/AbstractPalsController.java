@@ -7,12 +7,16 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -192,9 +196,20 @@ public abstract class AbstractPalsController {
     	userService.saveUserLogEntry(userLogEntry);
     }
     
-    
     protected UserService getUserService() {
     	return userService;
+    }
+    
+    protected String getRedirectUrl(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            SavedRequest savedRequest = (SavedRequest) session.getAttribute(WebAttributes.SAVED_REQUEST);
+            if(savedRequest != null) {
+                return savedRequest.getRedirectUrl();
+            }
+        }
+
+        return null;
     }
     
 }

@@ -1,3 +1,22 @@
+== Version 0.9.4 =======================================================
+
+New features and CRs
+
+    * Added pagination to all lists in backoffice
+    * Added pagination to lists of transactions and bets on user account page
+    * Spring security library updated, custom logout handler added
+    * Added templates for registration email
+    
+Bug fixes
+
+    * Added log out event to user log
+    * Added admin switching events (log in as user by admin) to user log
+    * User email in case of facebook registration now correctly stored
+    * Default FUN account now created for facebook registration also
+    * Email is send on facebook registration
+    * Fixed registration of visit (last login date, number of visits) for facebook users
+    
+
 == Version 0.9.3 =======================================================
 
 New features and CRs

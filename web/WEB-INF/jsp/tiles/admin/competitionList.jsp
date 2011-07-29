@@ -28,8 +28,10 @@
 </div>
 <div class="rbDiv contentDiv">
      <display:table requestURI="/admin/listcompetitions.html" name="competitionList" 
-        id="competitionListTable" class="palsTable"  
+        id="competitionListTable" class="palsTable" pagesize="20" 
         decorator="se.telescopesoftware.betpals.web.decorators.CompetitionTableDecorator">
+     <display:setProperty name="paging.banner.item_name" value="bet"/>
+     <display:setProperty name="paging.banner.items_name" value="bets"/>
          <display:column class="userListColumn" property="name" title="Name" sortable="true"/>
          <display:column class="userListColumn" property="owner" title="Owner" sortable="true"/>
          <display:column class="userListColumn" property="status" title="Status" sortable="true"/>

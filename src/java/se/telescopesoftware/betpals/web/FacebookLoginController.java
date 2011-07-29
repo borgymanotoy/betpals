@@ -1,7 +1,8 @@
 package se.telescopesoftware.betpals.web;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,13 +11,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import se.telescopesoftware.betpals.domain.FacebookUser;
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserProfile;
+import se.telescopesoftware.betpals.services.AccountService;
 import se.telescopesoftware.betpals.services.FacebookService;
 
 @Controller
@@ -24,6 +27,7 @@ public class FacebookLoginController extends AbstractPalsController {
 	
 	private AuthenticationManager authenticationManager;
 	private FacebookService facebookService;
+	private AccountService accountService;
 	
 
 	@Autowired
@@ -36,13 +40,15 @@ public class FacebookLoginController extends AbstractPalsController {
 		this.authenticationManager = authenticationManager;
 	}
 	
+	@Autowired
+	public void setAccountService(AccountService accountService) {
+		this.accountService = accountService;
+	}
+	
 
 	@RequestMapping(value="/facebooklogin")
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	protected ModelAndView processLogin(@RequestParam(value="code", required = false) String code, HttpServletRequest request, Locale locale) {
 
-		String code = ServletRequestUtils.getStringParameter(request, "code");
-		
 		if (code == null || code.length() == 0) {
 			logger.debug("redirecting to facebook..");
 			return new ModelAndView(new RedirectView(facebookService.getAuthorizeURL()));
@@ -57,8 +63,12 @@ public class FacebookLoginController extends AbstractPalsController {
 						user = getUserService().getUserByUsername(facebookUser.getMybetpalsUsername());
 					} catch(UsernameNotFoundException ex) {
 						logger.info("New Facebook user.");
-						Long userId = getUserService().registerFacebookUser(facebookUser);
+					}
+
+					if (user == null) {
+						Long userId = getUserService().registerFacebookUser(facebookUser, locale);
 						user = getUserService().getUserByUserId(userId);
+				    	accountService.createDefaultAccountForUser(userId);
 					}
 					
 					logger.info("Login from facebook for user: " + user.toString());
@@ -68,11 +78,16 @@ public class FacebookLoginController extends AbstractPalsController {
 					
 					getUserProfile().setFacebookAccessToken(accessToken);
 					getUserProfile().setFacebookUser(facebookUser);
+					UserProfile userProfile = getUserProfile();
+					userProfile.registerVisit();
+					getUserService().updateUserProfile(userProfile);
+
 				}
 			}
 		}
 
-		return new ModelAndView("userHomepageAction");
+        String redirectUrl = getRedirectUrl(request);
+        return redirectUrl != null ? new ModelAndView(new RedirectView(redirectUrl)) : new ModelAndView("userHomepageAction");
 	}
 	
 	

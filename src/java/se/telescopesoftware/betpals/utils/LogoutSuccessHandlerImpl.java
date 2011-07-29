@@ -11,16 +11,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import se.telescopesoftware.betpals.domain.User;
+import se.telescopesoftware.betpals.domain.UserLogEntry;
+import se.telescopesoftware.betpals.services.UserService;
 
 public class LogoutSuccessHandlerImpl extends SimpleUrlLogoutSuccessHandler {
 
+	private UserService userService;
+
     protected Logger logger = Logger.getLogger(this.getClass());
-	
-	@Override
+
+    
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+    
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		// TODO Auto-generated method stub
 		User user = (User) authentication.getPrincipal();
 		logger.info("Logged out " + user);
+		UserLogEntry userLogEntry = new UserLogEntry(user.getId(), "Log out");
+    	userService.saveUserLogEntry(userLogEntry);
 		super.handle(request, response, authentication);
 	}
 

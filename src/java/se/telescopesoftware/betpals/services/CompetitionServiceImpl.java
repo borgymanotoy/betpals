@@ -429,8 +429,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 	}
 
 	public Collection<Competition> getAllCompetitions(Integer pageNumber, Integer itemsPerPage) {
-		return competitionRepository.loadCompetitions(pageNumber != null ? pageNumber : new Integer(0), 
-				itemsPerPage != null ? itemsPerPage : new Integer(100)); //TODO: Move to configuration
+		return competitionRepository.loadCompetitions(pageNumber != null ? pageNumber : new Integer(0),	itemsPerPage);
 	}
 
 	@Transactional(readOnly = false)

@@ -13,7 +13,7 @@
     <property name="doc" value="../doc"/>
     <property name="base" value="../"/>
     <property name="name" value="mybetpals"/>
-    <property name="version" value="0.9.3"/>
+    <property name="version" value="0.9.4"/>
 
     <path id="project.classpath">
         <fileset dir="${lib}">

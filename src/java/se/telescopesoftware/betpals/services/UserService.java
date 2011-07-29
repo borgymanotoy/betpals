@@ -1,6 +1,7 @@
 package se.telescopesoftware.betpals.services;
 
 import java.util.Collection;
+import java.util.Locale;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -18,9 +19,9 @@ import se.telescopesoftware.betpals.domain.UserSearchForm;
 
 public interface UserService extends UserDetailsService {
 
-    Long registerUser(User user);
+    Long registerUser(User user, Locale locale);
     
-    Long registerFacebookUser(FacebookUser facebookUser);
+    Long registerFacebookUser(FacebookUser facebookUser, Locale locale);
     
     void updateUserProfile(UserProfile userProfile);
 

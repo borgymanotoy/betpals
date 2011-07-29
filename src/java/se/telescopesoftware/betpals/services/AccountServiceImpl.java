@@ -63,19 +63,16 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional(readOnly = false)
 	public void depositToAccount(Long accountId, BigDecimal amount) {
-		// TODO Auto-generated method stub
-		
+		// TODO Implement after deposit logic will be defined
 	}
 
 	@Transactional(readOnly = false)
 	public void withdrawFromAccount(Long accountId, BigDecimal amount) {
-		// TODO Auto-generated method stub
-		
+		// TODO Implement after withdraw logic will be defined
 	}
 
 	public Account getUserAccountForCurrency(Long userId, String currency) {
 		return accountRepository.loadUserAccountForCurrency(userId, currency);
-		//TODO: Add pagination to account transaction list
 	}
 
 	public String getDefaultCurrency() {

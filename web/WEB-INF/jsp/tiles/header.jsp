@@ -10,6 +10,7 @@
     <security:authorize ifAllGranted="ROLE_PREVIOUS_ADMINISTRATOR">
     <c:url value="/j_spring_security_exit_user" var="exitURL">
         <c:param name="targetUrl" value="${switchUserReturnUrl}"/>
+        <c:param name="exitUserId" value="${user.userId}"/>
     </c:url>
     <a class="whiteDotLink white noline" href="${exitURL}"><spring:message code="exit"/></a>&nbsp;
     </security:authorize>
