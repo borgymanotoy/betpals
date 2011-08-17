@@ -42,7 +42,7 @@ ${competition.name}
 ${competition.description}
 
 <spring:message code="competition.invitation.wanna.join"/>
-https://www.mybetpals.com/join/${competition.encodedLink}
+http://www.mybetpals.com/join/${competition.encodedLink}
             </textarea>
     </div>
     <p>&nbsp;</p>
@@ -93,9 +93,12 @@ https://www.mybetpals.com/join/${competition.encodedLink}
 </form:form>
     <h4><spring:message code="competition.share.header"/></h4>
     <p><spring:message code="competition.share.header.text"/></p>
+    <c:if test="${not empty user.facebookUser}">
     <div class="formSectionDiv">
-        <span class="clickable greenDotLink" onclick="shareToMedia('1');return false">Facebook</span>
+        <span class="clickable greenDotLink" onclick="shareToMedia('1');return false;">Facebook</span>
     </div>
+    </c:if>
+    
     <p>&nbsp;</p>
 </div>
 <div id="confirmShare" title='<spring:message code="confirmation.share.competition.title"/>'>

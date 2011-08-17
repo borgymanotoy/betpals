@@ -41,6 +41,8 @@ public interface CompetitionRepository {
 	
 	Collection<Invitation> loadInvitationsForUser(Long userId);
 	
+	Collection<Invitation> loadInvitationsForCommunity(Long communityId);
+	
 	Invitation loadInvitationById(Long id);
 	
 	Competition loadCompetitionById(Long id);

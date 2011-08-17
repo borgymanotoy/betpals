@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,10 +28,12 @@ public class Invitation implements Serializable {
 	private Date created;
 	private String ownerName;
 	private String competitionName;
-	
+	@Enumerated(EnumType.STRING)
+	private InvitationType invitationType;
 	
 	public Invitation() {
 		this.created = new Date();
+		this.invitationType = InvitationType.USER;
 	}
 
 	public Invitation(Competition competition, Long inviteeId) {
@@ -44,6 +48,17 @@ public class Invitation implements Serializable {
 		this.competitionId = competition.getId();
 		this.competitionName = competition.getName();
 		this.deadline = competition.getDeadline();
+	}
+	
+	public Invitation(Competition competition, UserProfile owner, Long inviteeId, InvitationType invitationType) {
+		this();
+		this.ownerId = owner.getUserId();
+		this.ownerName = owner.getFullName();
+		this.inviteeId = inviteeId;
+		this.competitionId = competition.getId();
+		this.competitionName = competition.getName();
+		this.deadline = competition.getDeadline();
+		this.invitationType = invitationType;
 	}
 	
 	public Long getId() {
@@ -127,6 +142,14 @@ public class Invitation implements Serializable {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public void setInvitationType(InvitationType invitationType) {
+		this.invitationType = invitationType;
+	}
+
+	public InvitationType getInvitationType() {
+		return invitationType;
 	}
 	
 	

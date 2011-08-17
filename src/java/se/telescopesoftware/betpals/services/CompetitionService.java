@@ -3,6 +3,7 @@ package se.telescopesoftware.betpals.services;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
@@ -51,6 +52,8 @@ public interface CompetitionService {
 	
 	Collection<Invitation> getInvitationsForUser(Long userId);
 
+	Collection<Invitation> getInvitationsForCommunity(Long communityId);
+	
 	Invitation getInvitationById(Long id);
 	
 	Competition getCompetitionById(Long id);
@@ -86,5 +89,8 @@ public interface CompetitionService {
     Collection<CompetitionLogEntry> getCompetitionLogEntries(Long competitionId);
 	
     void processExpiredCompetitions();
+
+	void sendInvitationsToCommunities(Competition competition,
+			Set<Long> communityIdSet, UserProfile userProfile, Locale locale);
 
 }

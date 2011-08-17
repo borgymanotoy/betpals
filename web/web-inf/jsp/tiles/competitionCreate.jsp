@@ -10,22 +10,36 @@
         jQuery('#competitionForm').submit();
 	} 
 	
+	
     jQuery(document).ready(function() {
-        jQuery("#competitionDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
+        jQuery("#competitionDeadline").datetimepicker({ 
+        	dateFormat: 'yy-mm-dd', 
+        	minDate: 0, 
+        	timeFormat: 'hh:mm',
+        	onClose: function(dateText, inst) {
+        	    jQuery.getJSON('<c:url value="/calculatesettlingdate.html"/>', 
+        	    		{ deadlineDate: dateText }, 
+        	    		function(json) {
+        	    			if (json.success == 'true') {
+        	    			   jQuery("#settlingDeadline").val(json.settlingDate);
+        	    			}
+        	    		});
+       		}
+        });
         jQuery("#settlingDeadline").datetimepicker({ dateFormat: 'yy-mm-dd', minDate: 0, timeFormat: 'hh:mm' });
         
-        var thumb = $('img#thumb'); 
+        var thumb = jQuery('img#thumb'); 
 
         new AjaxUpload('#imageUpload', {
             action: '<c:url value="/savetempcompetitionimage.html"/>',
             name: 'imageFile',
             onSubmit: function(file, extension) {
-                $('div.preview').addClass('loading');
+                jQuery('div.preview').addClass('loading');
                 jQuery('#filenameDiv').text('<spring:message code="generating.thumbnail"/>');
             },
             onComplete: function(file, response) {
                 thumb.load(function(){
-                    $('div.preview').removeClass('loading');
+                    jQuery('div.preview').removeClass('loading');
                     thumb.unbind();
                 });
 
@@ -44,6 +58,9 @@
                 }
             }
         });
+        <c:if test="${competition.competitionType == 'FIXED_STAKE'}">
+           jQuery('#fixedStakeDiv').show();
+        </c:if>
     });
 
    
@@ -117,9 +134,12 @@
         </form:select> 
     </div>    
     <div class="formSectionDiv">
-        <input type="radio" name="competitionType" value="POOL_BETTING" onclick="jQuery('#fixedStake').val('');" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>/><spring:message code="competition.type.pool.betting"/><br/>
-        <input type="radio" name="competitionType" value="FIXED_STAKE" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>/><spring:message code="competition.type.fixed.stake"/>
-        <form:input path="fixedStake" size="4" id="fixedStake"/>
+        <input type="radio" name="competitionType" value="POOL_BETTING" onclick="jQuery('#fixedStake').val(''); jQuery('#fixedStakeDiv').hide();" <c:if test="${competition.competitionType == 'POOL_BETTING'}">checked="checked"</c:if>/><spring:message code="competition.type.pool.betting"/><br/>
+        <input type="radio" name="competitionType" value="FIXED_STAKE" onclick="jQuery('#fixedStakeDiv').show();" <c:if test="${competition.competitionType == 'FIXED_STAKE'}">checked="checked"</c:if>/><spring:message code="competition.type.fixed.stake"/>
+        <div style="padding-left: 20px; display: none;" id="fixedStakeDiv">
+                <spring:message code="competition.stake"/>&nbsp;
+                <form:input path="fixedStake" size="4" id="fixedStake"/>
+        </div>
     </div>
     <p class="error">
         <form:errors path="*" />

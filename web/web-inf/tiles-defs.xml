@@ -103,7 +103,9 @@
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationList.jsp"/>
     </definition>
     <definition name="invitationView" extends="homeView">
+        <put-attribute name="leftPane" value="/WEB-INF/jsp/tiles/emptyLeftPane.jsp"/>
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationView.jsp"/>
+        <put-attribute name="rightPane" value="/WEB-INF/jsp/tiles/onlyAdvRightPane.jsp"/>
     </definition>
 <!-- _______________________________________________________________________________ -->
 

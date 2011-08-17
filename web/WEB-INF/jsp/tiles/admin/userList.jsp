@@ -36,12 +36,18 @@
 
      <display:table requestURI="/admin/listusers.html" name="userList" 
         id="userListTable" class="palsTable" pagesize="20" 
-        decorator="se.telescopesoftware.betpals.web.decorators.UserTableDecorator">
+        >
          <display:column class="userListColumn" property="name" title="Name" sortable="true"/>
          <display:column class="userListColumn" property="surname" title="Surname" sortable="true"/>
-         <display:column class="userListColumn" property="lastLoginDate" title="Last login" sortable="true"/>
-         <display:column class="userListColumn" property="lastBetDate" title="Last placed bet" sortable="true"/>
-         <display:column class="userListColumn" property="lastCompetitionDate" title="Last created bet" sortable="true"/>
+         <display:column class="userListColumn" title="Last login" sortable="true">
+            <fmt:formatDate value="${userListTable.lastLoginDate}" pattern="yyyy-MM-dd HH:mm"/>
+         </display:column>
+         <display:column class="userListColumn" title="Last placed bet" sortable="true">
+            <fmt:formatDate value="${userListTable.lastBetDate}" pattern="yyyy-MM-dd HH:mm"/>
+         </display:column>
+         <display:column class="userListColumn" title="Last created bet" sortable="true">
+            <fmt:formatDate value="${userListTable.lastCompetitionDate}" pattern="yyyy-MM-dd HH:mm"/>
+         </display:column>
          <display:column class="userListColumn" property="numberOfVisits" title="logins" sortable="true"/>
          <display:column class="userListColumn" property="betsCount" title="placed bets" sortable="true"/>
          <display:column class="userListColumn" property="competitionsCount" title="created bets" sortable="true"/>

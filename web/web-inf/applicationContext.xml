@@ -14,13 +14,8 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
 
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-		  <list>
-		      <value>/WEB-INF/app.properties</value>
-		  </list>
-		</property>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/app.properties"/>
 	</bean>
     <bean id="appRoot" class="java.lang.String">
         <constructor-arg type="java.lang.String" value="${betpals.root}" />
@@ -217,7 +212,7 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <property name="facebookAccessTokenUrl" value="https://graph.facebook.com/oauth/access_token"/>
         <property name="facebookUserInfoUrl" value="https://graph.facebook.com/me"/>
         <property name="facebookApiUrl" value="https://graph.facebook.com/"/>
-        <property name="competitionUrl" value="https://www.mybetpals.com/join/"/>
+        <property name="competitionUrl" value="http://www.mybetpals.com/join/"/>
     </bean>
 	
 	<!-- ================================================================= -->

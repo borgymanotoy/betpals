@@ -16,7 +16,7 @@ public class FacebookServiceImpl implements FacebookService {
 	private String facebookAccessTokenUrl = "https://graph.facebook.com/oauth/access_token";
 	private String facebookUserInfoUrl = "https://graph.facebook.com/me";
 	private String facebookApiUrl = "https://graph.facebook.com/";
-	private String competitionUrl = "https://www.mybetpals.com/join/";
+	private String competitionUrl = "http://www.mybetpals.com/join/";
 
     private static Logger logger = Logger.getLogger(FacebookServiceImpl.class);
 

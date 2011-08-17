@@ -1,6 +1,8 @@
 package se.telescopesoftware.betpals.web;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -11,11 +13,14 @@ import javax.validation.Valid;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.codec.Base64;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +54,7 @@ public class CompetitionController extends AbstractPalsController {
 	private ActivityService activityService;
 	private FacebookService facebookService;
 	
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     
     @Autowired
     public void setActivityService(ActivityService activityService) {
@@ -169,7 +175,7 @@ public class CompetitionController extends AbstractPalsController {
         	currentAlternative.increasePriority();
             nextAlternative.decreasePriority();
         }
-		
+        competition.getDefaultEvent().normalizeAlternativesPriorities();
 		competition = competitionService.saveCompetition(competition, null, false);
 		
 		Alternative alternative = new Alternative();
@@ -228,6 +234,20 @@ public class CompetitionController extends AbstractPalsController {
 		return "userHomepageAction";
 	}
 
+	
+	@InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
+	
+	@RequestMapping(value="/calculatesettlingdate")	
+	public void calculateSettlingDate(@RequestParam("deadlineDate") Date deadlineDate, HttpServletResponse response ) {
+		DateTime deadline = new DateTime(deadlineDate.getTime());
+		String settlingDate = dateFormat.format(deadline.plusDays(competitionService.getDefaultSettlingInterval()).toDate());
+		String message = "{\"success\":\"true\", \"settlingDate\":\"" + settlingDate + "\"}";
+		sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
+	}
+	
 	@RequestMapping(value="/savetempcompetitionimage")	
 	public void saveTempImage(@RequestParam("imageFile") MultipartFile imageFile, HttpServletResponse response) {
 		String filename = "tmp" + getUserId();
@@ -268,13 +288,17 @@ public class CompetitionController extends AbstractPalsController {
 	    	for (Long communityId : invitationHelper.getCommunityIdSet()) {
 	    		Community community = getUserService().getCommunityById(communityId);
 	    		friendsIdSet.addAll(community.getMembersIdSet());
+	    		String message = "Invited to competition: " + competition.getName(); //TODO: Add Message resource
+	        	Activity activity = new Activity(getUserProfile(), community.getId(), community.getName(), message, ActivityType.COMMUNITY);
+	        	activityService.saveActivity(activity);
 	    	}
 	
+	    	competitionService.sendInvitationsToCommunities(competition, invitationHelper.getCommunityIdSet(), getUserProfile(), locale);
 	    	competitionService.sendInvitationsToFriends(competition, friendsIdSet, getUserProfile(), locale);
 		}
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
-    	activity.setMessage("Created new competition: " + competition.getName());
+    	activity.setMessage("Created new competition: " + competition.getName()); //TODO: Add Message resource
     	activityService.saveActivity(activity);
 		
 		return "manageCompetitionsAction";
@@ -297,6 +321,7 @@ public class CompetitionController extends AbstractPalsController {
 
 		Event event = competitionService.getEventById(eventId);
 		event.addAlternative(alternative);
+		event.normalizeAlternativesPriorities();
 		event = competitionService.saveEvent(event);
 		
 		alternative = new Alternative();

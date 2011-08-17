@@ -33,6 +33,7 @@ import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
+import se.telescopesoftware.betpals.domain.InvitationType;
 import se.telescopesoftware.betpals.domain.UserProfile;
 import se.telescopesoftware.betpals.repository.CompetitionRepository;
 
@@ -162,6 +163,16 @@ public class CompetitionServiceImpl implements CompetitionService {
 		}
 	}
 
+	@Transactional(readOnly = false)
+	public void sendInvitationsToCommunities(Competition competition, Set<Long> communitiesIds, UserProfile owner, Locale locale) {
+		for (Long communityId : communitiesIds) {
+			Invitation invitation = new Invitation(competition, owner, communityId, InvitationType.COMMUNITY);
+			logger.info("Sending " + invitation);
+			saveCompetitionLogEntry(competition.getId(), "Sending " + invitation);
+			competitionRepository.storeInvitation(invitation);
+		}
+	}
+	
 	public Integer getInvitationsForUserCount(Long userId) {
 		return competitionRepository.getInvitationsForUserCount(userId);
 	}
@@ -170,6 +181,10 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadInvitationsForUser(userId);
 	}
 
+	public Collection<Invitation> getInvitationsForCommunity(Long communityId) {
+		return competitionRepository.loadInvitationsForCommunity(communityId);
+	}
+	
 	public Invitation getInvitationById(Long id) {
 		return competitionRepository.loadInvitationById(id);
 	}

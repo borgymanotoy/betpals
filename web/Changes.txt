@@ -1,3 +1,24 @@
+== Version 0.9.5 =======================================================
+
+New features and CRs
+
+    * Added "Create" button to draft bets page
+    * Hide stake input box until Fixed stake is selected
+    * Fill in the default settling date when the deadline is set
+    * "Bets" tab on community page is implemented
+    * Removed left panel on "Place bet" page
+    
+Bug fixes
+
+    * Fixed Invitation link to landing page
+    * Increase limit on uploaded image weight till 2Mb 
+    * Fixed sorting of alternatives on create bet page
+    * Do not show send to facebook option for users not logged in from facebook
+    * In case of community invitation, message now visible on community wall
+    * Do not send duplicate invitations
+    * Fixed sorting in back-office user list
+    
+    
 == Version 0.9.4 =======================================================
 
 New features and CRs

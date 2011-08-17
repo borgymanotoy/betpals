@@ -115,7 +115,7 @@ public class UserProfile implements Serializable {
 
     public void setUserId(Long userId) {
     	System.out.println("Setting user id!");
-
+    	//TODO: Remove or implement!
 //        this.userId = userId;
     }
 

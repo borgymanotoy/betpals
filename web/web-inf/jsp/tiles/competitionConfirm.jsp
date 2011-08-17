@@ -30,7 +30,7 @@
     <h4><spring:message code="competition.alternatives.header"/></h4>
     <div class="formSectionDiv">
         <ul id="friendList">
-        <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
+        <c:forEach items="${competition.defaultEvent.sortedAlternatives}" var="altFromList" varStatus="status">
         <li>
             <div class="span-12">
                 <div class="span-2 userPicDiv">

@@ -3,6 +3,7 @@ package se.telescopesoftware.betpals.repository;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -18,6 +19,7 @@ import se.telescopesoftware.betpals.domain.CompetitionLogEntry;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
+import se.telescopesoftware.betpals.domain.InvitationType;
 
 @Repository
 public class HibernateCompetitionRepositoryImpl implements CompetitionRepository {
@@ -76,7 +78,14 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 
 	public void storeInvitation(Invitation invitation) {
     	Session session = sessionFactory.getCurrentSession();
-		session.saveOrUpdate(invitation);
+    	Query query = session.createQuery("from Invitation i where i.inviteeId = :inviteeId and i.competitionId = :competitionId and i.invitationType = :invitationType order by i.created desc");
+    	query.setLong("inviteeId", invitation.getInviteeId());
+    	query.setLong("competitionId", invitation.getCompetitionId());
+    	query.setParameter("invitationType", invitation.getInvitationType());
+    	List<?> result = query.list();
+    	if (result == null || result.isEmpty()) {
+    		session.saveOrUpdate(invitation);
+    	}
 	}
 
 	public Integer getInvitationsForUserCount(Long userId) {
@@ -89,11 +98,21 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 	@SuppressWarnings("unchecked")
 	public Collection<Invitation> loadInvitationsForUser(Long userId) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from Invitation i where i.inviteeId = :userId order by i.created desc");
+    	Query query = session.createQuery("from Invitation i where i.inviteeId = :userId and i.invitationType = :invitationType order by i.created desc");
     	query.setLong("userId", userId);
+    	query.setParameter("invitationType", InvitationType.USER);
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public Collection<Invitation> loadInvitationsForCommunity(Long communityId) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Invitation i where i.inviteeId = :communityId and i.invitationType = :invitationType order by i.created desc");
+		query.setLong("communityId", communityId);
+		query.setParameter("invitationType", InvitationType.COMMUNITY);
+		return query.list();
+	}
+	
 	public Invitation loadInvitationById(Long id) {
     	Session session = sessionFactory.getCurrentSession();
 		return (Invitation) session.get(Invitation.class, id);

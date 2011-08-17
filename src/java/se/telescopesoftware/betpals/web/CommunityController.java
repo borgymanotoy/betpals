@@ -23,11 +23,13 @@ import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Community;
 import se.telescopesoftware.betpals.domain.UserRequest;
 import se.telescopesoftware.betpals.services.ActivityService;
+import se.telescopesoftware.betpals.services.CompetitionService;
 
 @Controller
 public class CommunityController extends AbstractPalsController {
 
     private ActivityService activityService;
+	private CompetitionService competitionService;
 
 	
     @Autowired
@@ -35,7 +37,12 @@ public class CommunityController extends AbstractPalsController {
         this.activityService = activityService;
     }
 
-    
+	@Autowired
+	public void setCompetitionService(CompetitionService competitionService) {
+		this.competitionService = competitionService;
+	}
+
+	
     @RequestMapping(value="/mycommunities")
     public String viewCommunities(Model model) {
     	model.addAttribute("tab", "communities");
@@ -135,12 +142,11 @@ public class CommunityController extends AbstractPalsController {
 		Community community = getUserService().getCommunityById(communityId);
 		model.addAttribute(community);
 		
-		Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(communityId, pageId, null, ActivityType.COMMUNITY);
-		model.addAttribute(activities);
-    	model.addAttribute("numberOfPages", activityService.getActivitiesPageCountForExtensionIdAndType(communityId, ActivityType.COMMUNITY, null));
-
-		
 		if (community.checkMembership(getUserId())) {
+			Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(communityId, pageId, null, ActivityType.COMMUNITY);
+			model.addAttribute(activities);
+			model.addAttribute("numberOfPages", activityService.getActivitiesPageCountForExtensionIdAndType(communityId, ActivityType.COMMUNITY, null));
+			model.addAttribute("invitationList", competitionService.getInvitationsForCommunity(communityId));
 			return "viewCommunityMemberView";
 		}
 		return "viewCommunityView";

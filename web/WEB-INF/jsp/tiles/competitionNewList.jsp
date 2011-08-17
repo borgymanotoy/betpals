@@ -10,6 +10,7 @@
     <h2 class="dark"><spring:message code="competition.new.list.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
+    <button style="margin-bottom: 10px;" class="blueButton90" onclick="manageCompetition(); return false;"><spring:message code="button.create.competition"/></button>
     <h4><spring:message code="competition.new.list.header"/></h4>
     <ul id="friendList">
     <c:forEach items="${competitionList}" var="competition">
