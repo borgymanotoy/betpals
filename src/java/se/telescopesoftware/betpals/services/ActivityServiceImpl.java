@@ -21,7 +21,8 @@ import se.telescopesoftware.betpals.repository.ActivityRepository;
 public class ActivityServiceImpl implements ActivityService {
 
 	private ActivityRepository activityRepository;
-	private Integer activitiesPerPage;
+	private SiteConfigurationService siteConfigurationService;
+
 	
 	private static Logger logger = Logger.getLogger(ActivityServiceImpl.class);
 
@@ -32,14 +33,10 @@ public class ActivityServiceImpl implements ActivityService {
     }
     
     @Autowired
-    public void setActivitiesPerPage(Integer defaultItemsPerPage) {
-    	this.activitiesPerPage = defaultItemsPerPage;
+    public void setSiteConfigurationService(SiteConfigurationService siteConfigurationService) {
+    	this.siteConfigurationService = siteConfigurationService;
     }
 
-    
-    public Integer getActivitiesPerPage() {
-    	return activitiesPerPage;
-    }
     
 	@Transactional(readOnly = false)
 	public void saveActivity(Activity activity) {
@@ -51,7 +48,8 @@ public class ActivityServiceImpl implements ActivityService {
 		List<Long> ownerIds = new ArrayList<Long>();
 		ownerIds.addAll(userProfile.getFriendsIdSet());
 		ownerIds.add(userProfile.getUserId());
-		
+		int activitiesPerPage = new Integer(siteConfigurationService.getParameterValue("activities.per.page", "10")).intValue();
+
 		return activityRepository.loadActivitiesForOwnerIds(
 				ownerIds, 
 				pageNumber != null ? pageNumber : 0, 
@@ -118,12 +116,12 @@ public class ActivityServiceImpl implements ActivityService {
 
 		Integer totalActivityCount = activityRepository.getActivitiesCountForUserProfile(ownerIds);
 		if (itemsPerPage == null) {
-			itemsPerPage = activitiesPerPage;
+			itemsPerPage = new Integer(siteConfigurationService.getParameterValue("activities.per.page", "10")).intValue();
 		}
 		
         if (totalActivityCount != null) {
         	Integer result = new Integer(totalActivityCount.intValue() / itemsPerPage.intValue());
-        	if ((result.intValue() * itemsPerPage.intValue()) < totalActivityCount.intValue()) {
+        	if (result.intValue() != 0 && (result.intValue() * itemsPerPage.intValue()) < totalActivityCount.intValue()) {
         		result += 1;
         	}
             return result;
@@ -133,6 +131,7 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	public Collection<Activity> getActivitiesForExtensionIdAndType(Long extensionId, Integer pageNumber, Integer itemsPerPage, ActivityType activityType) {
+		int activitiesPerPage = new Integer(siteConfigurationService.getParameterValue("activities.per.page", "10")).intValue();
 		return activityRepository.loadActivitiesForExtensionIdAndType(extensionId,
 				pageNumber != null ? pageNumber : 0, 
 				itemsPerPage != null ? itemsPerPage : activitiesPerPage, activityType);
@@ -143,12 +142,12 @@ public class ActivityServiceImpl implements ActivityService {
 
 		Integer totalActivityCount = activityRepository.getActivitiesCountForExtensionIdAndType(extensionId, activityType);
 		if (itemsPerPage == null) {
-			itemsPerPage = activitiesPerPage;
+			itemsPerPage = new Integer(siteConfigurationService.getParameterValue("activities.per.page", "10")).intValue();
 		}
 		
         if (totalActivityCount != null) {
         	Integer result = new Integer(totalActivityCount.intValue() / itemsPerPage.intValue());
-        	if ((result.intValue() * itemsPerPage.intValue()) < totalActivityCount.intValue()) {
+        	if (result.intValue() != 0 && (result.intValue() * itemsPerPage.intValue()) < totalActivityCount.intValue()) {
         		result += 1;
         	}
             return result;

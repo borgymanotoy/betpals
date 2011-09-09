@@ -48,6 +48,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            return false;
        } 
        
+       function joinCompetition(competitionId) {
+           jQuery('#competitionToJoin').val(competitionId);
+           jQuery('#joinCompetitionForm').submit();
+       } 
+       
+       
        jQuery(document).ready(function() {
            jQuery("#usernameField").focus();
            jQuery("#gallery").gallery();
@@ -102,8 +108,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         </div>
 	    </c:if>
     </div>
-    <div id="contentArea" class="span-24">
-        <div class="span-11">
+    <div id="loginContentArea" class="span-24">
+        <div class="span-11 whiteBg">
             <div id="introArea">
                 <div id="gallery">
                     <img class="galItem" src='<c:url value="/i/gallery/5.jpg"/>'/>
@@ -112,9 +118,25 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                     <img class="galItem" src='<c:url value="/i/gallery/1.jpg"/>'/>
                     <img class="galItem" src='<c:url value="/i/gallery/3.jpg"/>'/>
                 </div>
-                <div class="prepend-2 append-1">
-	                <p style="padding-top: 10px; color: #1b6b87; font-size: 12px;"><span style="font-size: 18px;">MyBetpals</span> - here goes some text with description, slogan or something similar, but not very long, or we will need to scroll page.</p>
-                </div>
+            </div>
+            <div id="lcomptitle" class="prepend-1 span-10 last">New competitions</div>
+            <div class="span-11 last pbDiv">
+	            <ul id="pbList">
+	            <c:forEach items="${topPublicCompetitions}" var="competition" varStatus="status">
+	                <li>
+	                    <div class="prepend-1 span-10 pb_${status.count}">
+	                        <div class="span-2 pbPicDiv">
+	                            <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
+	                        </div>
+	                        <div class="span-8 last">
+	                            <h5 class="clickable pbTitle" onclick="joinCompetition(${competition.id});">${competition.name}</h5>
+	                            <span class="detailTitle"><spring:message code="competition.creator"/>: </span>${competition.owner.fullName}<br/>
+	                            <span class="detailTitle"><spring:message code="competition.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/>
+	                        </div>
+	                    </div>
+	                </li>
+	            </c:forEach>
+	            </ul>
             </div>
         </div>
         <div id="signupArea" class="span-13 last">
@@ -139,6 +161,19 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <div class="span-4">&nbsp;</div>
             </form:form>
             <div class="span-9 last">&nbsp;</div>
+            <div class="prepend-2 span-9 append-2 last" style="padding-top: 30px;">
+                <p class="loginText"><span style="font-size: 18px;">myBetpals</span> - here goes some text with description, slogan or something similar, but not very long, or we will need to scroll page. <br/><br/><br/><br/><br/><br/></p>
+            </div>
+            <div class="prepend-2 span-5" style="padding-bottom: 20px;">
+                <a href="">Contact Us</a><br/>
+                <a href="">Security</a><br/>
+                <a href="">Terms and conditions</a>
+            </div>
+            <div class="span-4 append-2 last" style="padding-bottom: 20px;">
+                <a href="">Customer service</a><br/>
+                <a href="">Privacy policy</a><br/>
+                <a href="">Help</a>
+            </div>
         </div>
     </div>
     <div class="span-24" id="bottom">&nbsp;</div>
@@ -148,6 +183,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 </form>
 <form action='<c:url value="/forgotpasswordview.html"/>' method="post" id="forgotPasswordForm">
     <input type="hidden" name="email" value=""/>
+</form>
+<form action='<c:url value="/joincompetition.html"/>' method="post" id="joinCompetitionForm">
+    <input type="hidden" name="competitionId" value="" id="competitionToJoin"/>
 </form>
 
 </body>

@@ -52,6 +52,11 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            jQuery('#languageForm').submit();
        } 
 
+       function viewPublicCompetition(competitionId) {
+           jQuery('#publicCompetitionToView').val(competitionId);
+           jQuery('#viewPublicCompetitionForm').submit();
+       } 
+       
     		          
     </script>
 </head>
@@ -74,6 +79,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 </body>
 <form action="" method="post" id="languageForm">
     <input type="hidden" name="sitelang" value=""/>
+</form>
+<form action='<c:url value="/ongoingcompetition.html"/>' method="post" id="viewPublicCompetitionForm">
+    <input type="hidden" name="competitionId" value="" id="publicCompetitionToView"/>
 </form>
 
 </html>

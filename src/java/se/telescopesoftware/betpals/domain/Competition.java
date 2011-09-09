@@ -86,6 +86,7 @@ public class Competition {
 	
 	public Competition() {
 		this.competitionType = CompetitionType.POOL_BETTING;
+		this.accessType = AccessType.PRIVATE;
 	}
 
 	public Competition(String name) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import se.telescopesoftware.betpals.domain.AccessType;
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Alternative;
@@ -81,6 +82,21 @@ public class CompetitionManageController extends AbstractPalsController {
 		
 		return "ongoingCompetitionsView";
 	}
+	
+	@RequestMapping(value="/publiccompetitions")	
+	public String getPublicCompetitionsListView(@RequestParam(value="pageId", defaultValue="0", required=false) Integer pageId, Model model, HttpSession session) {
+		model.addAttribute("competitionList", competitionService.getActiveCompetitionsByAccessType(pageId, null, AccessType.PUBLIC));
+    	model.addAttribute("currentPage", pageId);
+    	model.addAttribute("numberOfPages", competitionService.getCompetitionPageCountForAccessType(AccessType.PUBLIC, null));
+
+		return "publicCompetitionsView";
+	}
+	
+    @RequestMapping(value="/searchpubliccompetitions")
+    public String searchPublicCompetitions(@RequestParam("query") String query, Model model) {
+    	model.addAttribute("competitionList", competitionService.searchPublicCompetitions(query));
+    	return "publicCompetitionsView";
+    }
 	
 	@RequestMapping(value="/ongoingcompetition")	
 	public String getOngoingCompetitionView(@RequestParam("competitionId") Long competitionId, @RequestParam(value="pageId", defaultValue="0", required=false) Integer pageId, Model model) {

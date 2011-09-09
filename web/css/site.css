@@ -10,10 +10,7 @@ input[type=text], input[type=password] {
 
 .colorDiv { padding-top: 45px; }
 .colorDiv a { line-height: 12px; }
-.colorDiv img {
-    border: 0;
-    vertical-align: bottom;
-}
+.colorDiv img { border: 0; vertical-align: bottom; }
 
 .logo1 { background: transparent url("../i/logo01.png") 0 0 no-repeat !important; }
 .logo2 { background: transparent url("../i/logo02.png") 0 0 no-repeat !important; }
@@ -46,18 +43,9 @@ input[type=text], input[type=password] {
 
 a { color: #297085 !important; }
 
-.greenDotLink {
-    background: transparent url("../i/greenDot.jpg") 0 2px no-repeat;   
-    padding-left: 15px;
-}
-.whiteDotLink {
-    background: transparent url("../i/whiteDot.png") 0 2px no-repeat;   
-    padding-left: 15px;
-}
-.blueDotLink {
-    background: transparent url("../i/blueDot.jpg") 0 5px no-repeat;   
-    padding-left: 15px;
-}
+.greenDotLink { background: transparent url("../i/greenDot.jpg") 0 2px no-repeat; padding-left: 15px; }
+.whiteDotLink { background: transparent url("../i/whiteDot.png") 0 2px no-repeat; padding-left: 15px; }
+.blueDotLink { background: transparent url("../i/blueDot.jpg") 0 5px no-repeat; padding-left: 15px; }
 
 h2.dark {
     background: transparent url("../i/h2_dark.png") 0 0 no-repeat;   
@@ -83,17 +71,8 @@ h2.dark_long {
     margin-bottom: 0px;
 }
 
-h3 {
-    font-family: "MS Trebuchet", sans-serif;
-    font-size: 20px;
-    color: #297085;
-}
-
-p {
-    font-family: "MS Trebuchet", sans-serif;
-    font-size: 13px;
-    color: #242b21;
-}
+h3 { font-family: "MS Trebuchet", sans-serif; font-size: 20px; color: #297085; }
+p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
 
 #loginButton {
     height: 26px;
@@ -293,16 +272,9 @@ p {
     cursor: pointer;
 }
 
-#accountInfoTable {
-    margin-left: 12px;
-    width: 149px;
-}
+#accountInfoTable { margin-left: 12px; width: 149px; }
 #accountInfoTable td:hover { cursor: pointer; }
-#accountInfoTable td {
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
-
+#accountInfoTable td { padding-top: 2px; padding-bottom: 2px; }
 #accountDetailsTable { margin-bottom: 30px; }
 #accountDetailsTable td {
     padding-top: 5px;
@@ -332,9 +304,7 @@ p {
     border-bottom: 1px solid #d4d4d4;
     padding-right: 0;
 }
-.palsTableHover td {
-    background-color: #b6b6b6 !important;	
-}
+.palsTableHover td { background-color: #b6b6b6 !important; }
 
 .reputationTable td {
     font-family: "MS Trebuchet", sans-serif;
@@ -367,6 +337,7 @@ p {
 
 #contentArea { background-color: #ffffff; }
 
+
 .contentDiv {
     font-family: "MS Trebuchet", sans-serif;
     font-size: 11px;
@@ -382,23 +353,22 @@ p {
 }
 
 #introArea {
-    height: 301px;
+    height: 300px;
     background-color: #ffffff;
-    padding-bottom: 50px;
 }
 
 #linksArea {
     height: 76px;
     background: transparent url("../i/links.jpg") 0 0 no-repeat; 
 }
-
+#loginContentArea { background: #c6c5c5; }
 #signupArea {
     padding-top: 95px;
     font-family: "MS Trebuchet", sans-serif;
     font-size: 11px;
     color: #242b21;
-    height: 306px;
-    background: transparent url("../i/signup.png") 0 0 no-repeat; 
+    height: 100%;
+    background: #3c423b url("../i/signup.png") 0 0 no-repeat; 
 }
 
 #signupArea input[type='text'] {
@@ -420,7 +390,43 @@ p {
     border-radius: 3px;
 }
 #signupArea img { vertical-align: bottom; }
-
+#signupArea a {color: #ffffff !important; background: url("../i/ll_arrow.png") 0 5px no-repeat; padding-left: 10px; text-decoration: none;}
+.loginText {padding-top: 10px; color: #ffffff; font-size: 12px; padding-bottom: 30px; border-bottom: 1px solid #5a5f59; margin-bottom: 30px; }
+#lcomptitle {
+	background: transparent url("../i/lc_title.png") 0 0 no-repeat; 
+	height: 23px; 
+	width: 440px; 
+	color: #ffffff; 
+	font-weight: bold; 
+	font-size: 12px; 
+	font-family: "MS Trebuchet", sans-serif; 
+	padding-top: 4px;
+}
+#pbList {
+    margin-right: 0px;
+    list-style-type: none;
+    padding-left: 0px;
+    background-color: #c6c5c5;
+}
+#pbRightList {
+    margin-right: 0px;
+    margin-left: 1px;
+    list-style-type: none;
+    padding-left: 0px;
+    width: 174px;
+}
+#pbRightList li { border-bottom: 1px solid #c3c4c4;}
+#pbRightList li p { padding-left: 10px; font-size: 11px; margin-bottom: 8px;}
+.pbRightOwnerDiv { background: #ececec url("../i/pbr_link.png") 10px 5px no-repeat; padding-left: 35px; padding-top: 6px; padding-bottom: 7px; }
+.pbPicDiv {padding-bottom: 10px; padding-top: 10px;}
+.pbDiv { background-color: #c6c5c5; width: 440px;}
+.pbTitle { color: #297085 !important; margin-bottom: 2px; margin-top: 8px;}
+.pbRightTitle { color: #297085 !important; margin-bottom: 2px; margin-top: 8px; padding-left: 10px;}
+.pb_1 { background-color: #efefef; width: 440px; border-bottom: 1px solid #3b413a;}
+.pb_2 { background-color: #e5e5e5; width: 440px; border-bottom: 1px solid #3b413a;}
+.pb_3 { background-color: #dcdcdc; width: 440px; border-bottom: 1px solid #3b413a;}
+.pb_4 { background-color: #d3d2d3; width: 440px; border-bottom: 1px solid #3b413a;}
+.pb_5 { background-color: #c6c5c5; width: 440px;}
 #registerButton {
     height: 26px;
     width: 189px;
@@ -566,8 +572,8 @@ p {
 .label { padding-top: 14px; }
 
 #bottom {
-    height: 85px;
-    background: transparent url("../i/btm.png") 0 0 no-repeat; 
+    height: 9px;
+    background: transparent url("../i/btm2.png") 0 0 no-repeat; 
 }
 
 #footerPane {
@@ -837,6 +843,7 @@ tr.odd td {background-color: #e5e5e5;}
 .noborder { border: none !important; }
 
 .white { color: white !important;}
+.whiteBg { background-color: white !important;}
 
 
 .error {

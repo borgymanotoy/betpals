@@ -38,11 +38,6 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <entry key="sv" value="sv"/>
     </util:map>
 
-    <!-- //TODO: Move to site configuration manager -->
-     <bean id="activitiesPerPage" class="java.lang.Integer">
-        <constructor-arg type="java.lang.String" value="10" />
-    </bean>
-
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="/WEB-INF/messages/messages"/>
         <property name="useCodeAsDefaultMessage" value="true"/>
@@ -113,9 +108,12 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
 	<security:http create-session="always">
 		<security:intercept-url pattern="/i/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/competition/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/users/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/css/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/join/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/joincompetition.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/register.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/login.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<security:intercept-url pattern="/processlogout.html" access="IS_AUTHENTICATED_ANONYMOUSLY" />

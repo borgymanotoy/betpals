@@ -1,3 +1,19 @@
+== Version 0.9.6 =======================================================
+
+New features and CRs
+
+    * Bet visibility and participation options (public, friendly, private) are added to bet creation pages.
+    * Page with list of all active public bets added.
+    * Search of public bets by name and description
+    * Selection of public bets for first page and right pane sorted by bet turnover
+    
+    
+Bug fixes
+
+    * Fixed incorrect page number calculations for user wall and community activities
+    
+    
+    
 == Version 0.9.5 =======================================================
 
 New features and CRs

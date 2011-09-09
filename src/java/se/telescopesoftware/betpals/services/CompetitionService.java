@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
+import se.telescopesoftware.betpals.domain.AccessType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
@@ -27,6 +28,14 @@ public interface CompetitionService {
 	Collection<Competition> getNewCompetitionsByUser(Long userId);
 
 	Collection<Competition> getAllCompetitions(Integer pageNumber, Integer itemsPerPage);
+
+	Collection<Competition> getAllActiveCompetitionsByAccessType(AccessType accessType);
+
+	Collection<Competition> getActiveCompetitionsByAccessType(Integer pageNumber, Integer itemsPerPage, AccessType accessType);
+	
+	Collection<Competition> getTopPublicCompetitionsByTurnover(Integer numberOfCompetitions);
+	
+	Collection<Competition> searchPublicCompetitions(String query);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
@@ -92,5 +101,7 @@ public interface CompetitionService {
 
 	void sendInvitationsToCommunities(Competition competition,
 			Set<Long> communityIdSet, UserProfile userProfile, Locale locale);
+
+	Integer getCompetitionPageCountForAccessType(AccessType accessType, Integer itemsPerPage);
 
 }

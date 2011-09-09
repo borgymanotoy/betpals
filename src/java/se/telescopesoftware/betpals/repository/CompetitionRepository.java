@@ -3,6 +3,7 @@ package se.telescopesoftware.betpals.repository;
 import java.util.Collection;
 import java.util.Date;
 
+import se.telescopesoftware.betpals.domain.AccessType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
@@ -20,6 +21,12 @@ public interface CompetitionRepository {
 	Collection<Competition> loadCompetitions(Long userId, CompetitionStatus competitionStatus);
 
 	Collection<Competition> loadCompetitions(Integer pageNumber, Integer itemsPerPage);
+	
+	Collection<Competition> loadAllActiveCompetitions(Integer pageNumber, Integer itemsPerPage);
+
+	Collection<Competition> loadAllActiveCompetitionsByAccessType(Integer pageNumber, Integer itemsPerPage, AccessType accessType);
+
+	Collection<Competition> findPublicCompetitions(String query);
 	
 	Integer getActiveCompetitionsByUserCount(Long userId);
 
@@ -65,6 +72,8 @@ public interface CompetitionRepository {
 	
 	Integer getTotalUserCompetitionsCount(Long userId);
 
+	Integer getActiveCompetitionsCountByAccessType(AccessType accessType);
+
 	Integer getTotalUserBetsCount(Long userId);
 	
 	Date getLastCompetitionCreatedDate(Long userId);
@@ -75,5 +84,4 @@ public interface CompetitionRepository {
     
     Collection<CompetitionLogEntry> loadCompetitionLogEntries(Long competitionId);
 
-    public Collection<Competition> loadAllActiveCompetitions(Integer pageNumber, Integer itemsPerPage);
 }

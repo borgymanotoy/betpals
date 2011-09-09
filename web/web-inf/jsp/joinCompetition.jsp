@@ -32,6 +32,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            jQuery('#invitationDetailsForm').submit();
        } 
        
+       function goHome() {
+           window.location = '<c:url value="/login.html"/>';
+       }
+       
     </script>
 </head>
 <body>
@@ -78,7 +82,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 		    <div style="background-color: #f6f6f6; padding: 20px 40px 20px 40px; margin-top: 15px; margin-bottom: 20px;">
 		      <span style="color: #1b6d87; font-weight: bold; font-size: 12px; padding-right: 40px;"><spring:message code="user.do.you.bet.against"/></span>
 		      <button class="greenButton90 noborder" onclick="getInvitationDetails(${competition.id});"><spring:message code="yes"/></button>&nbsp;
-		      <button class="orangeButton90 noborder" onclick=""><spring:message code="no"/></button>
+		      <button class="orangeButton90 noborder" onclick="goHome();"><spring:message code="no"/></button>
 		    </div>
             <div style="padding-top: 10px;">
                 <span class="detailTitle"><spring:message code="competition.deadline"/>: </span><fmt:formatDate value="${competition.deadline}" pattern="yyyy-MM-dd HH:mm"/><br/>

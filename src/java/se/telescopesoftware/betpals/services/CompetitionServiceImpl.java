@@ -2,10 +2,13 @@ package se.telescopesoftware.betpals.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
+import se.telescopesoftware.betpals.domain.AccessType;
 import se.telescopesoftware.betpals.domain.Account;
 import se.telescopesoftware.betpals.domain.AccountTransaction;
 import se.telescopesoftware.betpals.domain.AccountTransactionType;
@@ -30,6 +34,7 @@ import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
 import se.telescopesoftware.betpals.domain.CompetitionLogEntry;
 import se.telescopesoftware.betpals.domain.CompetitionStatus;
+import se.telescopesoftware.betpals.domain.CompetitionTurnoverComparator;
 import se.telescopesoftware.betpals.domain.CompetitionType;
 import se.telescopesoftware.betpals.domain.Event;
 import se.telescopesoftware.betpals.domain.Invitation;
@@ -48,7 +53,6 @@ public class CompetitionServiceImpl implements CompetitionService {
 	private MessageSource messageSource;
 	private SiteConfigurationService siteConfigurationService;
 	private VelocityEngine velocityEngine;
-
 	
     private static Logger logger = Logger.getLogger(CompetitionServiceImpl.class);
 
@@ -447,6 +451,16 @@ public class CompetitionServiceImpl implements CompetitionService {
 		return competitionRepository.loadCompetitions(pageNumber != null ? pageNumber : new Integer(0),	itemsPerPage);
 	}
 
+	public Collection<Competition> getAllActiveCompetitionsByAccessType(AccessType accessType) {
+		return competitionRepository.loadAllActiveCompetitionsByAccessType(null, null, accessType);
+	}
+	
+	public Collection<Competition> getActiveCompetitionsByAccessType(Integer pageNumber, Integer itemsPerPage, AccessType accessType) {
+		int competitionsPerPage = new Integer(siteConfigurationService.getParameterValue("competitions.per.page", "10")).intValue();
+		return competitionRepository.loadAllActiveCompetitionsByAccessType(pageNumber != null ? pageNumber : new Integer(0), 
+				itemsPerPage != null ? itemsPerPage : competitionsPerPage, accessType);
+	}
+	
 	@Transactional(readOnly = false)
 	public void saveCompetitionLogEntry(CompetitionLogEntry competitionLogEntry) {
 		competitionRepository.storeCompetitionLogEntry(competitionLogEntry);
@@ -570,6 +584,36 @@ public class CompetitionServiceImpl implements CompetitionService {
 				sendSettlingNotificationEmail(competition, null); //TODO: Store locale in Competition?
 			}
 		}
+	}
+
+	public Collection<Competition> getTopPublicCompetitionsByTurnover(Integer numberOfCompetitions) {
+		List<Competition> competitions = new ArrayList<Competition>(getAllActiveCompetitionsByAccessType(AccessType.PUBLIC));
+		Collections.sort(competitions, new CompetitionTurnoverComparator());
+		if (competitions.size() < numberOfCompetitions) {
+			return competitions;
+		}
+		return competitions.subList(0, numberOfCompetitions);
+	}
+
+	public Collection<Competition> searchPublicCompetitions(String query) {
+		return competitionRepository.findPublicCompetitions(query);
+	}
+
+	public Integer getCompetitionPageCountForAccessType(AccessType accessType, Integer itemsPerPage) {
+		Integer totalCount = competitionRepository.getActiveCompetitionsCountByAccessType(accessType);
+		if (itemsPerPage == null) {
+			itemsPerPage = new Integer(siteConfigurationService.getParameterValue("competitions.per.page", "10")).intValue();
+		}
+		
+        if (totalCount != null) {
+        	Integer result = new Integer(totalCount.intValue() / itemsPerPage.intValue());
+        	if (result.intValue() != 0 && (result.intValue() * itemsPerPage.intValue()) < totalCount.intValue()) {
+        		result += 1;
+        	}
+            return result;
+        }
+
+        return new Integer(0);
 	}
 
 

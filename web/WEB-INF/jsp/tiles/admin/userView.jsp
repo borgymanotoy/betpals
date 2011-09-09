@@ -143,7 +143,7 @@
 <form action='<c:url value="/admin/deleteuser.html"/>' method="post" id="deleteUserForm">
     <input type="hidden" name="userId" value="${userProfile.userId}"/>
 </form>
-<form action='<c:url value="/j_spring_security_switch_user"/>' method="post" id="switchUserForm">
+<form action='<c:url value="/j_spring_security_switch_user"/>' method="post" id="switchUserForm" target="_blank">
     <input type="hidden" name="j_username" value="${userProfile.user.username}"/>
 </form>
 <form action='<c:url value="/admin/blockuser.html"/>' method="post" id="blockUserForm">

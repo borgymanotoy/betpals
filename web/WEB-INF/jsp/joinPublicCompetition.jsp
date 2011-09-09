@@ -96,7 +96,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     </div>
     <div class="span-24" id="clearFooter">&nbsp;</div>
 </div>
-<form action='<c:url value="/linkinvitation.html"/>' method="post" id="invitationDetailsForm">
+<form action='<c:url value="/ongoingcompetition.html"/>' method="post" id="invitationDetailsForm">
     <input type="hidden" name="competitionId" value=""/>
 </form>
 

@@ -35,6 +35,7 @@ public class QuickCompetition {
 	@Future
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date settlingDeadline;
+	private AccessType accessType;
 	private boolean facebookPublish;
 	private boolean allFriends;
 	private Set<Long> friendsIdSet;
@@ -42,6 +43,9 @@ public class QuickCompetition {
 	private Long accountId;
 	private MultipartFile imageFile;
 	
+	public QuickCompetition() {
+		this.accessType = AccessType.PRIVATE;
+	}
 	
 	public String getName() {
 		return name;
@@ -130,7 +134,7 @@ public class QuickCompetition {
     	competition.setCompetitionType(CompetitionType.QUICK);
     	competition.setStatus(CompetitionStatus.OPEN);
     	competition.setFixedStake(getStake());
-    	competition.setAccessType(AccessType.PRIVATE);
+    	competition.setAccessType(getAccessType());
     	competition.setDescription(getDescription());
     	
     	competition.setDeadline(getDeadline());
@@ -168,6 +172,14 @@ public class QuickCompetition {
 
 	public void setSettlingDeadline(Date settlingDeadline) {
 		this.settlingDeadline = settlingDeadline;
+	}
+	
+	public AccessType getAccessType() {
+		return accessType;
+	}
+
+	public void setAccessType(AccessType accessType) {
+		this.accessType = accessType;
 	}
 	
 }

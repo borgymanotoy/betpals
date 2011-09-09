@@ -106,6 +106,11 @@
         </div>
         &nbsp;
     </div>    
+    <div class="formSectionDiv">
+        <input type="radio" name="accessType" value="PUBLIC" <c:if test="${competition.accessType == 'PUBLIC'}">checked="checked"</c:if>/><spring:message code="competition.access.type.public"/><br/>
+        <input type="radio" name="accessType" value="FRIENDLY" <c:if test="${competition.accessType == 'FRIENDLY'}">checked="checked"</c:if>/><spring:message code="competition.access.type.friendly"/><br/>
+        <input type="radio" name="accessType" value="PRIVATE" <c:if test="${competition.accessType == 'PRIVATE'}">checked="checked"</c:if>/><spring:message code="competition.access.type.private"/>
+    </div>
     <div class="formSectionDiv" style="padding-top: 5px; padding-bottom: 15px;">
         <div class="span-12">
             <div class="span-2 labelDiv">

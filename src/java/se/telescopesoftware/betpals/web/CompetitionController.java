@@ -333,7 +333,7 @@ public class CompetitionController extends AbstractPalsController {
 	}
 	
     @RequestMapping(value="/join/{competitionHash}")
-    protected String viewUserProfile(@PathVariable("competitionHash") String competitionHash, ModelMap model) {
+    protected String joinCompetitionByLink(@PathVariable("competitionHash") String competitionHash, ModelMap model) {
     	if (Base64.isBase64(competitionHash.getBytes())) {
     		String decodedString = new String(Base64.decode(competitionHash.getBytes()));
     		String competitionIdString = decodedString.substring(decodedString.indexOf("/") + 1);
@@ -352,6 +352,14 @@ public class CompetitionController extends AbstractPalsController {
         return "joinCompetitionView";
     }
 	
+    @RequestMapping(value="/joincompetition")
+    protected String joinCompetition(@RequestParam("competitionId") Long competitionId, ModelMap model) {
+		Competition competition = competitionService.getCompetitionById(competitionId);
+		model.addAttribute("competition", competition);
+    	
+    	return "joinPublicCompetitionView";
+    }
+    
 	@RequestMapping(value="/quickcompetitionview")	
 	public String getView(@RequestParam("accountId") Long accountId, @RequestParam("stake") BigDecimal stake, @RequestParam("alternative") String alternative, Model model) {
 		QuickCompetition competition = new QuickCompetition();
@@ -427,6 +435,10 @@ public class CompetitionController extends AbstractPalsController {
     	activity.setMessage("Joined the competition: " + competition.getName());
     	
     	activityService.saveActivity(activity);
+    	activity = new Activity(getUserProfile(), competition.getId(), competition.getName(), "", ActivityType.COMPETITION);
+    	activity.setMessage(getUserProfile().getFullName() + " placed bet."); //TODO: Move to message resources.
+    	
+    	activityService.saveActivity(activity);
 
 		return "userHomepageAction";
 	}
@@ -452,6 +464,15 @@ public class CompetitionController extends AbstractPalsController {
 		competitionService.placeBet(bet);
     	logUserAction("Placed " + bet);
 		
+    	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
+    	activity.setMessage("Placed bet on: " + competition.getName());
+    	
+    	activityService.saveActivity(activity);
+    	activity = new Activity(getUserProfile(), competition.getId(), competition.getName(), "", ActivityType.COMPETITION);
+    	activity.setMessage(getUserProfile().getFullName() + " placed bet."); //TODO: Move to message resources.
+    	
+    	activityService.saveActivity(activity);
+
 		return "userHomepageAction";
 	}
 	

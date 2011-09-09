@@ -96,6 +96,9 @@
     <definition name="newCompetitionListTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/competitionNewList.jsp"/>
     </definition>
+    <definition name="publicCompetitionsTilesView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/publicBetsList.jsp"/>
+    </definition>
 <!-- _______________________________________________________________________________ -->
 
 <!-- Invitation definitions _______________________________________________________ -->
@@ -103,9 +106,7 @@
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationList.jsp"/>
     </definition>
     <definition name="invitationView" extends="homeView">
-        <put-attribute name="leftPane" value="/WEB-INF/jsp/tiles/emptyLeftPane.jsp"/>
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/invitationView.jsp"/>
-        <put-attribute name="rightPane" value="/WEB-INF/jsp/tiles/onlyAdvRightPane.jsp"/>
     </definition>
 <!-- _______________________________________________________________________________ -->
 

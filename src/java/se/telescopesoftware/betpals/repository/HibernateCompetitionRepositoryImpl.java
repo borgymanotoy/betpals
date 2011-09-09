@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
+import se.telescopesoftware.betpals.domain.AccessType;
 import se.telescopesoftware.betpals.domain.Alternative;
 import se.telescopesoftware.betpals.domain.Bet;
 import se.telescopesoftware.betpals.domain.Competition;
@@ -184,6 +185,14 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 		return DataAccessUtils.intResult(query.list());
 	}
 
+	public Integer getActiveCompetitionsCountByAccessType(AccessType accessType) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("select count(*) from Competition c where c.accessType = :accessType and c.status != :status");
+		query.setParameter("accessType", accessType);
+		query.setParameter("status", CompetitionStatus.SETTLED);
+		return DataAccessUtils.intResult(query.list());
+	}
+	
 	public Integer getTotalUserBetsCount(Long userId) {
     	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("select count(*) from Bet b where b.ownerId = :userId");
@@ -282,6 +291,26 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 		return query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Collection<Competition> loadAllActiveCompetitionsByAccessType(Integer pageNumber, Integer itemsPerPage, AccessType accessType) {
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from Competition c where c.status != :status and c.accessType = :accessType order by c.created desc");
+		query.setParameter("status", CompetitionStatus.SETTLED);
+		query.setParameter("accessType", accessType);
+		
+		if (itemsPerPage != null) {
+			int offset = 0;
+			int resultsPerPage = itemsPerPage.intValue();
+			if (pageNumber.intValue() > 0) {
+				offset = pageNumber.intValue() * resultsPerPage;
+			}
+			
+			query.setFirstResult(offset);
+			query.setMaxResults(resultsPerPage);
+		}
+		return query.list();
+	}
+	
 
 	public void storeCompetitionLogEntry(CompetitionLogEntry competitionLogEntry) {
 		Session session = sessionFactory.getCurrentSession();
@@ -295,6 +324,17 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
     	Query query = session.createQuery("from CompetitionLogEntry cle where cle.competitionId = :competitionId order by cle.created desc");
     	query.setLong("competitionId", competitionId);
 		return query.list();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public Collection<Competition> findPublicCompetitions(String searchQuery) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Query query = session.createQuery("from Competition c where c.accessType = :accessType and lower(c.name) like :queryString OR " +
+        		"lower(c.description) like :queryString");
+    	query.setString("queryString", "%" + searchQuery.toLowerCase() + "%");
+    	query.setParameter("accessType", AccessType.PUBLIC);
+        return query.list();
 	}
 
 }

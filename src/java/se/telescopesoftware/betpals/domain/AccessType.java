@@ -4,5 +4,6 @@ public enum AccessType {
 	PUBLIC,
 	PRIVATE,
 	COMMUNITY,
-	FRIENDS
+	FRIENDS,
+	FRIENDLY
 }

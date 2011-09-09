@@ -73,6 +73,7 @@ public class SiteConfigurationServiceImpl implements SiteConfigurationService {
         }
     }
 
+	@SuppressWarnings("unchecked")
 	public Map<String, String[]> getAllParameters() {
 		return new TreeMap<String, String[]>((Map)getProperties());
 	}
