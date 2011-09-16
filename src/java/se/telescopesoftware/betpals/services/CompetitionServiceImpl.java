@@ -390,7 +390,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 		Set<Competition> result = new HashSet<Competition>();
 		for (Bet bet : getActiveBetsByUser(userId)) {
 			try {
-				Competition competition = bet.getAlternative().getEvent().getCompetition();
+				Alternative alternative = bet.getAlternative();
+				Event event = alternative.getEvent();
+				Competition competition = event.getCompetition();
 				if (competition.getStatus() != CompetitionStatus.SETTLED) {
 					result.add(competition);
 				}

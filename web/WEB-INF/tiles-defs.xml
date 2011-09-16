@@ -23,6 +23,10 @@
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/userRequestList.jsp"/>
     </definition>
 
+    <definition name="feedbackAcknowledgeTilesView" extends="homeView">
+        <put-attribute name="content" value="/WEB-INF/jsp/tiles/feedbackAcknowledge.jsp"/>
+    </definition>
+
 <!-- Friends, groups and communities definitions ______________________________________________ -->
     <definition name="friendsAndGroupsTilesView" extends="homeView">
         <put-attribute name="content" value="/WEB-INF/jsp/tiles/friends.jsp"/>

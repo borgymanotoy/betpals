@@ -21,7 +21,6 @@ public class EmailServiceImpl implements EmailService {
     private String smtphost = "localhost";
     private String encoding = "UTF-8";
     private String adminEmail;
-    private String adminName;
 
     private Log logger = LogFactory.getLog(EmailServiceImpl.class);
 
@@ -42,12 +41,8 @@ public class EmailServiceImpl implements EmailService {
     	this.adminEmail = email;
     }
 
-    public void setAdminName(String name) {
-    	this.adminName = name;
-    }
     
-    
-    public void sendEmail(String fromAddress, String fromName, String toAddress, String subject, String text) throws AddressException, MessagingException {
+    public void sendEmail(String fromAddress, String toAddress, String subject, String text) throws AddressException, MessagingException {
         InternetAddress internetAddress = new InternetAddress(toAddress);
 
         if (internetAddress != null) {
@@ -71,12 +66,12 @@ public class EmailServiceImpl implements EmailService {
 	public void sendEmail(Long fromUserId, Long toUserId, String subject, String text) throws AddressException, MessagingException {
 		UserProfile fromUserProfile = userService.getUserProfileByUserId(fromUserId);
 		UserProfile toUserProfile = userService.getUserProfileByUserId(toUserId);
-		sendEmail(fromUserProfile.getEmail(), fromUserProfile.getFullName(), toUserProfile.getEmail(), subject, text);
+		sendEmail(fromUserProfile.getEmail(), toUserProfile.getEmail(), subject, text);
 	}
 
 	public void sendEmail(Long toUserId, String subject, String text) throws AddressException, MessagingException {
 		UserProfile toUserProfile = userService.getUserProfileByUserId(toUserId);
-		sendEmail(adminEmail, adminName, toUserProfile.getEmail(), subject, text);
+		sendEmail(adminEmail, toUserProfile.getEmail(), subject, text);
 	}
 	
 

@@ -189,7 +189,6 @@ http://www.springframework.org/schema/security http://www.springframework.org/sc
         <property name="smtphost" value="localhost"/>
         <property name="encoding" value="UTF-8"/>
         <property name="adminEmail" value="noreply@mybetpals.com"/>
-        <property name="adminName" value="MyBetPals"/>
         <property name="userService" ref="userDetailsService"/>
     </bean>
     <bean id="messageResourceService" class="se.telescopesoftware.betpals.services.MessageResourceServiceImpl">

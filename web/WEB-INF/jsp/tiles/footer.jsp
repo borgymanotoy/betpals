@@ -1,5 +1,9 @@
 <%@include file="includes.jsp"%>
 <div id="footerPane" class="span-24">
+    <div class="prepend-4 span-4" style="padding-top: 9px;">
+        <span class="arrowLink clickable" onclick="provideFeedback();"><spring:message code="feedback.link"/></span>
+    </div>
+    <div class="span-16 last"></div>
 &nbsp;
 </div>
 <div class="span-24 versionInfo">

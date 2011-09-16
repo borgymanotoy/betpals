@@ -1,3 +1,14 @@
+== Version 0.9.7 =======================================================
+
+New features and CRs
+
+    * User feedback form and emails added
+    
+Bug fixes
+
+    
+    
+    
 == Version 0.9.6 =======================================================
 
 New features and CRs

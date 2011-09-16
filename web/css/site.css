@@ -330,13 +330,9 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
 #loginInput2 { padding-top: 14px; }
 #loginButtonPane { padding-top: 32px; }
 
-.contentPane img {
-    border: 0;
-    vertical-align: bottom;
-}
+.contentPane img { border: 0; vertical-align: bottom; }
 
 #contentArea { background-color: #ffffff; }
-
 
 .contentDiv {
     font-family: "MS Trebuchet", sans-serif;
@@ -352,15 +348,9 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
     padding-right: 30px;
 }
 
-#introArea {
-    height: 300px;
-    background-color: #ffffff;
-}
+#introArea { height: 300px; background-color: #ffffff; }
 
-#linksArea {
-    height: 76px;
-    background: transparent url("../i/links.jpg") 0 0 no-repeat; 
-}
+#linksArea { height: 76px; background: transparent url("../i/links.jpg") 0 0 no-repeat; }
 #loginContentArea { background: #c6c5c5; }
 #signupArea {
     padding-top: 95px;
@@ -781,10 +771,7 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
     padding-left: 10px;
 }
 
-.panel img {
-    margin-left: 5px;
-    margin-bottom: 5px;
-}
+.panel img { margin-left: 5px; margin-bottom: 5px; }
 .panel {
     background: transparent url("../i/bgDiv.jpg") 0 0 repeat-y; 
     padding-left: 10px;
@@ -802,14 +789,8 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
     padding: 2px;
     vertical-align: bottom;
 }
-.userPicDiv {
-    padding-top: 10px;
-    padding-bottom: 5px;
-}
-.userPicCell {
-    width: 60px;
-    vertical-align: top;
-}
+.userPicDiv { padding-top: 10px; padding-bottom: 5px; }
+.userPicCell { width: 60px; vertical-align: top; }
 .userNameDiv {
     height: 42px;
     padding-top: 28px;
@@ -899,20 +880,11 @@ tr.odd td {background-color: #e5e5e5;}
     margin-bottom: 0px !important;
 }
 
-.userPicCellComment {
-    width: 52px;
-    padding-left: 14px;
-}
+.userPicCellComment { width: 52px; padding-left: 14px; }
 .topTr { background: transparent url("../i/wl_top.png") 0 0 no-repeat; }
-.bottomTr {
-    background: transparent url("../i/wl_bottom.png") 0 0 no-repeat;
-    height: 2px;
-}
+.bottomTr { background: transparent url("../i/wl_bottom.png") 0 0 no-repeat; height: 2px; }
 
-#selectCurrencySpan {
-    font-size: 11px;
-    margin-right: 5px;
-}
+#selectCurrencySpan { font-size: 11px; margin-right: 5px; }
 #selectCurrencyInput { margin-right: 5px; }
 
 .versionInfo {
@@ -952,18 +924,9 @@ tr.odd td {background-color: #e5e5e5;}
     padding-bottom: 1px;
 }
 #quickCompetitionDiv a { color: #ffffff !important; }
-#quickCompetitionStake {
-    width: 40px;
-}
-
-#quickCompetitionAlternative {
-    width: 248px;
-}
-
-#quickCompetitionDiv2 {
-    height: 121px;
-    background: transparent url("../i/quickCompDiv2.png") 0 0 no-repeat; 
-}
+#quickCompetitionStake { width: 40px; }
+#quickCompetitionAlternative { width: 248px; }
+#quickCompetitionDiv2 { height: 121px; background: transparent url("../i/quickCompDiv2.png") 0 0 no-repeat; }
 #quickCompetitionDiv2 h2 {
     font-family: "MS Trebuchet", sans-serif;
     font-weight: bold;
@@ -973,10 +936,7 @@ tr.odd td {background-color: #e5e5e5;}
     padding-top: 8px;
     margin-bottom: 18px;
 }
-#quickCompetitionDiv2 span {
-    font-family: "MS Trebuchet", sans-serif;
-    font-size: 13px;
-}
+#quickCompetitionDiv2 span { font-family: "MS Trebuchet", sans-serif; font-size: 13px; }
 #quickCompetitionDiv2 input {
     -moz-border-radius: 3px 3px 3px 3px;
     border:1px solid #B5B6B6;
@@ -1012,10 +972,7 @@ tr.odd td {background-color: #e5e5e5;}
     height: 25px;
     padding-left: 5px;
 }
-.formSectionDiv label {
-    font-weight: normal;
-    padding-left: 4px;
-}
+.formSectionDiv label { font-weight: normal; padding-left: 4px; }
 .formSectionDiv h6 {
     font-family: "MS Trebuchet", sans-serif;
     font-size: 11px;
@@ -1024,10 +981,7 @@ tr.odd td {background-color: #e5e5e5;}
     margin-bottom: 5px;
     padding-bottom: 3px;
 }
-.formSectionSlimDiv {
-    padding-bottom: 2px;
-    margin-bottom: 0px;
-}
+.formSectionSlimDiv { padding-bottom: 2px; margin-bottom: 0px; }
 .formSectionSlimDiv input[type=text], input[type=password] {
     -moz-border-radius: 3px 3px 3px 3px;
     border: 1px solid #B5B6B6;
@@ -1109,15 +1063,11 @@ tr.odd td {background-color: #e5e5e5;}
 	-moz-border-radius: 0px 0px 3px 3px;
 }
 
-.communityTitle {
-	color: #1b6d87;
-    font-weight: bold;
-}
-.communityCount {
-	color: #1b6d87;
-    font-weight: bold;
-    font-size: 12px;
-}
+.communityTitle { color: #1b6d87; font-weight: bold; }
+.communityCount { color: #1b6d87; font-weight: bold; font-size: 12px; }
+
+.arrowLink {color: #9caa98 !important; background: url("../i/ll_arrow.png") 0 3px no-repeat; padding-left: 10px; text-decoration: none;}
+.arrowLink:hover {color: #ffffff !important;}
 
 .logList {
     list-style: none;
@@ -1136,17 +1086,9 @@ tr.odd td {background-color: #e5e5e5;}
 	font-weight: normal;
 	background-color: #f6f6f6;
 }
-.logFieldTitle {
-	color: #61695f;
-	font-weight: bold;
-}
-.logEntry {
-	padding-top: 2px;
-	padding-bottom: 2px;
-}
-.logHover {
-    background-color: #e5e5e5;
-}
+.logFieldTitle { color: #61695f; font-weight: bold; }
+.logEntry { padding-top: 2px; padding-bottom: 2px; }
+.logHover { background-color: #e5e5e5; }
 
 .logLevelFATAL { color: #cb523a !important; }
 .logLevelERROR { color: #cb523a !important; }

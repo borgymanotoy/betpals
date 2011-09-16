@@ -40,6 +40,29 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 jQuery("body").css("backgroundColor", bgColor);
                 jQuery("#langSelector").css("backgroundColor", bgColor);
     	    }
+    	    
+            jQuery("#feedbackDialog").dialog({
+                resizable: false,
+                autoOpen: false,
+                height:400,
+                width: 500,
+                modal: true,
+                buttons: {
+                    "<spring:message code='button.send'/>": function() {
+                    	var comment = jQuery('#feedbackComment').val();
+                    	if (comment) {
+                    	    jQuery('#feedbackPageUrlField').val(window.location);
+                    	    jQuery('#feedbackCommentField').val(comment);
+                    	    jQuery('#feedbackForm').submit();
+                    	}
+                        $( this ).dialog( "close" );
+                    },
+                    "<spring:message code='button.cancel'/>": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+    	    
 	   });
 
 	   function goHome() {
@@ -57,7 +80,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            jQuery('#viewPublicCompetitionForm').submit();
        } 
        
-    		          
+       function provideFeedback() {
+           jQuery("#feedbackDialog").dialog('open');
+       }	     
+       
     </script>
 </head>
 <body>
@@ -83,5 +109,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <form action='<c:url value="/ongoingcompetition.html"/>' method="post" id="viewPublicCompetitionForm">
     <input type="hidden" name="competitionId" value="" id="publicCompetitionToView"/>
 </form>
+<form action='<c:url value="/feedback.html"/>' method="post" id="feedbackForm">
+    <input type="hidden" name="pageUrl" value="" id="feedbackPageUrlField"/>
+    <input type="hidden" name="comment" value="" id="feedbackCommentField"/>
+</form>
+<div id="feedbackDialog" title="<spring:message code='feedback.dialog.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="feedback.dialog.text"/></p>
+    <textarea id="feedbackComment" style="width: 450px; height: 200px;" rows="5" cols="40"></textarea>
+</div>
 
 </html>
