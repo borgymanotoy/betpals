@@ -1,3 +1,22 @@
+== Version 0.9.8 =======================================================
+
+New features and CRs
+
+    * 0002376: Must confirm over 18 during registration
+    * 0002381: Competiton name shall link to competition
+    * 0002359: No date for comments under activities
+    * 0002362: Screen should not jump to top when wrting comment
+    
+Bug fixes
+
+    * 0002637: New request indicator does not refresh when rejecting a request
+    * 0002638: Error 404 when deleting a friend
+    * 0002640: Create new group/community image is cutoff
+    * 0002636: Too many periods on new friend requests label
+    * Password recovery fixed
+    
+    
+    
 == Version 0.9.7 =======================================================
 
 New features and CRs

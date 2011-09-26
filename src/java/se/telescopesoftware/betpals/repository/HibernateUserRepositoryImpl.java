@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -417,14 +416,15 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 		session.saveOrUpdate(passwordRecoveryRequest);
 	}
 
+	@SuppressWarnings("unchecked")
 	public PasswordRecoveryRequest findPasswordRecoveryRequest(String requestHash) {
     	Session session = sessionFactory.getCurrentSession();
     	Query query = session.createQuery("from PasswordRecoveryRequest pr where pr.requestHash = :requestHash");
     	query.setString("requestHash", requestHash);
-		Iterator<?> result = query.iterate();
-		if (result.hasNext()) {
-			return (PasswordRecoveryRequest) result.next();
-		}
+    	List<PasswordRecoveryRequest> result = query.list();
+    	if (result != null && !result.isEmpty()) {
+    		return result.get(0);
+    	}
 		return null;
 	}
 

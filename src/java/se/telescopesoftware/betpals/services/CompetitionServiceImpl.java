@@ -618,5 +618,17 @@ public class CompetitionServiceImpl implements CompetitionService {
         return new Integer(0);
 	}
 
+	@Override
+	public String getLinkToCompetition(Competition competition) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<a href=\"");
+		sb.append(siteConfigurationService.getParameterValue("site.url", "http://www.mybetpals.com"));
+		sb.append("/ongoingcompetition.html?competitionId=");
+		sb.append(competition.getId());
+		sb.append("\">");
+		sb.append(competition.getName());
+		sb.append("</a>");
+		return sb.toString();
+	}
 
 }

@@ -298,7 +298,7 @@ public class CompetitionController extends AbstractPalsController {
 		}
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
-    	activity.setMessage("Created new competition: " + competition.getName()); //TODO: Add Message resource
+    	activity.setMessage("Created new competition: " + competitionService.getLinkToCompetition(competition)); //TODO: Add Message resource
     	activityService.saveActivity(activity);
 		
 		return "manageCompetitionsAction";
@@ -432,7 +432,7 @@ public class CompetitionController extends AbstractPalsController {
     	logUserAction("Placed " + bet);
     	
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
-    	activity.setMessage("Joined the competition: " + competition.getName());
+    	activity.setMessage("Joined the competition: " + competitionService.getLinkToCompetition(competition));
     	
     	activityService.saveActivity(activity);
     	activity = new Activity(getUserProfile(), competition.getId(), competition.getName(), "", ActivityType.COMPETITION);
@@ -465,7 +465,7 @@ public class CompetitionController extends AbstractPalsController {
     	logUserAction("Placed " + bet);
 		
     	Activity activity = new Activity(getUserProfile(), ActivityType.USER);
-    	activity.setMessage("Placed bet on: " + competition.getName());
+    	activity.setMessage("Placed bet on: " + competitionService.getLinkToCompetition(competition));
     	
     	activityService.saveActivity(activity);
     	activity = new Activity(getUserProfile(), competition.getId(), competition.getName(), "", ActivityType.COMPETITION);

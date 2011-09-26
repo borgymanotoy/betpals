@@ -72,7 +72,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 <p style="padding-top: 15px; font-size: 12px; color: #000000;">
                 <spring:message code="forgot.password.change.text"/>
                 </p>
-                <form action='<c:url value="/changeforgottenpassword.html"/>' method="post">
+                <form id="changePasswordForm" action='<c:url value="/changeforgottenpassword.html"/>' method="post">
 			    <p class="error" id="changePasswordError">
 			    </p>
 			    <div class="span-12 formSectionSlimDiv">

@@ -18,6 +18,24 @@
 		} else if (selectedTab == "communities") {
 			jQuery("#tabs").tabs("select", 2);
 		}
+		
+        jQuery("#confirmDeleteFriend").dialog({
+            resizable: false,
+            autoOpen: false,
+            height:160,
+            modal: true,
+            buttons: {
+                "<spring:message code='button.delete'/>": function() {
+                    jQuery('#deleteFriendForm').submit();
+                    $( this ).dialog( "close" );
+                },
+                "<spring:message code='button.cancel'/>": function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        });
+
+		
 	});
 	
 	function searchFriends() {
@@ -26,6 +44,12 @@
 		    document.search_form.submit();
 		}
 	}
+	
+    function deleteFriend(friendId) {
+        jQuery("#friendToDelete").val(friendId);
+        jQuery("#confirmDeleteFriend").dialog('open');
+    } 
+	
 </script>
 <div id="searchFriendsDiv">
     <h2><spring:message code="friends.title"/></h2>
@@ -55,10 +79,7 @@
 		       	            <h5><a class="noline" href='<c:url value="/viewprofile/${friend.userId}.html"/>'>${friend.fullName}</a></h5>
 			            </div>
 			            <div class="span-1 last right">
-					        <form action='<c:url value="/deletefriend.html"/>' method="post">
-					            <input type="hidden" name="friendId" value="${friend.userId}"/>
-					            <button class="deleteButton" onclick="submit();">&nbsp;</button>
-					        </form>
+				            <button class="deleteButton" onclick="deleteFriend(${friend.userId});">&nbsp;</button>
 				        </div>
 			        </div>
 		        </div>
@@ -160,3 +181,10 @@
         </c:if>
     </div>
 </div>
+<div id="confirmDeleteFriend" title="<spring:message code='confirmation.delete.friend.title'/>">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.delete.friend.text"/></p>
+</div>
+<form action='<c:url value="/deletefriend.html"/>' method="post" id="deleteFriendForm">
+    <input type="hidden" name="friendId" value="" id="friendToDelete"/>
+</form>
+

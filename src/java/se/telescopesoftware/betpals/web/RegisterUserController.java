@@ -54,6 +54,10 @@ public class RegisterUserController extends AbstractPalsController {
     		model.addAttribute(result.getAllErrors());
     		return new ModelAndView("register");
     	}
+    	if (!userProfile.isOver18()) {
+        	model.addAttribute("under18", true);
+    		return new ModelAndView("register");
+    	}
     	
         String username = userProfile.getEmail();
         String password = userProfile.getPassword();

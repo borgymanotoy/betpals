@@ -100,7 +100,7 @@ public class CompetitionManageController extends AbstractPalsController {
 	
 	@RequestMapping(value="/ongoingcompetition")	
 	public String getOngoingCompetitionView(@RequestParam("competitionId") Long competitionId, @RequestParam(value="pageId", defaultValue="0", required=false) Integer pageId, Model model) {
-		Competition competition = competitionService.getCompetitionById(competitionId);
+		Competition competition = competitionService.getCompetitionById(competitionId); //TODO: Check user permissions to view competition
 		model.addAttribute(competition);
 
 		Collection<Activity> activities = activityService.getActivitiesForExtensionIdAndType(competitionId, pageId, null, ActivityType.COMPETITION);

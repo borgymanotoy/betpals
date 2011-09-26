@@ -103,5 +103,7 @@ public interface CompetitionService {
 			Set<Long> communityIdSet, UserProfile userProfile, Locale locale);
 
 	Integer getCompetitionPageCountForAccessType(AccessType accessType, Integer itemsPerPage);
+	
+	public String getLinkToCompetition(Competition competition);
 
 }

@@ -150,17 +150,17 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <div class="span-9 last"><form:input path="surname"/></div>
             <div class="span-4 right label"><spring:message code="registration.password"/></div>
             <div class="span-9 last"><form:password path="password"/></div>
-            <div class="span-4">&nbsp;</div>
-            <div class="span-9 last">
+            <div class="span-4 right label">&nbsp;</div>
+            <div class="span-9 last"><form:checkbox path="over18" style="margin-left: 0;"/>&nbsp;<spring:message code="registration.over18"/></div>
+            <div class="prepend-4 span-9 last">
                 <p class="error">
                     <form:errors path="*"/>
                     <c:if test="${alreadyExist}"><spring:message code='error.user.exist'/></c:if>
+                    <c:if test="${under18}"><spring:message code='error.over.18'/></c:if>
                 </p>
                 <input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/>
             </div>
-            <div class="span-4">&nbsp;</div>
             </form:form>
-            <div class="span-9 last">&nbsp;</div>
             <div class="prepend-2 span-9 append-2 last" style="padding-top: 30px;">
                 <p class="loginText"><span style="font-size: 18px;">myBetpals</span> - here goes some text with description, slogan or something similar, but not very long, or we will need to scroll page. <br/><br/><br/><br/><br/><br/></p>
             </div>

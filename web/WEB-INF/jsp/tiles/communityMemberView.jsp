@@ -168,6 +168,7 @@
 	                           </td>
 	                           <td class="">
 	                               <h5><a class="noline" href='<c:url value="/viewprofile/${comment.ownerId}.html"/>'>${comment.ownerName}</a></h5>
+                                   <span class="commentDate">${comment.timeSinceCreated}</span>
 	                               <p>${comment.message}</p>
 	                           </td>
 	                           <td class="right">

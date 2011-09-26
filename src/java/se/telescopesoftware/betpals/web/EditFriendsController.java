@@ -1,5 +1,7 @@
 package se.telescopesoftware.betpals.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,10 +61,24 @@ public class EditFriendsController extends AbstractPalsController {
     }
     
     @RequestMapping(value="/myrequests")
-    public String viewUserRequests(Model model) {
+    public String viewUserRequests(HttpSession session, Model model) {
     	model.addAttribute("userRequestFriendList", getUserService().getUserRequestsForUserByType(getUserId(), UserRequestType.FRIEND));
     	model.addAttribute("userRequestCommunityList", getUserService().getUserRequestsForUserByType(getUserId(), UserRequestType.COMMUNITY));
+    	session.setAttribute("myRequestsCount", getUserService().getUserRequestForUserCount(getUserId()));
+    	session.setAttribute("friendsSideList", getUserProfile().getLastLoggedInFriends());    	
+
     	return "userRequestsListView";
     }
 
+    @RequestMapping(value="/deletefriend")
+    public String deleteFriend(@RequestParam("friendId") Long friendId, Model model) {
+    	UserProfile friendProfile = getUserService().getUserProfileByUserId(friendId);
+    	UserProfile userProfile = getUserProfile();
+    	userProfile.removeFriend(friendProfile);
+    	getUserService().updateUserProfile(userProfile);
+    	logUserAction("Removing friend " + friendProfile);
+    	return "friendsAndGroupsAction";
+    }
+    
+    
 }

@@ -5,9 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import se.telescopesoftware.betpals.domain.Activity;
 import se.telescopesoftware.betpals.domain.ActivityComment;
+import se.telescopesoftware.betpals.domain.ActivityCommentJSON;
 import se.telescopesoftware.betpals.domain.ActivityLike;
 import se.telescopesoftware.betpals.domain.ActivityType;
 import se.telescopesoftware.betpals.domain.Community;
@@ -60,17 +62,22 @@ public class ActivitiesController extends AbstractPalsController {
     }
 
     @RequestMapping(value="/activitycomment")
-    public String postComment(@RequestParam("message") String message, @RequestParam("activityId") Long activityId, Model model) {
+    public @ResponseBody ActivityCommentJSON postComment(@RequestParam("message") String message, @RequestParam("activityId") Long activityId, Model model) {
     	Activity activity = activityService.getActivity(activityId);
     	if (activity != null) {
     		ActivityComment comment = new ActivityComment(getUserProfile(), message, activity);
     		activity.addComment(comment);
     		activityService.saveActivity(activity);
+    		activity = activityService.getActivity(activityId);
     		
-    		return getReturnUrlForActivity(activity, model);
+    		ActivityCommentJSON commentJSON = new ActivityCommentJSON(getUserProfile(), message, activity);
+    		commentJSON.setId(activity.getCommentIdByMessage(message, commentJSON.getOwnerId()));
+    		return commentJSON;
+//    		return getReturnUrlForActivity(activity, model);
     	}    	
 
-    	return "userHomepageAction";
+    	return null;
+//    	return "userHomepageAction";
     }
     
     @RequestMapping(value="/activitylike")

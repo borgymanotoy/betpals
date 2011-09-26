@@ -1,5 +1,7 @@
 package se.telescopesoftware.betpals.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +14,7 @@ public class SearchFriendsController extends AbstractPalsController {
 
 
     @RequestMapping(value="/allfriends")
-    public String get(@RequestParam(value="tab", required=false) String selectedTab, Model model) {
+    public String get(@RequestParam(value="tab", required=false) String selectedTab, Model model, HttpSession session) {
     	model.addAttribute("friendsList", getUserProfile().getFriends());
     	model.addAttribute("groupList", getUserService().getUserGroups(getUserId()));
     	model.addAttribute("communityList", getUserService().getUserCommunities(getUserId()));
@@ -20,6 +22,7 @@ public class SearchFriendsController extends AbstractPalsController {
     	model.addAttribute("userRequestCommunityList", getUserService().getUserRequestsByUserByType(getUserId(), UserRequestType.COMMUNITY));
 
     	model.addAttribute("tab", selectedTab);
+    	session.setAttribute("friendsSideList", getUserProfile().getLastLoggedInFriends());    	
     	
     	return "friendsAndGroupsView";
     }

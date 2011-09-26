@@ -219,4 +219,14 @@ public class Activity {
 				+ extensionName + "]";
 	}
 	
+	public Long getCommentIdByMessage(String message, Long ownerId) {
+		
+		for (ActivityComment comment : comments) {
+			if (comment.getMessage().equals(message) && comment.getOwnerId().compareTo(ownerId) == 0) {
+				return comment.getId();
+			}
+		}
+		
+		return null;
+	}
 }

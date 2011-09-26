@@ -63,6 +63,8 @@ public class UserProfile implements Serializable {
     private String checkPassword;
     @Transient
     private String oldPassword;
+    @Transient
+    private boolean over18;
 
     @ManyToOne()
     @JoinColumn(name="userId")
@@ -250,6 +252,10 @@ public class UserProfile implements Serializable {
 	public void addFriend(UserProfile userProfile) {
 		this.friends.add(userProfile);
 	}
+	
+	public void removeFriend(UserProfile friendProfile) {
+		this.friends.remove(friendProfile);
+	}
 
 	public Set<Long> getFriendsIdSet() {
 		if (friendsIdSet != null && !friendsIdSet.isEmpty()) {
@@ -354,6 +360,18 @@ public class UserProfile implements Serializable {
 				+ ", facebookAccessToken=" + facebookAccessToken + "]";
 	}
 
+	public void setOver18(boolean over18) {
+		this.over18 = over18;
+	}
+
+	public boolean isOver18() {
+		return over18;
+	}
+
+	public boolean getOver18() {
+		return isOver18();
+	}
+	
 	public void setCompetitionsCount(Integer competitionsCount) {
 		this.competitionsCount = competitionsCount;
 	}
