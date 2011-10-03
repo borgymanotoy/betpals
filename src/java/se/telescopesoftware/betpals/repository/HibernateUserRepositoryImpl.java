@@ -36,8 +36,8 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 	
     public User loadUserByUsername(String username) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from User usr where usr.username = :username");
-    	query.setString("username", username);
+    	Query query = session.createQuery("from User usr where lower(usr.username) = :username");
+    	query.setString("username", username.toLowerCase());
 		List<?> list = query.list();
         if (list == null || list.isEmpty()) {
             throw new UsernameNotFoundException("No user found.");
@@ -47,8 +47,8 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
     public User loadUserByEmail(String email) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from UserProfile up where up.email = :email");
-    	query.setString("email", email);
+    	Query query = session.createQuery("from UserProfile up where lower(up.email) = :email");
+    	query.setString("email", email.toLowerCase());
 		List<?> list = query.list();
         if (list == null || list.isEmpty()) {
             throw new UsernameNotFoundException("No user found.");
@@ -64,8 +64,8 @@ public class HibernateUserRepositoryImpl implements UserRepository {
 
     public boolean isUsernameExists(String username) {
     	Session session = sessionFactory.getCurrentSession();
-    	Query query = session.createQuery("from User usr where usr.username = :username");
-    	query.setString("username", username);
+    	Query query = session.createQuery("from User usr where lower(usr.username) = :username");
+    	query.setString("username", username.toLowerCase());
 		return query.iterate().hasNext();
     }
 

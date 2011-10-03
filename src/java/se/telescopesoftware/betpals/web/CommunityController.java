@@ -163,9 +163,11 @@ public class CommunityController extends AbstractPalsController {
 		boolean success = saveImage(imageFile, IMAGE_FOLDER_COMMUNITIES, filename);
 		if (success) {
 			String message = "{\"success\":\"true\", \"filename\":\"" + filename + "\"}";
+			response.setContentType("text/html");
 			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
 		} else {
 			String message = "{\"success\":\"false\", \"filename\":\"" + filename + "\"}";
+			response.setContentType("text/html");
 			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
 		}
 	}

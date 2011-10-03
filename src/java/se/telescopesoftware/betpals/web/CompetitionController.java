@@ -245,6 +245,7 @@ public class CompetitionController extends AbstractPalsController {
 		DateTime deadline = new DateTime(deadlineDate.getTime());
 		String settlingDate = dateFormat.format(deadline.plusDays(competitionService.getDefaultSettlingInterval()).toDate());
 		String message = "{\"success\":\"true\", \"settlingDate\":\"" + settlingDate + "\"}";
+		response.setContentType("text/html");
 		sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
 	}
 	
@@ -254,9 +255,11 @@ public class CompetitionController extends AbstractPalsController {
 		boolean success = saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, filename);
 		if (success) {
 			String message = "{\"success\":\"true\", \"filename\":\"" + filename + "\"}";
+			response.setContentType("text/html");
 			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
 		} else {
 			String message = "{\"success\":\"false\", \"filename\":\"" + filename + "\"}";
+			response.setContentType("text/html");
 			sendResponseStatusAndMessage(response, HttpServletResponse.SC_OK, message);
 		}
 	}

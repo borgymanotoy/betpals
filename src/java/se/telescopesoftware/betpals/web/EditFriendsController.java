@@ -18,10 +18,12 @@ public class EditFriendsController extends AbstractPalsController {
 
     @RequestMapping(value="/invitefriend")
     public String inviteFriend(@RequestParam("friendId") Long friendId) {
-    	UserProfile friendProfile = getUserService().getUserProfileByUserId(friendId);
-    	UserRequest userRequest = new UserRequest(getUserProfile(), friendProfile);
-    	getUserService().sendUserRequest(userRequest);
-    	logUserAction("Send " + userRequest);
+    	if (friendId.compareTo(getUserId()) != 0) {
+	    	UserProfile friendProfile = getUserService().getUserProfileByUserId(friendId);
+	    	UserRequest userRequest = new UserRequest(getUserProfile(), friendProfile);
+	    	getUserService().sendUserRequest(userRequest);
+	    	logUserAction("Send " + userRequest);
+    	}
     	return "friendsAndGroupsAction";
     }
     

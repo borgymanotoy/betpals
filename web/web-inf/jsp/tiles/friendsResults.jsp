@@ -45,10 +45,12 @@
 	                    <h5><a class="noline" href='<c:url value="/viewprofile/${friend.userId}.html"/>'>${friend.fullName}</a></h5>
 	                </div>
 	                <div class="span-2 last right userControlDiv">
+	                <c:if test="${user.userId != friend.userId}">
 				        <form action='<c:url value="/invitefriend.html"/>' method="post">
 				            <input type="hidden" name="friendId" value="${friend.userId}"/>
 				            <button class="addFriendButton" onclick="submit();"><spring:message code="button.add"/></button>
 				        </form>
+				    </c:if>
 	                </div>
 	            </div>
 	        </div>

@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
 	                Message.RecipientType.TO,
 	                internetAddress);
 	
-	        msg.setSubject(subject);
+	        msg.setSubject(subject, encoding);
 	        msg.setText(text, encoding);
 	        msg.setFrom(new InternetAddress(fromAddress));
 	        msg.setSentDate(new java.util.Date());

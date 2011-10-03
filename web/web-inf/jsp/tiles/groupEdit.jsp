@@ -23,7 +23,7 @@
         <div class="span-10 last selectionDiv115">
              <ul class="selectionList">
              <c:forEach items="${friendsList}" var="friend">
-                 <li><form:checkbox path="membersIdSet" label="${friend.fullName}" value="${friend.id}"/></li>
+                 <li><form:checkbox path="membersIdSet" label="${friend.fullName}" value="${friend.userId}"/></li>
              </c:forEach>
              </ul>
         </div>

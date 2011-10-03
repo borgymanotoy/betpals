@@ -52,6 +52,45 @@
         }); 
     });
 
+    function postComment(activityIdToComment) {
+        var url = '<c:url value="/activitycomment.html"/>';
+        var commentField = jQuery("#commentMessageField_" + activityIdToComment);
+        var commentMessage = jQuery.trim(commentField.val());
+        
+        if ( commentMessage != "" && commentMessage != commentField.attr('title')) {
+	        jQuery.post(url, { activityId: activityIdToComment, message: commentMessage }, function(data) {
+	             var activityId = data.activityId;
+	             var viewProfileURL = '<c:url value="/viewprofile/"/>' + data.ownerId + '.html';
+	             var userPicURL = '<c:url value="/users/images/"/>' + data.ownerId +'.jpeg';
+	             var removeCommentURL = '<c:url value="/removecomment.html"/>';
+	             var commentContent = '<table class="wallCommentTable">' +
+	                 '<tr class="topTr"><td colspan="3"></td></tr>' +
+	                 '<tr>' +
+	                     '<td class="userPicCellComment">' +
+	                       '<a href="' + viewProfileURL + '">' +
+	                         '<img class="userPic" src="' + userPicURL + '"/>' +
+	                       '</a>' +  
+	                     '</td>' +
+	                     '<td class="">' +
+	                         '<h5><a class="noline" href="' + viewProfileURL + '">' + data.ownerName + '</a></h5>' +
+	                         '<span class="commentDate">' + data.timeSinceCreated + '</span>' +
+	                         '<p>' + data.message + '</p>' +
+	                     '</td>' +
+	                     '<td class="right">' +
+	                         '<form action="' + removeCommentURL + '" method="post">' +
+	                             '<input type="hidden" name="commentId" value="' + data.id + '"/>' +
+	                             '<button class="deleteButton" onclick="submit();">&nbsp;</button>' +
+	                         '</form>' +
+	                     '</td>' +
+	                 '</tr>' +
+	                 '<tr class="bottomTr"><td colspan="3" class="nopadding"></td></tr>' +
+	             '</table>';
+	             
+	             jQuery(".wallCommentTable", "#activityCell_" + activityId).last().before(commentContent);
+	           });
+        }
+    }
+    
 </script>
 <div>
     <h2 class="dark"><spring:message code="community.view.title"/></h2>
@@ -113,7 +152,7 @@
 	                       <img class="userPic" src='<c:url value="/users/images/${activity.ownerId}.jpeg"/>'/>
 	                    </a>
 	                </td>
-	                <td class="">
+	                <td id="activityCell_${activity.id}" class="">
 	                   <h5><a class="noline" href='<c:url value="/viewprofile/${activity.ownerId}.html"/>'>${activity.ownerName}</a></h5>
 	                   <p>${activity.message}</p>
 	                   <form name="likeForm_${activity.id}" action='<c:url value="/activitylike.html"/>' method="post">
@@ -183,20 +222,16 @@
 	                       <tr class="bottomTr"><td colspan="3" class="nopadding"></td></tr>
 	                   </table>
 	                   </c:forEach>
-	                   
-	                   <form action='<c:url value="/activitycomment.html"/>' method="post">
-	                       <input type="hidden" name="activityId" value="${activity.id}"/>
 	                   <table class="wallCommentTable">
 	                       <tr class="topTr"><td colspan="2"></td></tr>
 	                       <tr>
 	                        <td>
-	                          <input type="text" class="commentField" name="message" value="" title="<spring:message code='wall.comment.placeholder'/>"/>
+	                          <input id="commentMessageField_${activity.id}" type="text" class="commentField" name="message" value="" title="<spring:message code='wall.comment.placeholder'/>"/>
 	                        </td>         
-	                        <td class="nopadding"><button class="commentButton">&nbsp;</button></td>  
+	                        <td class="nopadding"><button class="commentButton" onclick="postComment(${activity.id}); return false;">&nbsp;</button></td>  
 	                       </tr>
 	                       <tr class="bottomTr"><td colspan="2" class="nopadding"></td></tr>
 	                   </table>
-	                   </form>
 	                </td>
 	                </tr>
 	            </table>

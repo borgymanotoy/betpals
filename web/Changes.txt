@@ -1,3 +1,19 @@
+== Version 0.9.9 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002641 Error 500 internal server error when creating a group
+    * 0002642: Comment bet func does not work
+    * 0002643: Should not be possible to add and confirm yourself as a friend
+    * 0002644: email should not be case sensitive
+    * 0002364: Blank comments should not be added
+    * 0002639: Could not process image when adding a picture
+    * 0002645: email subject cannot handle Swedish characters
+
+
 == Version 0.9.8 =======================================================
 
 New features and CRs
