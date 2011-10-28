@@ -1,7 +1,6 @@
 package se.telescopesoftware.betpals.repository;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -45,9 +44,7 @@ public class HibernateAccountRepositoryImpl implements AccountRepository {
     	Query query = session.createQuery("from Account a where a.ownerId = :userId and a.currency = :currency");
     	query.setLong("userId", userId);
     	query.setString("currency", currency);
-    	Iterator<?> iterator = query.iterate();
-    	Account account = (Account) (iterator.hasNext() ? iterator.next() : null);
-    	return loadAccount(account.getId());
+    	return (Account) query.uniqueResult();
 	}
 
 	public void setAsDefault(Account account) {

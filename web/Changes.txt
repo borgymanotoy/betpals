@@ -1,3 +1,26 @@
+== Version 0.9.11 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002650: When deadline is reached betting should not be available
+    * 0002649: Missing name of the bet creator on the bet page
+    * 0002648: Error 500 Internal Server Error when trying to bet using a different currency
+
+
+== Version 0.9.10 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002646: Remove add button if you are already friends
+    * Unable to settle competition with deadline past current date
+
+
 == Version 0.9.9 =======================================================
 
 New features and CRs

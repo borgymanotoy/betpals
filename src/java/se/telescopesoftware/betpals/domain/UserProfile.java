@@ -99,6 +99,9 @@ public class UserProfile implements Serializable {
 	private Date lastBetDate;
 	
 	
+	@Transient
+	private boolean friendWithCurrentUser;
+	
 	public UserProfile() {
     }
 
@@ -438,6 +441,22 @@ public class UserProfile implements Serializable {
 	
 	public void setEmailOnBetPostToCommunity(Boolean emailOnBetPostToCommunity) {
 		this.emailOnBetPostToCommunity = emailOnBetPostToCommunity;
+	}
+
+	public boolean isFriendWithUser(UserProfile userProfile) {
+		return friends.contains(userProfile);
+	}
+	
+	public boolean isFriendWithCurrentUser() {
+		return friendWithCurrentUser;
+	}
+
+	public boolean getFriendWithCurrentUser() {
+		return isFriendWithCurrentUser();
+	}
+	
+	public void setFriendWithCurrentUser(boolean friendWithCurrentUser) {
+		this.friendWithCurrentUser = friendWithCurrentUser;
 	}
 
 }

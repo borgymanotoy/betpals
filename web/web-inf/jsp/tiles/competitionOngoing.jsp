@@ -89,6 +89,10 @@ function postComment(activityIdToComment) {
     <h2 class="dark"><spring:message code="competition.ongoing.title"/></h2>
 </div>
 <div class="rbDiv contentDiv">
+    <div class="formSectionDiv">
+        <img src='<c:url value="/i/ex.png"/>' style="vertical-align: bottom;"/>&nbsp;
+        <a href='<c:url value="/viewprofile/${competition.ownerId}.html"/>'>${competition.owner.fullName}</a>&nbsp;<spring:message code="invitation.owner.wants.you.to.join"/><br/>
+    </div>
     <div class="span-12">
         <div class="span-2 userPicDiv">
             <img class="userPic" src='<c:url value="/competition/images/${competition.id}.jpeg"/>'/>
@@ -110,6 +114,9 @@ function postComment(activityIdToComment) {
         <ul id="friendList">
     <c:if test="${not empty param.invalidStake}">
         <p class="error"><spring:message code="error.invalid.stake"/></p>
+    </c:if>
+    <c:if test="${not empty param.noAccount}">
+        <p class="error"><spring:message code="error.no.account"/>&nbsp;<a href='<c:url value="/addaccount.html"/>'><spring:message code="button.add.account"/></a></p>
     </c:if>
         <c:forEach items="${competition.defaultEvent.alternatives}" var="altFromList" varStatus="status">
         <li>
@@ -137,6 +144,11 @@ function postComment(activityIdToComment) {
                   <c:when test="${altFromList.taken}">
                     <div class="span-5 last right">
                           <spring:message code="alternative.already.taken.by"/> <br/><a href='<c:url value="/viewprofile/${altFromList.participantId}.html"/>'>${altFromList.participantName}</a>
+                    </div>
+                  </c:when>
+                  <c:when test="${competition.deadlineReached}">
+                    <div class="span-5 last right">
+                          <spring:message code="betting.is.closed"/>
                     </div>
                   </c:when>
                   <c:otherwise>

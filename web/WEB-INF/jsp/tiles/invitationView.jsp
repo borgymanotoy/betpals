@@ -23,6 +23,9 @@
     <c:if test="${not empty param.invalidStake}">
         <p class="error"><spring:message code="error.invalid.stake"/></p>
     </c:if>
+    <c:if test="${not empty param.noAccount}">
+        <p class="error"><spring:message code="error.no.account"/>&nbsp;<a href='<c:url value="/addaccount.html"/>'><spring:message code="button.add.account"/></a></p>
+    </c:if>
     <c:forEach items="${competition.events}" var="event">
         <c:forEach items="${event.alternatives}" var="alternative">
             <li>
@@ -40,6 +43,11 @@
 			              <spring:message code="alternative.already.taken.by"/> <br/><a href='<c:url value="/viewprofile/${alternative.participantId}.html"/>'>${alternative.participantName}</a>
 	                </div>
 		          </c:when>
+		          <c:when test="${competition.deadlineReached}">
+                    <div class="span-5 last right">
+                          <spring:message code="betting.is.closed"/>
+                    </div>
+                  </c:when>
 		          <c:otherwise>
 		            <form action='<c:url value="/placebet.html"/>' method="post">
                     <div class="span-5 last invViewButtonDiv right">

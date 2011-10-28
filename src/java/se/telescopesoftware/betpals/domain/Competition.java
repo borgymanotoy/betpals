@@ -23,7 +23,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -55,11 +54,9 @@ public class Competition {
 	private String name;
 	private String description;
 	private Date created;
-	@Future
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date deadline;
-	@Future
 	@NotNull
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
 	private Date settlingDeadline;
@@ -342,6 +339,18 @@ public class Competition {
 		return result;
 	}
 
+	public boolean getDeadlineReached() {
+		return isDeadlineReached();
+	}
+	
+	public boolean isDeadlineReached() {
+		if (getDeadline() != null) {
+			DateTime expirationDateTime = new DateTime(getDeadline());
+			return expirationDateTime.isBeforeNow();
+		}
+		return false;
+	}
+	
 	public boolean isExpired(int expirationIntervalInDays) {
 		if (getSettlingDeadline() != null) {
 			DateTime expirationDateTime = new DateTime(getSettlingDeadline()).plusDays(expirationIntervalInDays);

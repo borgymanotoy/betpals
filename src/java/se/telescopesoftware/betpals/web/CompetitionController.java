@@ -417,6 +417,9 @@ public class CompetitionController extends AbstractPalsController {
 		
 		Invitation invitation = competitionService.getInvitationById(invitationId);
 		Competition competition = competitionService.getCompetitionById(invitation.getCompetitionId());
+		if (competition.isDeadlineReached()) {
+			return "userHomepageAction";
+		}
 
     	Bet bet = new Bet(getUserProfile(), competition);
     	bet.setSelectionId(alternativeId);
@@ -424,6 +427,10 @@ public class CompetitionController extends AbstractPalsController {
 		BigDecimal validStake = getValidStake(competition, stake);
 		if (validStake == null) {
 			model.addAttribute("invalidStake", true);
+			Account account = accountService.getUserAccountForCurrency(getUserId(), competition.getCurrency());
+			if (account == null) {
+				model.addAttribute("noAccount", true);
+			}
 			model.addAttribute("invitationId", invitationId);
 			return "invitationAction";
 		}
@@ -452,6 +459,9 @@ public class CompetitionController extends AbstractPalsController {
 			@RequestParam(value="stake", required=false) BigDecimal stake, Model model) {
 	
 		Competition competition = competitionService.getCompetitionById(competitionId);
+		if (competition.isDeadlineReached()) {
+			return "userHomepageAction";
+		}
 		
 		Bet bet = new Bet(getUserProfile(), competition);
 		bet.setSelectionId(alternativeId);
@@ -459,6 +469,10 @@ public class CompetitionController extends AbstractPalsController {
 		BigDecimal validStake = getValidStake(competition, stake);
 		if (validStake == null) {
 			model.addAttribute("invalidStake", true);
+			Account account = accountService.getUserAccountForCurrency(getUserId(), competition.getCurrency());
+			if (account == null) {
+				model.addAttribute("noAccount", true);
+			}
 			model.addAttribute("competitionId", competitionId);
 			return "ongoingCompetitionAction";
 		}
@@ -485,7 +499,7 @@ public class CompetitionController extends AbstractPalsController {
 		} 
 		
 		Account account = accountService.getUserAccountForCurrency(getUserId(), competition.getCurrency());
-		return account.isValidStake(stake) ? stake : null;
+		return (account != null && account.isValidStake(stake)) ? stake : null;
 	}
 	
 	@RequestMapping(value="/competition/images/{competitionId}")	
