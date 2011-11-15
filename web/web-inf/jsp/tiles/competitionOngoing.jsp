@@ -45,6 +45,10 @@ jQuery(document).ready(function() {
     
 });
 
+function submitCommentByKeyPress(e, activityIdToComment){
+	if(e.keyCode == 13) postComment(activityIdToComment);			
+}
+
 function postComment(activityIdToComment) {
     var url = '<c:url value="/activitycomment.html"/>';
     var commentField = jQuery("#commentMessageField_" + activityIdToComment);
@@ -267,7 +271,7 @@ function postComment(activityIdToComment) {
                            <tr class="topTr"><td colspan="2"></td></tr>
                            <tr>
                             <td>
-                              <input id="commentMessageField_${activity.id}" type="text" class="commentField" name="message" value="" title="<spring:message code='wall.comment.placeholder'/>"/>
+                              <input id="commentMessageField_${activity.id}" type="text" class="commentField" name="message" value="" onkeypress="submitCommentByKeyPress(event, ${activity.id});" title="<spring:message code='wall.comment.placeholder'/>"/>
                             </td>         
                             <td class="nopadding"><button class="commentButton" onclick="postComment(${activity.id}); return false;">&nbsp;</button></td>  
                            </tr>

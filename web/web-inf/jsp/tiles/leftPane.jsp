@@ -22,21 +22,28 @@
         <form action='<c:url value="/accountdetails.html"/>' method="post" id="accountDetailsForm">
             <input type="hidden" name="accountId" value=""/>
         </form>
-	    <table id="accountInfoTable" class="palsTable altRows">
-	        <tr>
-	            <th></th>
-	            <th><spring:message code="account.balance"/></th>
-	            <th><spring:message code="account.available"/></th>
-	        </tr>
-	    <c:forEach items="${accounts}" var="account">
-	        <tr onclick="getAccountDetails(${account.id});">
-	            <td class="currencyCell">${account.currency}</td>
-	            <td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.balance}</fmt:formatNumber></td>
-	            <td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.available}</fmt:formatNumber></td>
-	        </tr>
-	    </c:forEach>    
-	    </table>
-	    <div class="leftPaneInside"><a class="greenDotLink" href='<c:url value="/addaccount.html"/>'><spring:message code="button.add.account"/></a></div>
+		<table id="accountInfoTable" class="palsTable altRows">
+			<tr>
+				<th></th>
+				<th><spring:message code="account.balance"/></th>
+				<th><spring:message code="account.available"/></th>
+			</tr>
+			<c:forEach items="${accounts}" var="account">
+				<tr onclick="getAccountDetails(${account.id});">
+					<td class="currencyCell">${account.currency}</td>
+					<td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.balance}</fmt:formatNumber></td>
+					<td><fmt:formatNumber maxFractionDigits="2" minFractionDigits="2">${account.available}</fmt:formatNumber></td>
+				</tr>
+			</c:forEach>    
+		</table>
+	    <div class="leftPaneInside">
+			<table id="tblPanel">
+				<tr>
+					<td id="tdBullet"><a href='<c:url value="/addaccount.html"/>'><img src='<c:url value="/i/greenDot.jpg"/>' /></a></td>
+					<td><a href='<c:url value="/allfriends.html"/>'>Add account</a></td>
+				</tr>			
+			</table>		
+		</div>
 	    <br/>
 	    <div class="orangeTitle"><spring:message code="competitions.pane.title"/></div>
 	    <div class="panelNoPadding">
@@ -53,8 +60,17 @@
 	    <div class="greenTitle"><spring:message code="friends.pane.title"/></div>
 	    <div class="panel">
 	        &nbsp;<br/>
-	        <a class="greenDotLink" href='<c:url value="/allfriends.html"/>'><spring:message code="link.all.friends"/></a><br/>
-	        <a class="greenDotLink" href='<c:url value="/myrequests.html"/>'><spring:message code="link.new.requests"/> (${myRequestsCount})</a><br/>
+			<table id="tblPanel">
+				<tr>
+					<td id="tdBullet"><a href='<c:url value="/allfriends.html"/>'><img src='<c:url value="/i/greenDot.jpg"/>' /></a></td>
+					<td><a href='<c:url value="/allfriends.html"/>'><spring:message code="link.all.friends"/></a></td>
+				</tr>
+				<tr>
+					<td id="tdBullet"><a href='<c:url value="/myrequests.html"/>'><img src='<c:url value="/i/greenDot.jpg"/>' /></a></td>
+					<td><a href='<c:url value="/myrequests.html"/>'><spring:message code="link.new.requests"/> (${myRequestsCount})</a></td>
+				</tr>				
+			</table>
+
 	        <ul id="friendsSideList">
 	        <c:forEach items="${friendsSideList}" var="friend">
 	           <li>
