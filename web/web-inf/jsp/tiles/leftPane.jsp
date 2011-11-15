@@ -40,7 +40,7 @@
 			<table id="tblPanel">
 				<tr>
 					<td id="tdBullet"><a href='<c:url value="/addaccount.html"/>'><img src='<c:url value="/i/greenDot.jpg"/>' /></a></td>
-					<td><a href='<c:url value="/allfriends.html"/>'>Add account</a></td>
+					<td><a href='<c:url value="/addaccount.html"/>'>Add account</a></td>
 				</tr>			
 			</table>		
 		</div>
