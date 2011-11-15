@@ -315,7 +315,7 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
     padding-right: 0;
 }
 
-.leftPaneInside { margin-left: 12px; }
+.leftPaneInside { margin-left: 10px; height: 20px; width: 100px; }
 
 #loginInput1 { padding-top: 14px; }
 #loginInput1 input[type='checkbox'] {
@@ -775,6 +775,34 @@ p { font-family: "MS Trebuchet", sans-serif; font-size: 13px; color: #242b21; }
     background: transparent url("../i/bgDiv.jpg") 0 0 repeat-y; 
     padding-left: 10px;
 }
+
+#tblPanel{
+	padding: 0px;
+}
+#tblPanel tr td{
+	margin:  0px;
+	padding: 0px;
+	width:   0px;
+	height:  12px;
+	vertical-align: top;
+}
+/*
+#tdBullet{
+	margin:  0px;
+	padding: 0px;
+	vertical-align: top;
+	border: 1px solid gray;
+}
+*/
+
+#tdBullet img{
+	margin: 0px;
+	padding-right: 3px;
+	height: 11px;
+	width: 12px;
+	border: 0px;
+}
+
 .panelNoPadding { background: transparent url("../i/bgDiv.jpg") 0 0 repeat-y; }
 
 .panelFooter {
