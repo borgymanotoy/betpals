@@ -55,6 +55,8 @@ public interface UserRepository {
     
     Collection<UserProfile> findUserProfiles(String query);
     
+    UserProfile findUserProfilesById(Long userId);
+    
     void storeUserRequest(UserRequest userRequest);
 
     void deleteUserRequest(UserRequest userRequest);

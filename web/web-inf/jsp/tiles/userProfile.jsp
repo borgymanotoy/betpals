@@ -27,6 +27,14 @@
              <td>100%</td>
          </tr>
      </table>
-    
+    <p>&nbsp;</p>
+	<div class="span-2 last left userControlDiv">
+	<c:if test="${user.userId != friendProfile.userId && !friendProfile.friendWithCurrentUser}">
+		<form action='<c:url value="/invitefriend.html"/>' method="post">
+			<input type="hidden" name="friendId" value="${friendProfile.userId}"/>
+			<button class="addFriendButton" onclick="submit();"><spring:message code="button.add"/></button>
+		</form>
+	</c:if>
+	</div>	
     <p>&nbsp;</p>
 </div>

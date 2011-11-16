@@ -184,6 +184,10 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findUserProfiles(query);
 	}
 
+	public UserProfile searchUserProfilesByUserId(Long userId) {
+		return userRepository.findUserProfilesById(userId);
+	}	
+	
 	public Collection<UserProfile> getUserFriends(Long userId) {
 		UserProfile userProfile = getUserProfileByUserId(userId);
 		if (userProfile == null) {
@@ -361,9 +365,27 @@ public class UserServiceImpl implements UserService {
 			String subject = messageSource.getMessage("email.registration.welcome.subject", new Object[] {}, locale);
 			
 			emailService.sendEmail(userProfile.getUserId(), subject, message);
-			
 		} catch (Exception e) {
-			logger.error("Could not send email: ", e);
+			/*Note: 
+			 * logger.error("Could not send email: ", e);
+			 * Use logger.error once deployed in www
+			 * logger below is for local testing only. 
+			 * 
+			 * Affected/Altered Files.
+			 * -UserServiceImpl.java
+			 * -CompetitionServiceImpl.java
+			 * */
+			StringBuffer sb = new StringBuffer();
+			sb.append("\n\n");
+			sb.append("\nNote:");
+			sb.append("\n-----");
+			sb.append("\n\t* This is for local setting only.");
+			sb.append("\n\t* Local environment does not have SMTP Server.");
+			sb.append("\n\t* That is why this message is displaying everytime a new user is created. ");
+			sb.append("\n");
+			
+			System.out.println(sb.toString());
+			
 		}
 		
 	}

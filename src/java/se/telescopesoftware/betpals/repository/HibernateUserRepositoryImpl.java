@@ -3,9 +3,11 @@ package se.telescopesoftware.betpals.repository;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,6 +30,7 @@ import se.telescopesoftware.betpals.domain.UserRequestType;
 public class HibernateUserRepositoryImpl implements UserRepository {
 
 	private SessionFactory sessionFactory;
+	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -305,6 +308,22 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     	query.setString("queryString", "%" + searchQuery.toLowerCase() + "%");
         return query.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public UserProfile findUserProfilesById(Long userId) {
+		Session session = sessionFactory.getCurrentSession();
+		User user = (User) session.load(User.class, userId);  
+		
+		Query query = session.createQuery("from UserProfile up where up.user = :objUser ");
+		query.setParameter("objUser", user);
+		
+		UserProfile userProfile = null;
+		Collection<UserProfile> list = query.list();
+		if(list!=null && list.size() > 0){
+			for(UserProfile up : list) userProfile = up;
+		}
+		return userProfile;
+	}	
 
 	public void storeUserRequest(UserRequest userRequest) {
     	Session session = sessionFactory.getCurrentSession();
@@ -450,5 +469,4 @@ public class HibernateUserRepositoryImpl implements UserRepository {
     	query.setLong("userId", userId);
 		return query.list();
 	}
-    
 }

@@ -51,6 +51,8 @@ public interface UserService extends UserDetailsService {
 
     Collection<UserProfile> searchUserProfiles(String query, Long userId);
     
+    UserProfile searchUserProfilesByUserId(Long userId);
+    
     Collection<User> searchUsers(UserSearchForm searchForm);
     
     Collection<User> getUsersByRole(String userRole);

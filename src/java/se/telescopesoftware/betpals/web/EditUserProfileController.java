@@ -111,10 +111,10 @@ public class EditUserProfileController extends AbstractPalsController {
     	userProfile.setEmailOnBetSettling(updatedUserProfile.getEmailOnBetSettling());
     	
     	getUserService().updateUserProfile(userProfile);
+    	
         logUserAction("Update user profile");
-        
         saveImage(updatedUserProfile.getUserImageFile(), IMAGE_FOLDER_USERS, getUserId().toString());
-
+        
         return "userHomepageAction";
     }
 

@@ -32,7 +32,8 @@ public class SearchFriendsController extends AbstractPalsController {
     
     @RequestMapping(value="/searchfriends")
     public String post(@RequestParam("query") String query, Model model) {
-    	Collection<UserProfile> friendList = getUserService().searchUserProfiles(query, getUserId());
+    	Long userId = getUserId();
+    	Collection<UserProfile> friendList = getUserService().searchUserProfiles(query, userId);
     	markFriends(friendList);
     	model.addAttribute("friendsList", friendList);
     	model.addAttribute("communityList", getUserService().searchCommunities(query));

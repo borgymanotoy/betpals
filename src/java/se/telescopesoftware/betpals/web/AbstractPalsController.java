@@ -33,7 +33,7 @@ import se.telescopesoftware.betpals.utils.ThumbnailUtil;
  */
 @Component
 public abstract class AbstractPalsController {
-
+	
     private String appRoot;
 
 	private UserService userService;
@@ -105,8 +105,7 @@ public abstract class AbstractPalsController {
     	File imageFile = new File(path, filename + DEFAULT_IMAGE_SUFFIX);
     	if (!imageFile.exists()) {
     		imageFile = new File(getAppRoot() + "images" + File.separator + "empty" + DEFAULT_IMAGE_SUFFIX);
-    	} 
-    	
+    	}
     	BufferedImage image;
 		try {
 			image = ImageIO.read(imageFile);
@@ -131,10 +130,8 @@ public abstract class AbstractPalsController {
 	 * @return boolean - true if successfull, false otherwise
 	 */
     protected boolean saveImage(MultipartFile imageFile, String folderName, String filename) {
-    	
     	String path = getAppRoot() + "images" + File.separator + folderName;
     	File outputFile = new File(path, filename + DEFAULT_IMAGE_SUFFIX);
-    	
     	try {
     		if (imageFile != null && !imageFile.isEmpty()) {
 	        	InputStream inputStream = imageFile.getInputStream();
@@ -143,11 +140,13 @@ public abstract class AbstractPalsController {
 	    		logger.debug("Writing uploaded picture to " + outputFile.getPath());
 	    		ImageIO.write(thumbnailImage, DEFAULT_IMAGE_FORMAT, outputFile);
 	        } else {
-	        	File tempFile = new File(path, TEMP_IMAGE_PREFIX + getUserId() + DEFAULT_IMAGE_SUFFIX);
+	        	Long userId = getUserId();
+	        	File oldFile = new File(path, userId + DEFAULT_IMAGE_SUFFIX);
+	        	File tempFile = new File(path, TEMP_IMAGE_PREFIX + userId + DEFAULT_IMAGE_SUFFIX);
+	        	if(oldFile!=null) oldFile.delete();
 	        	logger.debug("Moving temp picture to " + outputFile.getPath());
 	        	tempFile.renameTo(outputFile);
 	        }
-    	
     	} catch(Exception ex) {
     		logger.error("Could not save image", ex);
     		return false;

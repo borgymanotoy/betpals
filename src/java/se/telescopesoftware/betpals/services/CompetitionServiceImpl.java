@@ -488,7 +488,25 @@ public class CompetitionServiceImpl implements CompetitionService {
 			String subject = messageSource.getMessage("email.competition.invitation.subject", new Object[] {invitation.getCompetitionName()}, locale);
 			emailService.sendEmail(invitation.getOwnerId(), invitation.getInviteeId(), subject, message);
 		} catch (Exception e) {
-			logger.error("Could not send invitation email: ", e);
+			/*Note: 
+			 * logger.error("Could not send invitation email: ", e);
+			 * Use logger.error once deployed in prod
+			 * logger below is for local testing only. 
+			 * 
+			 * Affected/Altered Files.
+			 * -UserServiceImpl.java
+			 * -CompetitionServiceImpl.java
+			 * */
+			StringBuffer sb = new StringBuffer();
+			sb.append("\n\n");
+			sb.append("\nNote:");
+			sb.append("\n-----");
+			sb.append("\n\t* This is for local setting only.");
+			sb.append("\n\t* Local environment does not have SMTP Server.");
+			sb.append("\n\t* That is why this message is displaying everytime a new user is created. ");
+			sb.append("\n");
+			
+			System.out.println(sb.toString());			
 		}
 
 	}
@@ -509,7 +527,25 @@ public class CompetitionServiceImpl implements CompetitionService {
 			}
 			
 		} catch (Exception e) {
-			logger.error("Could not send email: ", e);
+			/*Note: 
+			 * logger.error("Could not send email: ", e);
+			 * Use logger.error once deployed in www
+			 * logger below is for local testing only. 
+			 * 
+			 * Affected/Altered Files.
+			 * -UserServiceImpl.java
+			 * -CompetitionServiceImpl.java
+			 * */
+			StringBuffer sb = new StringBuffer();
+			sb.append("\n\n");
+			sb.append("\nNote:");
+			sb.append("\n-----");
+			sb.append("\n\t* This is for local setting only.");
+			sb.append("\n\t* Local environment does not have SMTP Server.");
+			sb.append("\n\t* That is why this message is displaying everytime a new user is created. ");
+			sb.append("\n");
+			
+			System.out.println(sb.toString());			
 		}
 		
 	}

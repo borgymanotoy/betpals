@@ -251,7 +251,16 @@ public class CompetitionController extends AbstractPalsController {
 	
 	@RequestMapping(value="/savetempcompetitionimage")	
 	public void saveTempImage(@RequestParam("imageFile") MultipartFile imageFile, HttpServletResponse response) {
+		
 		String filename = "tmp" + getUserId();
+		
+		logger.info("\n\n\n");
+		logger.info("<<< SAVE-TEMP-IMAGE >>>");
+		logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		logger.info("[FILE-NAME]: " + filename);
+		logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		logger.info("\n\n\n");
+		
 		boolean success = saveImage(imageFile, IMAGE_FOLDER_COMPETITIONS, filename);
 		if (success) {
 			String message = "{\"success\":\"true\", \"filename\":\"" + filename + "\"}";
