@@ -53,7 +53,66 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
            jQuery('#joinCompetitionForm').submit();
        } 
        
-       
+	   var validateRegister = function() {
+			var email = $.trim($("#email").val());
+			var name = $.trim($("#name").val());
+			var password = $.trim($("#password").val());
+			var is_checked = $("#over181").is(":checked");
+			var emailEmpty = (email.length == 0) ? 1 : 0;
+			var nameEmpty = (name.length == 0) ? 1 : 0;
+			var passwordEmpty = (password.length == 0) ? 1 : 0;
+			var strObj = "";
+			var errorCount = emailEmpty + nameEmpty + passwordEmpty;
+			if( errorCount == 0 && is_checked){
+				$("#userProfile").submit();
+			}else{
+				if(errorCount >= 3){
+					strObj = "Please fill-up registration fields properly. ";
+				}else{
+					if(emailEmpty == 1)    strObj = insertErrorMessage(strObj, "Email is mandatory");
+					if(nameEmpty == 1)     strObj = insertErrorMessage(strObj, "Name is mandatory");
+					if(passwordEmpty == 1) strObj = insertErrorMessage(strObj, "Password is mandatory");
+				}	
+				if(!is_checked) strObj = insertErrorMessage(strObj, "You should be over 18 years to register");
+				$("#spn_error").html(strObj);
+				$("#spn_error").show();					
+			}		
+			return false;
+	   };
+	   var insertErrorMessage = function (strObj, msg){
+			if(strObj!=null){
+				if(strObj.length > 0) strObj += "<br/>";
+				strObj += msg;
+			}
+			return strObj;
+	   };
+	   var clearErrorMessages = function(){
+			$("#spn_error").html("");
+			$("#spn_error").hide();
+	   };
+
+	   /* START: On submit handler for non IE Browsers */
+		var formEventHandler = function (eventObject) {
+			if (eventObject.preventDefault) {
+				eventObject.preventDefault();
+			} else if (window.event) /* for ie */ {
+				window.event.returnValue = false;
+			}
+			return true;
+		};
+		var preventFormSubmitDefault = function(form_name){
+			if(form_name && form_name.length > 0){
+				if(element = window.document.getElementById(form_name)){
+					if (element.addEventListener) {
+						element.addEventListener("submit", formEventHandler, false);
+					} else if (element.attachEvent) {
+						element.attachEvent("onsubmit", formEventHandler);
+					}					
+				}
+			}
+		};     
+	   /* END */
+	   
        jQuery(document).ready(function() {
            jQuery("#usernameField").focus();
            jQuery("#gallery").gallery();
@@ -63,7 +122,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                jQuery("body").css("backgroundColor", bgColor);
                jQuery("#langSelector").css("backgroundColor", bgColor);
            }
-           
+		   preventFormSubmitDefault("userProfile");
+           clearErrorMessages();
        });
       
     </script>
@@ -140,26 +200,29 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             </div>
         </div>
         <div id="signupArea" class="span-13 last">
+
             <c:url value="/register.html" var="registerURL"/>
             <form:form commandName="userProfile" action="${registerURL}" method="post">
-            <div class="span-4 right label"><spring:message code="registration.email"/></div>
-            <div class="span-9 last"><form:input path="email"/></div>
-            <div class="span-4 right label"><spring:message code="registration.first.name"/></div>
-            <div class="span-9 last"><form:input path="name"/></div>
-            <div class="span-4 right label"><spring:message code="registration.last.name"/></div>
-            <div class="span-9 last"><form:input path="surname"/></div>
-            <div class="span-4 right label"><spring:message code="registration.password"/></div>
-            <div class="span-9 last"><form:password path="password"/></div>
-            <div class="span-4 right label">&nbsp;</div>
-            <div class="span-9 last"><form:checkbox path="over18" style="margin-left: 0;"/>&nbsp;<spring:message code="registration.over18"/></div>
-            <div class="prepend-4 span-9 last">
-                <p class="error">
-                    <form:errors path="*"/>
-                    <c:if test="${alreadyExist}"><spring:message code='error.user.exist'/></c:if>
-                    <c:if test="${under18}"><spring:message code='error.over.18'/></c:if>
-                </p>
-                <input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/>
-            </div>
+				<div class="span-4 right label"><spring:message code="registration.email"/></div>
+				<div class="span-9 last"><form:input path="email"/></div>
+				<div class="span-4 right label"><spring:message code="registration.first.name"/></div>
+				<div class="span-9 last"><form:input path="name"/></div>
+				<div class="span-4 right label"><spring:message code="registration.last.name"/></div>
+				<div class="span-9 last"><form:input path="surname"/></div>
+				<div class="span-4 right label"><spring:message code="registration.password"/></div>
+				<div class="span-9 last"><form:password path="password"/></div>
+				<div class="span-4 right label">&nbsp;</div>
+				<div class="span-9 last"><form:checkbox path="over18" style="margin-left: 0;"/>&nbsp;<spring:message code="registration.over18"/></div>				
+				<div class="prepend-4 span-9 last">
+					<p class="error">
+						<span class="error hide" id="spn_error"></span><br/>
+						<form:errors path="*"/>
+						<c:if test="${alreadyExist}"><spring:message code='error.user.exist'/></c:if>
+						<c:if test="${under18}"><spring:message code='error.over.18'/></c:if>
+					</p>
+					<!--input type="submit" id="registerButton" value="<spring:message code='registration.login'/>"/-->
+					<button id="registerButton" onclick="validateRegister();"><spring:message code="registration.login"/></button>
+				</div>
             </form:form>
             <div class="prepend-2 span-9 append-2 last" style="padding-top: 30px;">
                 <p class="loginText"><span style="font-size: 18px;">myBetpals</span> - here goes some text with description, slogan or something similar, but not very long, or we will need to scroll page. <br/><br/><br/><br/><br/><br/></p>
@@ -174,6 +237,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                 <a href="">Privacy policy</a><br/>
                 <a href="">Help</a>
             </div>
+			
         </div>
     </div>
     <div class="span-24" id="bottom">&nbsp;</div>

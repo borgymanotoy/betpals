@@ -4,7 +4,11 @@
         jQuery('input', '#accountDetailsForm').val(accountId);
         jQuery('#accountDetailsForm').submit();
     } 
-
+	var redirectPage = function(url){
+		if(url){
+			window.location = url;
+		}
+	};
 </script>
 <div id="leftPane" class="span-5">
     <div class="span-2 right">
@@ -15,7 +19,7 @@
     <div class="span-3 last">
         <h5><security:authentication property="principal.userProfile.name"/>&nbsp;</h5>
         <h5><security:authentication property="principal.userProfile.surname"/>&nbsp;</h5>
-        <button id="editProfileButton" onclick="window.location = '<c:url value="/editprofile.html"/>'"><spring:message code="button.edit.profile"/></button>
+        <button id="editProfileButton" onclick="redirectPage('<c:url value="/editprofile.html"/>')"><spring:message code="button.edit.profile"/></button>
     </div>
     <div id="leftBlock" class="span-5">
         <div class="leftPaneInside"><img src='<c:url value="/i/separator.jpg"/>'/></div>

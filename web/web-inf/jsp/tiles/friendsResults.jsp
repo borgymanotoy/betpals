@@ -48,7 +48,7 @@
 	                <c:if test="${user.userId != friend.userId && !friend.friendWithCurrentUser}">
 				        <form action='<c:url value="/invitefriend.html"/>' method="post">
 				            <input type="hidden" name="friendId" value="${friend.userId}"/>
-				            <button class="addFriendButton" onclick="submit();"><spring:message code="button.add"/></button>
+				            <button class="addFriendButton" onclick="submit();"><spring:message code="button.add.friend"/></button>
 				        </form>
 				    </c:if>
 	                </div>

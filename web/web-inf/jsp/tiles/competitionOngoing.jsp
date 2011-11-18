@@ -46,7 +46,10 @@ jQuery(document).ready(function() {
 });
 
 function submitCommentByKeyPress(e, activityIdToComment){
-	if(e.keyCode == 13) postComment(activityIdToComment);			
+	if(e.keyCode == 13){
+		postComment(activityIdToComment);			
+		return false;
+	}	
 }
 
 function postComment(activityIdToComment) {
