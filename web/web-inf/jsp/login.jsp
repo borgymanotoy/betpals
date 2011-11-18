@@ -87,8 +87,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 			return strObj;
 	   };
 	   var clearErrorMessages = function(){
-			$("#spn_error").html("");
-			$("#spn_error").hide();
+			if($("#spn_error").is(":visible")){
+				$("#spn_error").html("");
+				$("#spn_error").hide();
+			}
 	   };
 
 	   /* START: On submit handler for non IE Browsers */
@@ -204,13 +206,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <c:url value="/register.html" var="registerURL"/>
             <form:form commandName="userProfile" action="${registerURL}" method="post">
 				<div class="span-4 right label"><spring:message code="registration.email"/></div>
-				<div class="span-9 last"><form:input path="email"/></div>
+				<div class="span-9 last"><form:input path="email" onkeypress="clearErrorMessages();" /></div>
 				<div class="span-4 right label"><spring:message code="registration.first.name"/></div>
-				<div class="span-9 last"><form:input path="name"/></div>
+				<div class="span-9 last"><form:input path="name" onkeypress="clearErrorMessages();" /></div>
 				<div class="span-4 right label"><spring:message code="registration.last.name"/></div>
-				<div class="span-9 last"><form:input path="surname"/></div>
+				<div class="span-9 last"><form:input path="surname"  onkeypress="clearErrorMessages();" /></div>
 				<div class="span-4 right label"><spring:message code="registration.password"/></div>
-				<div class="span-9 last"><form:password path="password"/></div>
+				<div class="span-9 last"><form:password path="password"  onkeypress="clearErrorMessages();" /></div>
 				<div class="span-4 right label">&nbsp;</div>
 				<div class="span-9 last"><form:checkbox path="over18" style="margin-left: 0;"/>&nbsp;<spring:message code="registration.over18"/></div>				
 				<div class="prepend-4 span-9 last">
