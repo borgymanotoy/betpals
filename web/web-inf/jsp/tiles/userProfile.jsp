@@ -19,12 +19,12 @@
          <tr>
              <th>&nbsp;<spring:message code="profile.competitions.created"/></th>
              <th><spring:message code="profile.competitions.participated"/></th>
-             <th><spring:message code="profile.satisfaction"/></th>
+             <!--th><spring:message code="profile.satisfaction"/></th-->
          </tr>
          <tr class="odd">
              <td>&nbsp;${totalCompetitions}</td>
              <td>${totalBets}</td>
-             <td>100%</td>
+             <!--td>100%</td-->
          </tr>
      </table>
     <p>&nbsp;</p>
