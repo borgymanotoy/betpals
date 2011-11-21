@@ -488,6 +488,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 			String subject = messageSource.getMessage("email.competition.invitation.subject", new Object[] {invitation.getCompetitionName()}, locale);
 			emailService.sendEmail(invitation.getOwnerId(), invitation.getInviteeId(), subject, message);
 		} catch (Exception e) {
+			
+			logger.error("Could not send invitation email: ", e);
+			
 			/*Note: 
 			 * logger.error("Could not send invitation email: ", e);
 			 * Use logger.error once deployed in prod
@@ -496,7 +499,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			 * Affected/Altered Files.
 			 * -UserServiceImpl.java
 			 * -CompetitionServiceImpl.java
-			 * */
+			 * * /
 			StringBuffer sb = new StringBuffer();
 			sb.append("\n\n");
 			sb.append("\nNote:");
@@ -506,7 +509,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 			sb.append("\n\t* That is why this message is displaying everytime a new user is created. ");
 			sb.append("\n");
 			
-			System.out.println(sb.toString());			
+			System.out.println(sb.toString());
+			*/			
 		}
 
 	}
@@ -527,6 +531,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 			}
 			
 		} catch (Exception e) {
+			
+			logger.error("Could not send email: ", e);
+			
 			/*Note: 
 			 * logger.error("Could not send email: ", e);
 			 * Use logger.error once deployed in www
@@ -535,7 +542,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 			 * Affected/Altered Files.
 			 * -UserServiceImpl.java
 			 * -CompetitionServiceImpl.java
-			 * */
+			 * * /
 			StringBuffer sb = new StringBuffer();
 			sb.append("\n\n");
 			sb.append("\nNote:");
@@ -545,7 +552,8 @@ public class CompetitionServiceImpl implements CompetitionService {
 			sb.append("\n\t* That is why this message is displaying everytime a new user is created. ");
 			sb.append("\n");
 			
-			System.out.println(sb.toString());			
+			System.out.println(sb.toString());
+			*/
 		}
 		
 	}

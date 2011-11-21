@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,6 +27,7 @@ import se.telescopesoftware.betpals.domain.InvitationType;
 public class HibernateCompetitionRepositoryImpl implements CompetitionRepository {
 
 	private SessionFactory sessionFactory;
+	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -294,7 +296,7 @@ public class HibernateCompetitionRepositoryImpl implements CompetitionRepository
 	@SuppressWarnings("unchecked")
 	public Collection<Competition> loadAllActiveCompetitionsByAccessType(Integer pageNumber, Integer itemsPerPage, AccessType accessType) {
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Competition c where c.status != :status and c.accessType = :accessType order by c.created desc");
+		Query query = session.createQuery("from Competition c where c.deadline >= sysdate and c.status != :status and c.accessType = :accessType order by c.deadline desc");
 		query.setParameter("status", CompetitionStatus.SETTLED);
 		query.setParameter("accessType", accessType);
 		

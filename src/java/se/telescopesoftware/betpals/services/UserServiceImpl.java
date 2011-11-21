@@ -366,6 +366,9 @@ public class UserServiceImpl implements UserService {
 			
 			emailService.sendEmail(userProfile.getUserId(), subject, message);
 		} catch (Exception e) {
+			
+			logger.error("Could not send email: ", e);
+			
 			/*Note: 
 			 * logger.error("Could not send email: ", e);
 			 * Use logger.error once deployed in www
@@ -374,7 +377,7 @@ public class UserServiceImpl implements UserService {
 			 * Affected/Altered Files.
 			 * -UserServiceImpl.java
 			 * -CompetitionServiceImpl.java
-			 * */
+			 * * /
 			StringBuffer sb = new StringBuffer();
 			sb.append("\n\n");
 			sb.append("\nNote:");
@@ -385,7 +388,7 @@ public class UserServiceImpl implements UserService {
 			sb.append("\n");
 			
 			System.out.println(sb.toString());
-			
+			*/
 		}
 		
 	}
