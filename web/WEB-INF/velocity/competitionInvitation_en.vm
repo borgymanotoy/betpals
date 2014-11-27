@@ -1,7 +1,0 @@
-Hello,
-
-${invitation.ownerName} is inviting you to a bet at myBetpals!
-
-${invitation.competitionName}
- 
-Deadline for betting is ${invitation.deadline} 

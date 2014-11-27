@@ -1,5 +1,0 @@
-Hello,
-
-${competition.name} is not settled.
-Settling deadline was ${competition.settlingDeadline}
-

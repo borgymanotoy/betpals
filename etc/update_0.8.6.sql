@@ -1,1 +1,0 @@
-alter table account add column defaultAccount boolean default false;

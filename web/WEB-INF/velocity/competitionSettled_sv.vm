@@ -1,6 +1,0 @@
-Hello,
-
-${competition.name} has been settled
-
-The winning alternative is ${alternative.name}
- 

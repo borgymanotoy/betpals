@@ -1,1 +1,0 @@
-alter table groups alter column owner_id rename to ownerid;

@@ -1,6 +1,0 @@
-
-1. Report ID - ${feedback.reportId}
-2. Page - ${feedback.pageUrl}
-3. Username - ${feedback.userName}
-4. User email - ${feedback.userEmail}
-5. Comment - ${feedback.comment}
