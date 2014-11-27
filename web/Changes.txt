@@ -1,0 +1,392 @@
+== Version 0.9.15 =======================================================
+New features and CRs
+
+
+Bug fixes
+
+    * 2759: Image logo not shown on community page
+    * 2760: Remove the resolved date on joincompetition
+    * 2761: Comptetions should list all alternatives
+    * 2763: Unexpected logout and missing balance after choosing a competition link
+    * 2764: Alt delete button too near right side 
+    * 2766: Update landing page
+    * 2762: Missing balance after login
+    * 2767: alt text in error 404 page
+
+
+== Version 0.9.14 =======================================================
+New features and CRs
+
+
+Bug fixes
+
+    * 2728: Forgot password does not work for new users 
+    * 2730: Last page of activites is always blank
+    * 2749: Logo destroyed when changing color
+    * 2750: Alternatives can have the same names
+    * 2752: Typo on min 2 alternatives error message
+    * 2753: Cannot delete an activity
+    * 2756: Search Field and Botton misalignment on search result page
+    * 2757: All created alternatives does not display on duplicate error page
+
+
+== Version 0.9.13 =======================================================
+New features and CRs
+
+
+Bug fixes
+
+    * 2640: Create new group/community image is cutoff
+    * 2667: Creating a bet should have multiple alternatives
+    * 2668: Alternatives has random order
+    * 2724: Selecting header link does not redirect to anywhere when not logged in
+    * 2725: IE: using keyboard enter key redirects to edit profile page
+    * 2726: Error message for missing name is not clear what name is missing
+    * 2727: When user already exist, it is not clear what field to change
+    * 2729: Clear comment field after comment input
+    * 2731: Error message is fragmented for invalid currency
+    * 2732: Lessen the "back to home" area
+    * 2733: Ugly behavior for invalid login
+    * 2734: IE9: Search field and button misalignment
+    * 2736: Postcode limited to 5 characters and only accepts numbers
+    * 2737: Fragmented error message when creating an alternative
+    * 2745: Admin missing images on header and sidebar
+    * 2748: Missing save and exit and confirm
+
+
+== Version 0.9.12 =======================================================
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002659: Blank password should not be allowed when signing up
+    * 0002662: Keyboard enter/return does not work when writing a comment
+    * 0002663: Change label of All friends
+    * 0002664: Change “Create Competition” to “Create Bet”
+    * 0002666: No competitions where deadline is reached should be shown on the first page
+    * 0002665: Remove the satisfaction text below the user info
+    * 0002674: Add a ”Add as friend” button on the user page
+    * 0002668: Alternatives has random order
+    * 0002718: Friends inconsitent label
+    * 0002721: Satisfaction still present when not logged in
+    * Validation of Alternative Bets: Should not allow blank entries and allow number and decimals only
+    * Validation of Zip Code in Edit Profile: should accept numbers only and max length of 5
+    * Validate Account Deposit and Withdrawals: Should not allow blank entries and allow numbers only
+
+
+== Version 0.9.11 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002650: When deadline is reached betting should not be available
+    * 0002649: Missing name of the bet creator on the bet page
+    * 0002648: Error 500 Internal Server Error when trying to bet using a different currency
+
+
+== Version 0.9.10 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002646: Remove add button if you are already friends
+    * Unable to settle competition with deadline past current date
+
+
+== Version 0.9.9 =======================================================
+
+New features and CRs
+
+    
+Bug fixes
+
+    * 0002641 Error 500 internal server error when creating a group
+    * 0002642: Comment bet func does not work
+    * 0002643: Should not be possible to add and confirm yourself as a friend
+    * 0002644: email should not be case sensitive
+    * 0002364: Blank comments should not be added
+    * 0002639: Could not process image when adding a picture
+    * 0002645: email subject cannot handle Swedish characters
+
+
+== Version 0.9.8 =======================================================
+
+New features and CRs
+
+    * 0002376: Must confirm over 18 during registration
+    * 0002381: Competiton name shall link to competition
+    * 0002359: No date for comments under activities
+    * 0002362: Screen should not jump to top when wrting comment
+    
+Bug fixes
+
+    * 0002637: New request indicator does not refresh when rejecting a request
+    * 0002638: Error 404 when deleting a friend
+    * 0002640: Create new group/community image is cutoff
+    * 0002636: Too many periods on new friend requests label
+    * Password recovery fixed
+    
+    
+    
+== Version 0.9.7 =======================================================
+
+New features and CRs
+
+    * User feedback form and emails added
+    
+Bug fixes
+
+    
+    
+    
+== Version 0.9.6 =======================================================
+
+New features and CRs
+
+    * Bet visibility and participation options (public, friendly, private) are added to bet creation pages.
+    * Page with list of all active public bets added.
+    * Search of public bets by name and description
+    * Selection of public bets for first page and right pane sorted by bet turnover
+    
+    
+Bug fixes
+
+    * Fixed incorrect page number calculations for user wall and community activities
+    
+    
+    
+== Version 0.9.5 =======================================================
+
+New features and CRs
+
+    * Added "Create" button to draft bets page
+    * Hide stake input box until Fixed stake is selected
+    * Fill in the default settling date when the deadline is set
+    * "Bets" tab on community page is implemented
+    * Removed left panel on "Place bet" page
+    
+Bug fixes
+
+    * Fixed Invitation link to landing page
+    * Increase limit on uploaded image weight till 2Mb 
+    * Fixed sorting of alternatives on create bet page
+    * Do not show send to facebook option for users not logged in from facebook
+    * In case of community invitation, message now visible on community wall
+    * Do not send duplicate invitations
+    * Fixed sorting in back-office user list
+    
+    
+== Version 0.9.4 =======================================================
+
+New features and CRs
+
+    * Added pagination to all lists in backoffice
+    * Added pagination to lists of transactions and bets on user account page
+    * Spring security library updated, custom logout handler added
+    * Added templates for registration email
+    
+Bug fixes
+
+    * Added log out event to user log
+    * Added admin switching events (log in as user by admin) to user log
+    * User email in case of facebook registration now correctly stored
+    * Default FUN account now created for facebook registration also
+    * Email is send on facebook registration
+    * Fixed registration of visit (last login date, number of visits) for facebook users
+    
+
+== Version 0.9.3 =======================================================
+
+New features and CRs
+
+    * New user setting (Profile) 
+            Send me an email when I’m invited to a bet (default = true), 
+            Send me an email when one of my bets are settled (default = true), 
+            Send me an email when a bet is posted to a community where I am a member (default = true)
+    * Send email on bet invitation (User setting)
+    * Send email when bet was settled (User setting)
+    * Send email on bet modification (Always)
+    * Send an email to the bet creator, when the settle date is passed and a remainder X days after if it is still not settled. (Always)
+    * If a bet is not settled X days after settle date, the bet should be voided. An email should be sent to all participants and the bet creator. (Always)
+    
+Bug fixes
+
+
+
+
+== Version 0.9.2 =======================================================
+
+New features and CRs
+
+    * Updated user list in backoffice
+    * Login as user for administrator
+    * Search users in backoffice
+    * Bet list
+    * Bet details
+    * View the bet in the Manage bet view with the same permissions as the bet creator.
+    * Lock/unlock user
+    * User log
+    * Bet log
+    
+Bug fixes
+
+
+
+== Version 0.9.1 =======================================================
+
+New features and CRs
+
+    * backoffice user list
+    * backoffice user info page
+    * backoffice system configuration parameters page
+    
+Bug fixes
+
+    * Cannot remove comment from user wall    
+    * Stake can be bigger than funds
+
+
+== Version 0.9.0 =======================================================
+
+New features and CRs
+
+    * Email field added to user profile edit form
+    * Limit left side user list to 5 and sort according to last login date
+    
+Bug fixes
+
+    * Bet count not updated on left menu
+    * Currencies not available in select boxes
+    
+
+== Version 0.8.9 =======================================================
+
+New features and CRs
+
+    * Transactions and security
+    
+Bug fixes
+
+    * Activity messages and bets for friends not visible
+    
+
+== Version 0.8.8 =======================================================
+
+New features and CRs
+
+    * Error reporting, input validation
+    * Logging
+    
+Bug fixes
+
+    * Not possible to switch language on login page.
+
+    
+== Version 0.8.7 =======================================================
+
+New features and CRs
+
+    * Create Competition, various tweaks & fixes
+    * Thumb preview, uploaded images
+    * Manage competition, close bet function
+    * Manage competition, Add an icon showing if the bet is open (open for bets) or closed (no more bets)
+      (icon added for closed bets)
+    * Manage competition, notify punters OnVoid() function (by email)
+    * Manage competition, various tweaks & fixes
+    * Edit profile page, change pwd function
+    * ”Forgot your password” function
+    * Emails to user on registration
+    * Automatically add friend to your friends, when accepting request for friendship   
+
+Bug fixes
+
+    * Community disappear from list after edit
+
+    
+== Version 0.8.6 =======================================================
+
+New features and CRs
+
+    * Ongoing competition wall
+    * Default account created on user registration
+    * Default account functionality (currency selectors set to default account currency)
+    * Settled bets, various tweaks & fixes
+    * Invites & competitions, version 2
+    * Invite to Competition, version 2
+
+Bug fixes
+
+    * Incorrect returns after add/delete comments and likes on community wall
+    * Exception on user registration
+
+
+== Version 0.8.5 =======================================================
+
+New features and CRs
+
+    * Localization support
+    * Quick bet, version 2
+    * Changed headers "Invites and competitions" and "Friends and groups" to "MyBets" and "MyPals"
+    * All labels changed to "Bets" instead of "Competition"
+
+Bug fixes
+
+    * Possible to submit empty activity on user wall
+
+
+== Version 0.8.4 =======================================================
+
+New features and CRs
+
+    * Communities
+
+Bug fixes
+
+    * Friend invitation bug introduced in v 0.8.2
+
+
+== Version 0.8.3 =======================================================
+
+New features and CRs
+
+Bug fixes
+
+    * User could not add comment or like an activity
+
+
+
+== Version 0.8.2 =======================================================
+
+New features and CRs
+
+    * Remove comment function added
+    * Remove "like" function added
+    * Delete activity function added
+    * Pagination for user wall entries
+    * Support for administrative interface added (roles, login logic)
+
+Bug fixes
+
+
+
+== Version 0.8.1 =======================================================
+
+New features and CRs
+
+    * Facebook publish for create competition invitations page
+    * Direct link to competition (like https://www.mybetpals.com/join/MTMwMzU3NjMwMzk0OC8xNg==)
+    * Invitation landing page (from links sent by mail, published to facebook, etc.)
+    * Custom error pages
+    * Language selection (still need translation work)
+    * User groups
+    
+
+Bug fixes
+    
+    * Remember me checkbox doesn't work
+    * Exception on facebook publish for not facebook users

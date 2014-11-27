@@ -1,0 +1,12 @@
+[user]
+	name = Borgy Manotoy
+	email = ejsalipahmad@yahoo.com
+[core]
+	autcrlf = =
+	autocrlf = true
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = true

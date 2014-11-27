@@ -1,0 +1,59 @@
+App Name:   bptest
+App URL:    http://www.namaskar.lv/bptest/
+App ID: 119321918127784
+App Secret: e03b93a9954a8727f7da34e641a8b8ec
+
+
+https://graph.facebook.com/oauth/authorize?client_id=119321918127784&redirect_uri=http://www.namaskar.lv/bptest/test.html
+http://www.namaskar.lv/bptest/test.html?code=2.j8WNMGUrM3Vgv1kyoXyI9g__.3600.1288173600-100001674309520|WwrrrMXnIb2eV9uXu3Wfh9S0y68
+
+https://graph.facebook.com/oauth/access_token?client_id=119321918127784&redirect_uri=http://www.namaskar.lv/bptest/test.html&client_secret=e03b93a9954a8727f7da34e641a8b8ec&code=2.j8WNMGUrM3Vgv1kyoXyI9g__.3600.1288173600-100001674309520|WwrrrMXnIb2eV9uXu3Wfh9S0y68
+access_token=119321918127784|2.j8WNMGUrM3Vgv1kyoXyI9g__.3600.1288173600-100001674309520|hzIp8VUESHPrDpL_a-dK3LuQjTA&expires=5089
+https://graph.facebook.com/me?access_token=119321918127784|2.j8WNMGUrM3Vgv1kyoXyI9g__.3600.1288173600-100001674309520|hzIp8VUESHPrDpL_a-dK3LuQjTA
+{
+   "id": "100001674309520",
+   "name": "Pavel Fokin",
+   "first_name": "Pavel",
+   "last_name": "Fokin",
+   "link": "http://www.facebook.com/profile.php?id=100001674309520",
+   "gender": "male",
+   "timezone": 3,
+   "locale": "en_US"
+}
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>bptest</title>
+  </head>
+  <body>
+    <h1>bptest</h1>
+    <p><fb:login-button autologoutlink="true"></fb:login-button></p>
+    <p><fb:like></fb:like></p>
+
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '119321918127784', status: true, cookie: true,
+                 xfbml: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
+  </body>
+</html>
+
+events, v1.0: only when creating a bet 
+
+- text: [user] just created the competition [betname] at Mybetpals. (whole text linked back to Mybetpals)
+
+- where: users own facebook wall

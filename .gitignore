@@ -5,3 +5,4 @@
 .classpath
 /bin
 /web/images
+/web/WEB-INF/db

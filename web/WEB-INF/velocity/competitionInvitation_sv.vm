@@ -1,0 +1,7 @@
+Hello,
+ 
+${invitation.ownerName} invites you to join the ${invitation.competitionName} bet.
+ 
+Deadline for betting is ${invitation.deadline} 
+
+You may join by following this link: ${siteUrl}/join/${competition.encodedLink}

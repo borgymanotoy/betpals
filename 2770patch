@@ -1,0 +1,446 @@
+diff --git a/build/build.xml b/build/build.xml
+index 30308f5c7308f36c229465b53331fa4a344882ec..8b2f2f5b1282ffc7e128c3b204dcf3525020eb3d 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -13,7 +13,7 @@
+     <property name="doc" value="../doc"/>
+     <property name="base" value="../"/>
+     <property name="name" value="mybetpals"/>
+-    <property name="version" value="0.9.15"/>
++    <property name="version" value="0.9.16"/>
+ 
+     <path id="project.classpath">
+         <fileset dir="${lib}">
+diff --git a/src/java/se/telescopesoftware/betpals/web/InvitationController.java b/src/java/se/telescopesoftware/betpals/web/InvitationController.java
+index a2bcdda41d241c4e238e186a3849f9132234b845..e1d57063ffb1a5ac405c1057774604fea860ce28 100644
+--- a/src/java/se/telescopesoftware/betpals/web/InvitationController.java
++++ b/src/java/se/telescopesoftware/betpals/web/InvitationController.java
+@@ -1,5 +1,9 @@
+ package se.telescopesoftware.betpals.web;
+ 
++import java.math.BigDecimal;
++
++import javax.servlet.http.HttpSession;
++
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.ui.Model;
+@@ -43,11 +47,21 @@ public class InvitationController extends AbstractCompetitionController {
+ 	}
+ 
+ 	@RequestMapping(value="/linkinvitation")
+-	public String viewLinkInvitation(@RequestParam("competitionId") Long competitionId, Model model) {
++	public String viewLinkInvitation(@RequestParam("competitionId") Long competitionId, @RequestParam(value="alternativeId", defaultValue="0", required=false) Long alternativeId, @RequestParam(value="betValue", defaultValue="0", required=false) BigDecimal betValue, Model model, HttpSession session) {
++
+ 		Competition competition = competitionService.getCompetitionById(competitionId);
+ 		Invitation invitation = new Invitation(competition, getUserId());
++
++		for(Event e : competition.getEvents()){
++			e.setAlternatives(sortAlternativeSet(e.getSortedAlternatives()));
++		}
++
+ 		model.addAttribute("invitation", invitation);
+ 		model.addAttribute("competition", competition);
++
++		model.addAttribute("alternativeId", alternativeId);
++		model.addAttribute("betValue", betValue.toString());
++
+ 		return "invitationView";
+ 	}
+ }
+diff --git a/web/WEB-INF/config.properties b/web/WEB-INF/config.properties
+index 48845f0b5ff67b6aeb46cc46c56db98b1bbe199b..7678ed24c53460983db18d81eb571eabb7762326 100644
+--- a/web/WEB-INF/config.properties
++++ b/web/WEB-INF/config.properties
+@@ -1,5 +1,5 @@
+ #System configuration parameters
+-#Mon Sep 26 12:50:21 EEST 2011
++#Tue Jan 17 5:30:21 EEST 2012
+ interval.deadline.days=7
+ activities.per.page=10
+ site.url=http\://localhost\:8080/betpals
+diff --git a/web/WEB-INF/jsp/joinCompetition.jsp b/web/WEB-INF/jsp/joinCompetition.jsp
+index c639e42839b5a0c1a20011f6724f7659c89dadb7..ee01290645c659e9ea13aa9108415d5a425fb47d 100644
+--- a/web/WEB-INF/jsp/joinCompetition.jsp
++++ b/web/WEB-INF/jsp/joinCompetition.jsp
+@@ -16,6 +16,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     <link rel="stylesheet" href='<c:url value="/css/site.css"/>' type="text/css" media="screen, projection"/>
+     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+     <script type="text/javascript" src='<c:url value="/js/jquery-1.4.4.min.js"/>'></script>
++    <script type="text/javascript" src='<c:url value="/js/jquery.numeric.js"/>'></script>
++    <script type="text/javascript" src='<c:url value="/js/autoNumeric.js"/>'></script>
+     <script type="text/javascript">
+        function changeBgColor(color, logo) {
+     	    jQuery("html").css("backgroundColor", color);
+@@ -27,15 +29,26 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     	    jQuery("#headerPane").addClass(logo);
+        }
+ 
+-       function getInvitationDetails(competitionId) {
+-           jQuery('input', '#invitationDetailsForm').val(competitionId);
++       function getInvitationDetails(competitionId, alternativeId) {
++           var betValue = jQuery('#myStake_' + alternativeId).val();
++           jQuery('#competitionId').val(competitionId);
++           jQuery('#alternativeId').val(alternativeId);
++           jQuery('#betValue').val(betValue);
+            jQuery('#invitationDetailsForm').submit();
+        } 
+-       
++       function getInvitationDetailsByKeypress(e, competitionId, alternativeId){
++           if(e.keyCode == 13){
++               getInvitationDetails(competitionId, alternativeId);
++           }
++       }
++
+        function goHome() {
+            window.location = '<c:url value="/login.html"/>';
+        }
+-       
++
++       jQuery(document).ready(function() {
++            $(".positive_number_only").numeric({ negative: false }, function() { alert("No negative values"); this.value = ""; this.focus(); });
++       });
+     </script>
+ </head>
+ <body>
+@@ -149,8 +162,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                                                     ${competition.fixedStake} ${competition.currency}&nbsp;
+                                                 </c:otherwise>
+                                             </c:choose>
+-                                            <input type="hidden" name="competitionId" value="${competition.id}"/>
+-                                            <input type="hidden" name="alternativeId" value="${altFromList.id}"/>
+                                             <button id="placeBetButton_${altFromList.id}" class="greenButton90" onclick="getInvitationDetails(${competition.id}, ${altFromList.id});"><spring:message code="button.place.bet"/></button>
+                                         </div>
+                                     </c:otherwise>
+@@ -179,7 +190,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     <div class="span-24" id="clearFooter">&nbsp;</div>
+ </div>
+ <form action='<c:url value="/linkinvitation.html"/>' method="post" id="invitationDetailsForm">
+-    <input type="hidden" name="competitionId" value=""/>
++    <input type="hidden" id="competitionId" name="competitionId" value=""/>
++    <input type="hidden" id="alternativeId" name="alternativeId" value=""/>
++    <input type="hidden" id="betValue" name="betValue" value=""/>
+ </form>
+ 
+ </body>
+diff --git a/web/WEB-INF/jsp/joinPublicCompetition.jsp b/web/WEB-INF/jsp/joinPublicCompetition.jsp
+index 3e4b55cb96a0d95b840f7fbdb84c03f679f73198..16ca0d8913ad85aa7299f962cc87a9e8efe85f15 100644
+--- a/web/WEB-INF/jsp/joinPublicCompetition.jsp
++++ b/web/WEB-INF/jsp/joinPublicCompetition.jsp
+@@ -30,13 +30,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        }
+        function getInvitationDetails(competitionId, alternativeId) {
+            var betValue = jQuery('#myStake_' + alternativeId).val();
+-           var params = new Array();
+-           params.push("competitionId="+competitionId);
+-           params.push("alternativeId="+alternativeId);
+-           params.push("betValue="+betValue);
+-
+-           var url = jQuery('#invitationDetailsForm').attr("action") + "?" + params.join("&");
+-           jQuery('#invitationDetailsForm').attr("action", url);
++           jQuery('#competitionId').val(competitionId);
++           jQuery('#alternativeId').val(alternativeId);
++           jQuery('#betValue').val(betValue);
+            jQuery('#invitationDetailsForm').submit();
+        } 
+         var getInvitationDetailsByKeypress = function(e, competitionId, alternativeId){
+@@ -163,8 +159,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                                                     ${competition.fixedStake} ${competition.currency}&nbsp;
+                                                 </c:otherwise>
+                                             </c:choose>
+-                                            <input type="hidden" name="competitionId" value="${competition.id}"/>
+-                                            <input type="hidden" name="alternativeId" value="${altFromList.id}"/>
+                                             <button id="placeBetButton_${altFromList.id}" class="greenButton90" onclick="getInvitationDetails(${competition.id}, ${altFromList.id});"><spring:message code="button.place.bet"/></button>
+                                         </div>
+                                     </c:otherwise>
+@@ -196,6 +190,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ </div>
+ <form action='<c:url value="/ongoingcompetition.html"/>' method="post" id="invitationDetailsForm">
+     <input type="hidden" id="competitionId" name="competitionId" value=""/>
++    <input type="hidden" id="alternativeId" name="alternativeId" value=""/>
++    <input type="hidden" id="betValue" name="betValue" value=""/>
+ </form>
+ 
+ </body>
+diff --git a/web/WEB-INF/jsp/tiles/competitionOngoing.jsp b/web/WEB-INF/jsp/tiles/competitionOngoing.jsp
+index caf57f97520bb9c6c7496c5178cfca6d6d71d9c0..56ea21cdd73cf09fd486733853276b70ebef982d 100644
+--- a/web/WEB-INF/jsp/tiles/competitionOngoing.jsp
++++ b/web/WEB-INF/jsp/tiles/competitionOngoing.jsp
+@@ -61,24 +61,70 @@ jQuery(document).ready(function() {
+         }
+     });
+ 
++    jQuery("#informBet").dialog({
++        resizable: false,
++        autoOpen: false,
++        width: 410,
++        height: 180,
++        modal: true,
++        buttons: {
++            "<spring:message code='button.ok'/>": function() {
++                submitStake($( this ).data("competitionId"), $( this ).data("alternativeId"), $( this ).data("stake"));
++                $( this ).dialog( "close" );
++            }
++        }
++    });
++
+ });
+ 
+-var validateAlternativeBet = function(e, value){
++var validateAlternativeBet = function(e, competitionId, alternativeId){
+ 	if(e.keyCode == 13){
+-		if(value.length == 0){
+-			e.preventDefault();
+-			return false;
++		$("#stake_"+alternativeId).val($("#myStake_"+alternativeId).val());
++		var value = $("#stake_"+alternativeId).val();
++		var stake = (value.length > 0) ? Number(value) : 0;
++		if(stake > 0){
++			showBetConfirmation(competitionId, alternativeId, stake);
++		}else{
++			//Add action when stake is zero here.
+ 		}
+ 	}
+ };
+-
+-var validateAlternativeBetSubmit = function(e, altId){
+-	var value = $("#myStake_"+altId).val();
+-	if(value.length == 0){
+-		e.preventDefault();
+-		return false;
++var validateAlternativeBetSubmit = function(e, competitionId, alternativeId){
++	$("#stake_"+alternativeId).val($("#myStake_"+alternativeId).val());
++	var value = $("#stake_"+alternativeId).val();
++	var stake = (value.length > 0) ? Number(value) : 0;
++	if(stake > 0){
++		showBetConfirmation(competitionId, alternativeId, stake);
++	}else{
++		//Add action when stake is zero here.
+ 	}
+ };
++var showBetConfirmation = function(competitionId, alternativeId, stake){
++	var competitionName = $("#competitionName_"+alternativeId).val();
++	var competitionName = (competitionName.length > 0) ? competitionName : "N/A";
++	var competitionCurrency = $("#competitionCurrency_"+alternativeId).val();
++	var competitionCurrency = (competitionCurrency.length > 0) ? competitionCurrency : "N/A";
++
++	var inform_msg = $('#betInformMessage').html();
++	inform_msg = inform_msg.replace(/~%BET%~/g, stake);
++	inform_msg = inform_msg.replace(/~%CURRENCY%~/g, competitionCurrency);
++	inform_msg = inform_msg.replace(/~%COMPETITION%~/g, "<b>" + competitionName+"</b>");
++	$('#betInformMessage').html(inform_msg);
++
++	jQuery("#informBet")
++	  .data('competitionId',competitionId)
++	  .data('competitionName',competitionName)
++	  .data('alternativeId',alternativeId)
++	  .data('currency',competitionCurrency)
++	  .data('stake',stake)
++	  .dialog('open');
++};
++function submitStake(competitionId, alternativeId, stake){
++	jQuery('#competitionId_'+alternativeId).val(competitionId);
++	jQuery('#alternativeId_'+alternativeId).val(alternativeId);
++	jQuery('#stake_'+alternativeId).val(stake);
++	jQuery('#placeAnotherBetForm_'+alternativeId).submit();
++}
+ 
+ function submitCommentByKeyPress(e, activityIdToComment){
+ 	if(e.keyCode == 13){
+@@ -203,26 +249,29 @@ function removeActivityAction(activityId){
+                     </div>
+                   </c:when>
+                   <c:otherwise>
+-                    <form action='<c:url value="/placeanotherbet.html"/>' method="post">
++                    <form id="placeAnotherBetForm_${altFromList.id}" action='<c:url value="/placeanotherbet.html"/>' method="post">
++                        <input type="hidden" id="competitionId_${altFromList.id}" name="competitionId" value="${competition.id}"/>
++                        <input type="hidden" id="competitionName_${altFromList.id}" name="competitionCurrency" value="${competition.name}"/>
++                        <input type="hidden" id="competitionCurrency_${altFromList.id}" name="competitionCurrency" value="${competition.currency}"/>
++                        <input type="hidden" id="alternativeId_${altFromList.id}" name="alternativeId" value="${altFromList.id}"/>
++                        <input type="hidden" id="stake_${altFromList.id}" name="stake" value=""/>
++                    </form>
+                     <div class="span-5 last right">
+                         <c:choose>
+                         <c:when test="${competition.competitionType == 'POOL_BETTING'}">
+                             <c:if test="${altFromList.id == alternativeId}">
+-                                <input type="text" id="myStake_${altFromList.id}" size="3" maxlength="3" name="stake" value="${betValue}" class="positive_number_only" onkeypress="validateAlternativeBet(event, this.value);" /> ${competition.currency}&nbsp;
++                                <input type="text" id="myStake_${altFromList.id}" size="3" maxlength="3" value="${betValue}" class="positive_number_only" onkeypress="validateAlternativeBet(event, ${competition.id}, ${altFromList.id}, this.value);" /> ${competition.currency}&nbsp;
+                             </c:if>
+                             <c:if test="${altFromList.id != alternativeId}">
+-                                <input type="text" id="myStake_${altFromList.id}" size="3" maxlength="3" name="stake" class="positive_number_only" onkeypress="validateAlternativeBet(event, this.value);" /> ${competition.currency}&nbsp;
++                                <input type="text" id="myStake_${altFromList.id}" size="3" maxlength="3" class="positive_number_only" onkeypress="validateAlternativeBet(event, ${competition.id}, ${altFromList.id}, this.value);" /> ${competition.currency}&nbsp;
+                             </c:if>
+                         </c:when>
+                         <c:otherwise>
+                             ${competition.fixedStake} ${competition.currency}&nbsp;
+                         </c:otherwise>
+                         </c:choose>
+-                        <input type="hidden" name="competitionId" value="${competition.id}"/>
+-                        <input type="hidden" name="alternativeId" value="${altFromList.id}"/>
+-                        <button id="placeBetButton_${altFromList.id}" class="greenButton90" onclick="validateAlternativeBetSubmit(event, ${altFromList.id});"><spring:message code="button.place.bet"/></button>
++                        <input type="submit" id="placeBetButton_${altFromList.id}" class="greenButton90" value="<spring:message code='button.place.bet'/>" onclick="validateAlternativeBetSubmit(event, ${competition.id}, ${altFromList.id});"/>
+                     </div>
+-                    </form>
+                   </c:otherwise>
+                 </c:choose>
+                 </div>
+@@ -362,3 +411,6 @@ function removeActivityAction(activityId){
+ <div id="confirmDelete" title="<spring:message code='confirmation.delete.activity.title'/>">
+     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><spring:message code="confirmation.delete.activity"/></p>
+ </div>
++<div id="informBet" title="<spring:message code='link.ongoing.competitions'/>">
++    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="betInformMessage"><spring:message code="confirmation.bet.redirect.after"/></span></p>
++</div>
+diff --git a/web/WEB-INF/jsp/tiles/invitationView.jsp b/web/WEB-INF/jsp/tiles/invitationView.jsp
+index c7a97b9eca9b78c0475272810e0fdf94b9544dbd..ebce63fcb699adc8b14a1536c79334f9b106c46a 100644
+--- a/web/WEB-INF/jsp/tiles/invitationView.jsp
++++ b/web/WEB-INF/jsp/tiles/invitationView.jsp
+@@ -1,4 +1,71 @@
+ <%@include file="includes.jsp"%>
++<script type="text/javascript">
++    jQuery(document).ready(function() {
++        $(".positive_number_only").numeric({ negative: false }, function() { alert("No negative values"); this.value = ""; this.focus(); });
++        jQuery("#informBet").dialog({
++            resizable: false,
++            autoOpen: false,
++            width: 410,
++            height: 180,
++            modal: true,
++            buttons: {
++                "<spring:message code='button.ok'/>": function() {
++                    submitStake($( this ).data("invitationId"), $( this ).data("alternativeId"), $( this ).data("stake"));
++                    $( this ).dialog( "close" );
++                }
++            }
++        });
++    });
++
++    var validateAlternativeBet = function(e, invitationId, alternativeId){
++        if(e.keyCode == 13){
++            $("#stake_"+alternativeId).val($("#myStake_"+alternativeId).val());
++            var value = $("#stake_"+alternativeId).val();
++            var stake = (value.length > 0) ? Number(value) : 0;
++            if(stake > 0){
++                showBetConfirmation(invitationId, alternativeId, stake);
++            }else{
++                //Add action when stake is zero here.
++            }
++        }
++    };
++    var validateAlternativeBetSubmit = function(e, invitationId, alternativeId){
++        $("#stake_"+alternativeId).val($("#myStake_"+alternativeId).val());
++        var value = $("#stake_"+alternativeId).val();
++        var stake = (value.length > 0) ? Number(value) : 0;
++        if(stake > 0){
++            showBetConfirmation(invitationId, alternativeId, stake);
++        }else{
++            //Add action when stake is zero here.
++        }
++    };
++    var showBetConfirmation = function(invitationId, alternativeId, stake){
++        var competitionName = $("#competitionName_"+alternativeId).val();
++        var competitionName = (competitionName.length > 0) ? competitionName : "N/A";
++        var competitionCurrency = $("#competitionCurrency_"+alternativeId).val();
++        var competitionCurrency = (competitionCurrency.length > 0) ? competitionCurrency : "N/A";
++
++        var inform_msg = $('#betInformMessage').html();
++        inform_msg = inform_msg.replace(/~%BET%~/g, stake);
++        inform_msg = inform_msg.replace(/~%CURRENCY%~/g, competitionCurrency);
++        inform_msg = inform_msg.replace(/~%COMPETITION%~/g, "<b>" + competitionName+"</b>");
++        $('#betInformMessage').html(inform_msg);
++
++        jQuery("#informBet")
++            .data('invitationId',invitationId)
++            .data('competitionName',competitionName)
++            .data('alternativeId',alternativeId)
++            .data('currency',competitionCurrency)
++            .data('stake',stake)
++            .dialog('open');
++    };
++    function submitStake(invitationId, alternativeId, stake){
++        jQuery('#invitationId_'+alternativeId).val(invitationId);
++        jQuery('#alternativeId_'+alternativeId).val(alternativeId);
++        jQuery('#stake_'+alternativeId).val(stake);
++        jQuery('#placeBetForm_'+alternativeId).submit();
++    }
++</script>
+ <div>
+     <h2 class="dark"><spring:message code="invitation.view.title"/></h2>
+ </div>
+@@ -48,24 +115,33 @@
+                           <spring:message code="betting.is.closed"/>
+                     </div>
+                   </c:when>
+-		          <c:otherwise>
+-		            <form action='<c:url value="/placebet.html"/>' method="post">
++                  <c:otherwise>
++                    <form id="placeBetForm_${alternative.id}" action='<c:url value="/placebet.html"/>' method="post">
++                        <input type="hidden" id="invitationId_${alternative.id}" name="invitationId" value="${invitation.id}"/>
++                        <input type="hidden" id="competitionId_${alternative.id}" name="competitionId" value="${competition.id}"/>
++                        <input type="hidden" id="competitionName_${alternative.id}" name="competitionCurrency" value="${competition.name}"/>
++                        <input type="hidden" id="competitionCurrency_${alternative.id}" name="competitionCurrency" value="${competition.currency}"/>
++                        <input type="hidden" id="alternativeId_${alternative.id}" name="alternativeId" value="${alternative.id}"/>
++                        <input type="hidden" id="stake_${alternative.id}" name="stake" value=""/>
++                    </form>
+                     <div class="span-5 last invViewButtonDiv right">
+                         <c:choose>
+                         <c:when test="${competition.competitionType == 'POOL_BETTING'}">
+-                            <input type="text" id="myStake" size="3" name="stake"/> ${competition.currency}&nbsp;
++                            <c:if test="${alternative.id == alternativeId}">
++                                <input type="text" id="myStake_${alternative.id}" size="3" maxlength="3" value="${betValue}" class="positive_number_only" onkeypress="validateAlternativeBet(event, '${invitation.id}', ${alternative.id}, this.value);" /> ${competition.currency}&nbsp;
++                            </c:if>
++                            <c:if test="${alternative.id != alternativeId}">
++                                <input type="text" id="myStake_${alternative.id}" size="3" maxlength="3" class="positive_number_only" onkeypress="validateAlternativeBet(event, '${invitation.id}', ${alternative.id}, this.value);" /> ${competition.currency}&nbsp;
++                            </c:if>
+                         </c:when>
+                         <c:otherwise>
+                             ${competition.fixedStake} ${competition.currency}&nbsp;
+                         </c:otherwise>
+                         </c:choose>
+-		                <input type="hidden" name="invitationId" value="${invitation.id}"/>
+-		                <input type="hidden" name="alternativeId" value="${alternative.id}"/>
+-		                <input type="submit" class="greenButton90" value="<spring:message code="button.place.bet"/>"/>
++                        <input type="submit" id="placeBetButton_${alternative.id}" class="greenButton90" value="<spring:message code='button.place.bet'/>" onclick="validateAlternativeBetSubmit(event, '${invitation.id}', ${alternative.id});"/>
+                     </div>
+-		            </form>
+-		          </c:otherwise>
+-		        </c:choose>
++                  </c:otherwise>
++                </c:choose>
+             </div>
+             </li>
+         </c:forEach>
+@@ -73,3 +149,6 @@
+     </ul>
+     <p>&nbsp;</p>
+ </div>
++<div id="informBet" title="<spring:message code='link.ongoing.competitions'/>">
++    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="betInformMessage"><spring:message code="confirmation.bet.redirect.after"/></span></p>
++</div>
+diff --git a/web/WEB-INF/lib/mybetpals-0.9.15.jar b/web/WEB-INF/lib/mybetpals-0.9.15.jar
+deleted file mode 100644
+index c0aef20983531a690fb83210f2355f8b50b206c1..0000000000000000000000000000000000000000
+Binary files a/web/WEB-INF/lib/mybetpals-0.9.15.jar and /dev/null differ
+diff --git a/web/WEB-INF/lib/mybetpals-0.9.16.jar b/web/WEB-INF/lib/mybetpals-0.9.16.jar
+new file mode 100644
+index 0000000000000000000000000000000000000000..49fbf9ec8e647c68a1e19e6b023e85ad060379cd
+Binary files /dev/null and b/web/WEB-INF/lib/mybetpals-0.9.16.jar differ
+diff --git a/web/WEB-INF/messages/messages_en.properties b/web/WEB-INF/messages/messages_en.properties
+index 92472fc54ae1f58a74eab039563b07e63f28fc12..d9482bc4f6fa64720e33bbd580e5009f8347387c 100644
+--- a/web/WEB-INF/messages/messages_en.properties
++++ b/web/WEB-INF/messages/messages_en.properties
+@@ -628,3 +628,4 @@ error.multiple.alternatives=Please provide at least two alternatives to continue
+ error.duplicate.alternative.name=Please provide a different name for the alternative.
+ confirmation.delete.activity.title=Delete activity?
+ confirmation.delete.activity=Are you sure you want to delete this activity,<br/>all associated comments and likes will also be deleted
++confirmation.bet.redirect.after=You successfully placed ~%BET%~ ~%CURRENCY%~ on ~%COMPETITION%~.<br/>You will find your bet under Ongoing bets.
+diff --git a/web/WEB-INF/messages/messages_sv.properties b/web/WEB-INF/messages/messages_sv.properties
+index 4eda7b73a98b48582e577b52282d941e6b8660a2..4070c34d0fb3a463ca148f2c6f71278510991adc 100644
+--- a/web/WEB-INF/messages/messages_sv.properties
++++ b/web/WEB-INF/messages/messages_sv.properties
+@@ -629,3 +629,5 @@ error.multiple.alternatives=Please provide at least two alternatives to continue
+ error.duplicate.alternative.name=Please provide a different name for the alternative.
+ confirmation.delete.activity.title=Delete activity?
+ confirmation.delete.activity=Are you sure you want to delete this activity,<br/>all associated comments and likes will also be deleted
++confirmation.bet.redirect.after=You successfully placed ~%BET%~ ~%CURRENCY%~ on ~%COMPETITION%~.<br/>You will find your bet under Ongoing bets.
++
